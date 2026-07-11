@@ -16,12 +16,12 @@
   --accent:#5b4636; --accent2:#8c6f52; --sel:#efe7db;
   --c1bg:#242427; --c1item:#e8e8ea; --c1hover:#37373c; --c1active:#8c6f52;
   --c2bg:#4c4c52; --c2item:#f0f0f2; --c2hover:#5d5d64; --c2active:#8c6f52;
-  --hl1:#ffe97d; --hl2:#b7e4a7; --hl3:#a8d5f2; --hl4:#d9b8f0; --hl5:#f5b0b0; --hl6:#ffcf8f;
+  --hl1:#ffe97d; --hl2:#b7e4a7; --hl3:#a8d5f2; --hl4:#d9b8f0; --hl5:#f5b0b0; --hl6:#ffcf8f; --hl7:#9fe3d5;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top, 0px));background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
 header h1{font-size:17px;margin:0;color:var(--accent);white-space:nowrap}
 header h1 small{font-weight:normal;color:var(--muted);font-size:12px}
 #search{flex:1;min-width:160px;padding:7px 12px;border:1px solid var(--border);border-radius:20px;font-size:14px;outline:none;background:var(--bg)}
@@ -40,41 +40,41 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .col .list{overflow-y:auto;flex:1;padding:0 8px 20px}
 
 /* Kolumna 1 — ciemny grafit */
-#colTags{width:240px;min-width:190px;background:linear-gradient(180deg,#303035 0%,#242428 45%,#1c1c1f 100%);border:1px solid #121214;border-top-color:#4a4a52;box-shadow:0 3px 10px rgba(30,25,15,.45),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.4)}
-#colTags h2{color:#9a9aa0}
-#colTags .item{color:var(--c1item);background:linear-gradient(180deg,#46464e 0%,#36363c 48%,#2c2c31 100%);border:1px solid #1d1d21;border-top-color:#5c5c64;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colTags .item:hover{background:linear-gradient(180deg,#54545c 0%,#424249 48%,#36363c 100%);border-top-color:#6e6e77;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colTags .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active .cnt{color:#f0e2b8}
-#colTags .cnt{color:#9a9aa0}
-#colTags .divider{color:#77777e;border-top:1px solid #3a3a40}
-#colTags .list::-webkit-scrollbar{width:8px}
-#colTags .list::-webkit-scrollbar-thumb{background:#4a4a50;border-radius:4px}
-#btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed #6a6a72;color:#c9c9cf;border-radius:8px;cursor:pointer;font-size:12.5px}
-#btnNewTag:hover{background:var(--c1hover);color:#fff}
+#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,#303035 0%,#242428 45%,#1c1c1f 100%);border:1px solid #121214;border-top-color:#4a4a52;box-shadow:0 3px 10px rgba(30,25,15,.45),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.4)}
+#colBooks h2{color:#9a9aa0}
+#colBooks .item{color:var(--c1item);background:linear-gradient(180deg,#46464e 0%,#36363c 48%,#2c2c31 100%);border:1px solid #1d1d21;border-top-color:#5c5c64;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colBooks .item:hover{background:linear-gradient(180deg,#54545c 0%,#424249 48%,#36363c 100%);border-top-color:#6e6e77;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colBooks .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colBooks .item.active .cnt{color:#f0e2b8}
+#colBooks .cnt{color:#9a9aa0}
+#colBooks .divider{color:#77777e;border-top:1px solid #3a3a40}
+#colBooks .list::-webkit-scrollbar{width:8px}
+#colBooks .list::-webkit-scrollbar-thumb{background:#4a4a50;border-radius:4px}
+#btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed #9a9aa2;color:#f0f0f2;border-radius:8px;cursor:pointer;font-size:12.5px}
+#btnNewTag:hover{background:#6e6e76;color:#fff}
 
 /* Kolumna 2 — szary */
-#colBooks{width:220px;min-width:180px;background:linear-gradient(180deg,#5b5b63 0%,#4a4a51 45%,#3e3e45 100%);border:1px solid #2c2c31;border-top-color:#7a7a83;box-shadow:0 3px 10px rgba(30,25,15,.4),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks h2{color:#d4d4da}
-#colBooks .item{color:var(--c2item);background:linear-gradient(180deg,#71717a 0%,#5c5c64 48%,#4d4d55 100%);border:1px solid #3b3b41;border-top-color:#8b8b94;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colBooks .item:hover{background:linear-gradient(180deg,#7f7f88 0%,#68686f 48%,#585860 100%);border-top-color:#9d9da6;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colBooks .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colBooks .item.active .cnt{color:#f0e2b8}
-#colBooks .cnt{color:#c4c4cc}
-#colBooks .divider{color:#c0c0c8;border-top:1px solid #5f5f66}
-#colBooks .list::-webkit-scrollbar{width:8px}
-#colBooks .list::-webkit-scrollbar-thumb{background:#6a6a72;border-radius:4px}
+#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,#5b5b63 0%,#4a4a51 45%,#3e3e45 100%);border:1px solid #2c2c31;border-top-color:#7a7a83;box-shadow:0 3px 10px rgba(30,25,15,.4),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colTags h2{color:#d4d4da}
+#colTags .item{color:var(--c2item);background:linear-gradient(180deg,#71717a 0%,#5c5c64 48%,#4d4d55 100%);border:1px solid #3b3b41;border-top-color:#8b8b94;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item:hover{background:linear-gradient(180deg,#7f7f88 0%,#68686f 48%,#585860 100%);border-top-color:#9d9da6;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item.active .cnt{color:#f0e2b8}
+#colTags .cnt{color:#c4c4cc}
+#colTags .divider{color:#c0c0c8;border-top:1px solid #5f5f66}
+#colTags .list::-webkit-scrollbar{width:8px}
+#colTags .list::-webkit-scrollbar-thumb{background:#6a6a72;border-radius:4px}
 .chwrap{display:flex;flex-wrap:wrap;gap:4px;padding:4px 10px 8px 22px}
-.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:#5d5d64;color:#fff;font-size:12px;cursor:pointer;border:1px solid transparent}
-.chip-ch:hover{background:#6e6e76}
+.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#4a4a52,#3a3a40);color:#fff;font-size:12px;cursor:pointer;border:1px solid #26262b;border-top-color:#5e5e66;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12)}
+.chip-ch:hover{background:linear-gradient(180deg,#5a5a62,#48484f)}
 .chip-ch.active{background:linear-gradient(180deg,#b28f2e,#93711f 48%,#755815);color:#fff;font-weight:700;border-color:#d3b158;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
 .item .arr{width:14px;text-align:center;color:inherit;opacity:.6;font-size:10px}
 
 #colNotes{flex:1;background:linear-gradient(180deg,#faf8f3 0%,#f2efe8 55%,#eae6dc 100%);border:1px solid #cfc8b8;border-top-color:#ffffff;box-shadow:0 3px 10px rgba(30,25,15,.3),inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(0,0,0,.06)}
 .item{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:13.5px;margin:6px 3px;position:relative;overflow:hidden;transition:transform .1s ease, box-shadow .1s ease}
 /* metaliczny błysk na kafelkach */
-#colTags .item::after,#colBooks .item::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.11) 44%,rgba(255,255,255,.04) 52%,transparent 64%)}
-#colTags .item:hover::after,#colBooks .item:hover::after{background:linear-gradient(115deg,transparent 26%,rgba(255,255,255,.17) 42%,rgba(255,255,255,.06) 54%,transparent 68%)}
+#colBooks .item::after,#colTags .item::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.11) 44%,rgba(255,255,255,.04) 52%,transparent 64%)}
+#colBooks .item:hover::after,#colTags .item:hover::after{background:linear-gradient(115deg,transparent 26%,rgba(255,255,255,.17) 42%,rgba(255,255,255,.06) 54%,transparent 68%)}
 #colTags .item.tinted{border-color:rgba(0,0,0,.25);border-top-color:rgba(255,255,255,.55);box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.15)}
 #colTags .item.tinted:hover{transform:translateY(-1px)}
 .item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -138,7 +138,10 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ntitle[contenteditable="true"]{color:#222;text-shadow:none}
 mark.hl1{background:var(--hl1)}mark.hl2{background:var(--hl2)}mark.hl3{background:var(--hl3)}
 mark.hl4{background:var(--hl4)}mark.hl5{background:var(--hl5)}mark.hl6{background:var(--hl6)}
+mark.hl7{background:var(--hl7)}
 mark{padding:0 1px;border-radius:3px}
+#hlBar .tb.fmt{font-family:Georgia,serif;width:24px;text-align:center}
+#hlBar .sep{width:1px;height:20px;background:var(--border)}
 .qhl{background:#9fd9ff;border-radius:3px;box-shadow:0 0 0 1px #6db9e8}
 #hlBar{position:fixed;display:none;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:6px;z-index:50;gap:5px;align-items:center}
 #hlBar .sw{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.15);cursor:pointer}
@@ -246,6 +249,7 @@ mark{padding:0 1px;border-radius:3px}
 </main>
 
 <div id="hlBar"></div>
+<input type="color" id="hlColor" value="#9fe3d5" style="position:fixed;left:-100px;top:-100px;width:1px;height:1px;opacity:0">
 <div id="toast"></div>
 <div id="dropdown"></div>
 
@@ -288,7 +292,7 @@ mark{padding:0 1px;border-radius:3px}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAIPcUWoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAMDoUWoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -830,11 +834,16 @@ function sanitize(html){
         if(tag==="BR"){ dst.appendChild(document.createElement("br")); }
         else if(tag==="MARK"){
           const m=document.createElement("mark");
-          m.className=(node.className.match(/hl[1-6]/)||["hl1"])[0];
+          const cls=(node.className||"").match(/hl[1-7]/);
+          if(cls){ m.className=cls[0]; }
+          else if(node.style && node.style.background){ m.style.background=node.style.background; }
+          else if(node.style && node.style.backgroundColor){ m.style.background=node.style.backgroundColor; }
+          else { m.className="hl1"; }
           walk(node,m); dst.appendChild(m);
         }
         else if(tag==="B"||tag==="STRONG"){ const b=document.createElement("b"); walk(node,b); dst.appendChild(b); }
         else if(tag==="I"||tag==="EM"){ const i=document.createElement("i"); walk(node,i); dst.appendChild(i); }
+        else if(tag==="U"){ const u=document.createElement("u"); walk(node,u); dst.appendChild(u); }
         else if(tag==="DIV"||tag==="P"){
           if(dst.lastChild && dst.lastChild.tagName!=="BR") dst.appendChild(document.createElement("br"));
           walk(node,dst);
@@ -853,8 +862,16 @@ function htmlToPlain(html){
 
 /* ================= KOLOROWANIE ZAZNACZEŃ ================= */
 const hlBar = $("hlBar");
-hlBar.innerHTML = [1,2,3,4,5,6].map(i=>`<div class="sw" style="background:var(--hl${i})" data-hl="${i}" title="Podświetl"></div>`).join("") +
-  `<button class="tb" data-hl="0" title="Usuń kolor">⌫</button><button class="tb" data-hl="copy" title="Kopiuj zaznaczenie">📋</button>`;
+hlBar.innerHTML = [1,2,3,4,5,6,7].map(i=>`<div class="sw" style="background:var(--hl${i})" data-hl="${i}" title="Podświetl"></div>`).join("") +
+  `<div class="sw" data-hl="pick" title="Dowolny kolor z palety" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
+   <button class="tb" data-hl="0" title="Usuń kolor">⌫</button>
+   <span class="sep"></span>
+   <button class="tb fmt" data-fmt="b" title="Pogrubienie"><b>B</b></button>
+   <button class="tb fmt" data-fmt="i" title="Kursywa"><i>I</i></button>
+   <button class="tb fmt" data-fmt="u" title="Podkreślenie"><u>U</u></button>
+   <span class="sep"></span>
+   <button class="tb" data-hl="copy" title="Kopiuj zaznaczenie">📋</button>`;
+const touchUI = ()=> matchMedia("(hover: none)").matches || isIOS();
 function showHlBar(){
   const sel=getSelection();
   if(sel.isCollapsed||!sel.rangeCount){ hlBar.style.display="none"; return; }
@@ -865,8 +882,14 @@ function showHlBar(){
   if(!cont){ hlBar.style.display="none"; return; }
   const r=range.getBoundingClientRect();
   hlBar.style.display="flex";
-  hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-110,innerWidth-250))+"px";
-  hlBar.style.top=Math.max(8,r.top-48)+"px";
+  const w = hlBar.offsetWidth || 340;
+  hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-w/2,innerWidth-w-8))+"px";
+  // na iPadzie/iPhonie systemowe menu pojawia się NAD zaznaczeniem — nasz pasek idzie POD nie
+  if(touchUI()){
+    hlBar.style.top=Math.min(r.bottom+14, innerHeight-52)+"px";
+  } else {
+    hlBar.style.top=Math.max(8,r.top-48)+"px";
+  }
 }
 document.addEventListener("mouseup", e=>{
   if(e.target.closest("#hlBar")) return;
@@ -878,10 +901,18 @@ document.addEventListener("selectionchange", ()=>{
   clearTimeout(selTimer);
   selTimer=setTimeout(showHlBar, 400);
 });
+function saveContentEl(contEl, n){
+  contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
+  const clean=sanitize(contEl.innerHTML);
+  contEl.innerHTML=hilite(clean);
+  n.h=clean; n.c=htmlToPlain(clean);
+  markDirty(n);
+}
+let pickCtx=null; // zapamiętane zaznaczenie dla palety kolorów
 hlBar.addEventListener("pointerdown", e=>{
   e.preventDefault();
-  const hl=e.target.dataset.hl;
-  if(hl===undefined) return;
+  const t = e.target.closest("[data-hl],[data-fmt]");
+  if(!t) return;
   const sel=getSelection();
   if(!sel.rangeCount) return;
   const range=sel.getRangeAt(0);
@@ -891,25 +922,45 @@ hlBar.addEventListener("pointerdown", e=>{
   if(!contEl) return;
   const card=contEl.closest(".ncard");
   const n=notes.find(x=>x.g===card.dataset.g);
+  const hl=t.dataset.hl, fmt=t.dataset.fmt;
   if(hl==="copy"){
     navigator.clipboard.writeText(sel.toString()).then(()=>toast("Skopiowano zaznaczenie"));
     sel.removeAllRanges(); hlBar.style.display="none"; return;
   }
-  if(hl==="0") unwrapMarks(range,contEl); else applyMark(range,+hl);
+  if(hl==="pick"){
+    pickCtx={range:range.cloneRange(), contEl, n};
+    sel.removeAllRanges(); hlBar.style.display="none";
+    $("hlColor").click();
+    return;
+  }
+  if(fmt){ wrapTag(range, fmt); }
+  else if(hl==="0") unwrapMarks(range,contEl);
+  else applyMark(range,+hl);
   sel.removeAllRanges();
   hlBar.style.display="none";
-  // usuń znaczniki wyszukiwania przed zapisem
-  contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
-  const clean=sanitize(contEl.innerHTML);
-  contEl.innerHTML=hilite(clean);
-  n.h=clean; n.c=htmlToPlain(clean);
-  markDirty(n);
+  saveContentEl(contEl, n);
 }, true);
+$("hlColor").addEventListener("change", e=>{
+  if(!pickCtx) return;
+  const mark=document.createElement("mark");
+  mark.style.background=e.target.value;
+  const r=pickCtx.range;
+  try{ r.surroundContents(mark); }
+  catch(err){ const f=r.extractContents(); mark.appendChild(f); r.insertNode(mark); }
+  saveContentEl(pickCtx.contEl, pickCtx.n);
+  pickCtx=null;
+  toast("Zastosowano wybrany kolor");
+});
 function applyMark(range,color){
   const mark=document.createElement("mark");
   mark.className="hl"+color;
   try{ range.surroundContents(mark); }
   catch(err){ const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); }
+}
+function wrapTag(range,tag){
+  const el=document.createElement(tag);
+  try{ range.surroundContents(el); }
+  catch(err){ const frag=range.extractContents(); el.appendChild(frag); range.insertNode(el); }
 }
 function unwrapMarks(range,contEl){
   [...contEl.querySelectorAll("mark")].filter(m=>range.intersectsNode(m)).forEach(m=>{

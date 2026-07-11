@@ -387,7 +387,7 @@ html[data-theme="dark"] .fsmodal{background:var(--bg)}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAIKLUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAGOmUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -1130,10 +1130,18 @@ function showHlBar(){
   hlBar.style.display="flex";
   const w = hlBar.offsetWidth || 380;
   if(touchUI()){
-    // na iPadzie/iPhonie: pasek na dole ekranu, wyśrodkowany — systemowe menu tam nie sięga
-    hlBar.style.left=Math.max(8,(innerWidth-w)/2)+"px";
-    hlBar.style.top="auto";
-    hlBar.style.bottom="calc(20px + env(safe-area-inset-bottom, 0px))";
+    // iPad/iPhone: pasek tuż POD zaznaczeniem, z odstępem na systemowe menu Apple
+    hlBar.style.bottom="auto";
+    hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-w/2,innerWidth-w-8))+"px";
+    const off = r.top < 80 ? 95 : 55;   // przy górze ekranu menu Apple wyskakuje POD zaznaczeniem — zejdź niżej
+    let top = r.bottom + off;
+    if(top > innerHeight - 70){
+      // brak miejsca na dole — przypnij nad dolną krawędzią
+      hlBar.style.top="auto";
+      hlBar.style.bottom="calc(14px + env(safe-area-inset-bottom, 0px))";
+    } else {
+      hlBar.style.top = top+"px";
+    }
   } else {
     hlBar.style.bottom="auto";
     hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-w/2,innerWidth-w-8))+"px";
@@ -1144,12 +1152,14 @@ document.addEventListener("mouseup", e=>{
   if(e.target.closest("#hlBar")) return;
   setTimeout(showHlBar,10);
 });
-// iPad/iPhone: pasek kolorów pojawia się po zaznaczeniu palcem
+// iPad/iPhone: pasek kolorów pojawia się szybko po zaznaczeniu palcem lub rysikiem
 let selTimer=null;
 document.addEventListener("selectionchange", ()=>{
   clearTimeout(selTimer);
-  selTimer=setTimeout(showHlBar, 400);
+  selTimer=setTimeout(showHlBar, 120);
 });
+document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 60); }, {passive:true});
+document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen") setTimeout(showHlBar, 60); }, {passive:true});
 function saveContentEl(contEl, n){
   contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
   const clean=sanitize(contEl.innerHTML);

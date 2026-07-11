@@ -132,7 +132,19 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 @keyframes pulse{50%{opacity:.6}}
 .tagrow select{padding:5px 6px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;max-width:150px;background:#fff}
 .tagrow input{padding:5px 8px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;width:120px}
-.ncontent{font-size:14px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;min-height:8px;margin-top:4px}
+.ncontent{font-size:var(--noteFs,14px);line-height:1.6;white-space:pre-wrap;word-wrap:break-word;min-height:8px;margin-top:4px}
+/* regulacja czcionki */
+.fontctl{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.fontctl button{border:none;background:var(--panel);cursor:pointer;padding:7px 10px;font-size:12px;color:var(--text)}
+.fontctl button:hover{background:var(--sel)}
+.fontctl button+button{border-left:1px solid var(--border)}
+/* notatka na pełnym ekranie */
+#modalFs .fsmodal{background:var(--bg);border-radius:16px;width:min(1100px,96vw);max-height:94vh;overflow-y:auto;padding:16px;position:relative;box-shadow:0 12px 50px rgba(0,0,0,.4)}
+#fsClose{position:sticky;top:0;float:right;z-index:10;border:none;background:var(--accent);color:#fff;border-radius:50%;width:36px;height:36px;font-size:17px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#fsClose:hover{background:var(--accent2)}
+#fsWrap .ncard{margin:6px 0 0}
+#fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7}
+#fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
 .ncontent:empty{display:none}
 .ncontent[contenteditable="true"],.ntitle[contenteditable="true"]{outline:2px solid var(--accent2);border-radius:4px;padding:4px;background:#fffdf5}
 .ntitle[contenteditable="true"]{color:#222;text-shadow:none}
@@ -140,13 +152,14 @@ mark.hl1{background:var(--hl1)}mark.hl2{background:var(--hl2)}mark.hl3{backgroun
 mark.hl4{background:var(--hl4)}mark.hl5{background:var(--hl5)}mark.hl6{background:var(--hl6)}
 mark.hl7{background:var(--hl7)}
 mark{padding:0 1px;border-radius:3px}
-#hlBar .tb.fmt{font-family:Georgia,serif;width:24px;text-align:center}
-#hlBar .sep{width:1px;height:20px;background:var(--border)}
+#hlBar .tb.fmt{font-family:Georgia,serif;width:25px;text-align:center;font-size:14.5px}
+#hlBar .sep{width:1px;height:20px;background:rgba(0,0,0,.12)}
 .qhl{background:#9fd9ff;border-radius:3px;box-shadow:0 0 0 1px #6db9e8}
-#hlBar{position:fixed;display:none;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.18);padding:6px;z-index:50;gap:5px;align-items:center}
-#hlBar .sw{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.15);cursor:pointer}
-#hlBar .sw:hover{transform:scale(1.15)}
-#hlBar button.tb{border:none;background:transparent;cursor:pointer;font-size:15px;padding:2px 6px;border-radius:6px}
+#hlBar{position:fixed;display:none;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.08);border-radius:21px;box-shadow:0 8px 28px rgba(0,0,0,.26),inset 0 1px 0 #fff;padding:7px 11px;z-index:120;gap:7px;align-items:center}
+#hlBar .sw{width:24px;height:24px;border-radius:50%;border:1px solid rgba(0,0,0,.18);cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(0,0,0,.15);transition:transform .1s}
+#hlBar .sw:hover{transform:scale(1.18)}
+#hlBar .sw:active{transform:scale(.94)}
+#hlBar button.tb{border:none;background:transparent;cursor:pointer;font-size:15px;padding:3px 6px;border-radius:8px;line-height:1}
 #hlBar button.tb:hover{background:var(--sel)}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 20px;border-radius:24px;font-size:13.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99;max-width:80%;text-align:center}
 #toast.show{opacity:1}
@@ -163,9 +176,13 @@ mark{padding:0 1px;border-radius:3px}
 .modal p{font-size:13.5px;line-height:1.55}
 .tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px}
 .tagpick label{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:13px;color:var(--text);cursor:pointer}
-#dropdown{position:fixed;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:70;max-height:280px;overflow-y:auto;display:none;min-width:230px}
-#dropdown div{padding:7px 14px;cursor:pointer;font-size:13px}
+#dropdown{position:fixed;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.08);border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.22);z-index:70;max-height:320px;overflow-y:auto;display:none;min-width:260px;padding:6px}
+#dropdown div{padding:9px 13px;cursor:pointer;font-size:13px;border-radius:9px;display:flex;align-items:center;gap:4px}
 #dropdown div:hover{background:var(--sel)}
+#dropdown .dd-sep{height:1px;padding:0;margin:5px 8px;background:var(--border);border-radius:0;cursor:default}
+#dropdown .dd-sep:hover{background:var(--border)}
+#dropdown .dd-note{font-size:11px;color:var(--muted);cursor:default;padding:4px 13px 6px}
+#dropdown .dd-note:hover{background:transparent}
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:14px}
 .spinner{width:36px;height:36px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -213,13 +230,17 @@ mark{padding:0 1px;border-radius:3px}
 
 <header>
   <h1><svg width="26" height="26" viewBox="0 0 64 64" style="vertical-align:-6px;margin-right:4px"><rect width="64" height="64" rx="14" fill="#4c4c52"/><path d="M32 16c-4.5-2.8-11-4.2-17-4.2v32c6 0 12.5 1.4 17 4.2 4.5-2.8 11-4.2 17-4.2v-32c-6 0-12.5 1.4-17 4.2z" fill="#f5f2ec"/><path d="M32 16v32" stroke="#4c4c52" stroke-width="2.5"/><path d="M20 23c3.5 0 6.5.6 9 1.8M20 30c3.5 0 6.5.6 9 1.8M20 37c3.5 0 6.5.6 9 1.8M44 23c-3.5 0-6.5.6-9 1.8M44 30c-3.5 0-6.5.6-9 1.8M44 37c-3.5 0-6.5.6-9 1.8" stroke="#b9b9c0" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>JW Study <small id="hCount"></small></h1>
-  <input id="search" type="search" placeholder="Szukaj w notatkach…">
+  <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
     <option value="old">Najstarsze</option>
     <option value="bible">Kolejność biblijna</option>
     <option value="alpha">Alfabetycznie</option>
   </select>
+  <div class="fontctl" title="Rozmiar czcionki notatek">
+    <button id="fMinus">A−</button>
+    <button id="fPlus" style="font-size:15px">A+</button>
+  </div>
   <button class="btn primary" id="btnNew">✚ Nowa notatka</button>
   <button class="btn" id="btnMenu">⚙️ Plik ▾</button>
   <input type="file" id="fileImport" accept=".jwlibrary" hidden>
@@ -249,9 +270,15 @@ mark{padding:0 1px;border-radius:3px}
 </main>
 
 <div id="hlBar"></div>
-<input type="color" id="hlColor" value="#9fe3d5" style="position:fixed;left:-100px;top:-100px;width:1px;height:1px;opacity:0">
 <div id="toast"></div>
 <div id="dropdown"></div>
+
+<div class="overlay" id="modalFs">
+  <div class="fsmodal">
+    <button id="fsClose" title="Zamknij">✕</button>
+    <div id="fsWrap"></div>
+  </div>
+</div>
 
 <div class="overlay" id="modalNew">
   <div class="modal">
@@ -292,7 +319,7 @@ mark{padding:0 1px;border-radius:3px}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAMDoUWoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIACv9UWoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -331,7 +358,7 @@ async function idbBulkChunked(store,items){
 }
 function idbCount(store){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).count();t.onsuccess=()=>res(t.result);t.onerror=rej;});}
 function saveNote(n){ if(idb) idbPut("notes", n).catch(()=>{}); }
-function saveTags(){ if(idb) idbBulk("tags", tags).catch(()=>{}); }
+function saveTags(){ if(idb) idbBulk("tags", tags).catch(()=>{}); if(typeof bumpDirty==="function") bumpDirty(); }
 
 /* ================= START ================= */
 async function decodeEmbedded(){
@@ -405,7 +432,45 @@ function noteMatchesTag(n,t){ if(t==="all")return true; if(t==="none")return n.t
 function noteMatchesBook(n,b){ if(b==="all")return true; if(b===0)return !n.b; return n.b===b; }
 function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
 function plainOf(n){ return (n.t?n.t+" ":"") + (n.c||""); }
-function noteMatchesQuery(n){ return !query || plainOf(n).toLowerCase().includes(query); }
+/* Wyszukiwanie rozszerzone:
+   słowo1 słowo2   → oba muszą wystąpić
+   miłos*          → gwiazdka = dowolna końcówka/odmiana
+   "cała fraza"    → dokładna fraza
+   (kot|pies)      → jedno z kilku słów; działa też: kot|pies i OR   */
+let qComp=null, qHl=null;
+function parseQuery(q){
+  query = q.trim();
+  qComp = null; qHl = null;
+  if(!query) return;
+  try{
+    const groups=[]; let orFlag=false;
+    const re=/"([^"]+)"|\(([^)]+)\)|(\S+)/g; let m;
+    while((m=re.exec(query))){
+      let alts=null;
+      if(m[1]!==undefined) alts=[m[1]];
+      else if(m[2]!==undefined) alts=m[2].split("|").map(s=>s.trim()).filter(Boolean);
+      else{
+        const w=m[3];
+        if(w==="|" || /^or$/i.test(w)){ orFlag=true; continue; }
+        if(w.includes("|")) alts=w.split("|").map(s=>s.trim()).filter(Boolean);
+        else alts=[w];
+      }
+      if(!alts || !alts.length) continue;
+      if(orFlag && groups.length){ groups[groups.length-1].push(...alts); orFlag=false; }
+      else groups.push(alts);
+    }
+    if(!groups.length) return;
+    const mk = s => s.replace(/[.+?^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\p{L}\\p{N}]*");
+    qComp = groups.map(g=>new RegExp(g.map(mk).join("|"),"iu"));
+    qHl = new RegExp("("+groups.flat().map(mk).join("|")+")","giu");
+  }catch(e){ qComp=null; qHl=null; }
+}
+function noteMatchesQuery(n){
+  if(!query) return true;
+  const txt = plainOf(n);
+  if(qComp) return qComp.every(rx=>rx.test(txt));
+  return txt.toLowerCase().includes(query.toLowerCase());
+}
 function filteredNotes(){
   return notes.filter(n=>!n.del && noteMatchesTag(n,filt.tag) && noteMatchesBook(n,filt.book) && noteMatchesCh(n) && noteMatchesQuery(n));
 }
@@ -627,7 +692,7 @@ function openInJWL(n){
 function hilite(html){
   if(!query) return html;
   const tmp = document.createElement("div"); tmp.innerHTML = html;
-  const rx = new RegExp("("+query.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  const rx = qHl || new RegExp("("+query.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
   (function walk(node){
     [...node.childNodes].forEach(ch=>{
       if(ch.nodeType===3 && rx.test(ch.textContent)){
@@ -691,6 +756,7 @@ function noteCard(n){
      <div class="ntools">
        <div class="btnrow">
          ${openA}
+         <button class="sbtn ico" data-act="fs" title="Otwórz na pełnym ekranie">⛶</button>
          <button class="sbtn ico" data-act="copy" title="Kopiuj treść">⧉</button>
          ${link?`<button class="sbtn ico" data-act="link" title="Kopiuj odnośnik">🔗</button>`:""}
          <button class="sbtn ico" data-act="mic" title="Dyktuj (mowa → tekst)">🎤</button>
@@ -710,11 +776,15 @@ function noteCard(n){
     const act = e.target.dataset.act;
     if(!act) return;
     if(act==="iosfb"){
-      // link jwlibrary:// otwiera się natywnie; jeśli po 1,6 s nadal tu jesteśmy — otwórz stronę jw.org
-      const u = e.target.dataset.url;
-      setTimeout(()=>{ if(!document.hidden) window.open(u, "_blank"); }, 1600);
-      return; // nie blokuj domyślnego działania linku
+      // iPad/iPhone: spróbuj otworzyć JW Library przez schemat; awaryjnie strona jw.org
+      e.preventDefault();
+      const a = e.target.closest("a");
+      const u = a.dataset.url;
+      try{ location.href = a.getAttribute("href"); }catch(err){}
+      setTimeout(()=>{ if(!document.hidden) window.open(u, "_blank"); }, 1400);
+      return;
     }
+    if(act==="fs"){ openFs(n); return; }
     if(act==="copy") copyNote(n);
     else if(act==="link"){ navigator.clipboard.writeText(finderUrl(n)).then(()=>toast("Skopiowano odnośnik")); }
     else if(act==="md") downloadMd(n);
@@ -754,11 +824,44 @@ function noteCard(n){
   });
   return d;
 }
-function renderAll(){ visibleCount=60; renderTags(); renderBooks(); renderNotes(); }
+function renderAll(){ visibleCount=60; renderTags(); renderBooks(); renderNotes(); if(fsGuid) renderFs(); }
+
+/* ================= NOTATKA NA PEŁNYM EKRANIE ================= */
+let fsGuid = null;
+function openFs(n){ fsGuid = n.g; renderFs(); openModal("modalFs"); }
+function renderFs(){
+  const n = notes.find(x=>x.g===fsGuid);
+  if(!n || n.del){ closeFs(); return; }
+  const w = $("fsWrap");
+  w.innerHTML = "";
+  const card = noteCard(n);
+  card.querySelector('[data-act="fs"]')?.remove(); // bez przycisku pełnego ekranu w pełnym ekranie
+  w.appendChild(card);
+}
+function closeFs(){ fsGuid = null; closeModal("modalFs"); }
+$("fsClose").onclick = closeFs;
+$("modalFs").addEventListener("click", e=>{ if(e.target.id==="modalFs") closeFs(); });
+
+/* ================= ROZMIAR CZCIONKI ================= */
+let noteFs = 14;
+function applyFs(){ document.documentElement.style.setProperty("--noteFs", noteFs+"px"); }
+try{ noteFs = Math.min(24, Math.max(11, +(localStorage.getItem(KP+"Font")||14) )); }catch(e){}
+applyFs();
+$("fMinus").onclick = ()=>{ noteFs = Math.max(11, noteFs-1); localStorage.setItem(KP+"Font", noteFs); applyFs(); toast("Czcionka: "+noteFs+" px"); };
+$("fPlus").onclick = ()=>{ noteFs = Math.min(24, noteFs+1); localStorage.setItem(KP+"Font", noteFs); applyFs(); toast("Czcionka: "+noteFs+" px"); };
 function persistFilt(){ localStorage.setItem(KP+"Filt", JSON.stringify(filt)); }
 
 /* ================= AKCJE ================= */
-function markDirty(n){ n.ed=true; n.mo=new Date().toISOString(); saveNote(n); }
+function bumpDirty(){ try{ localStorage.setItem(KP+"Dirty", String((+(localStorage.getItem(KP+"Dirty")||0))+1)); }catch(e){} }
+function clearDirty(){ try{ localStorage.setItem(KP+"Dirty","0"); localStorage.setItem(KP+"LastBk", new Date().toISOString().substring(0,10)); }catch(e){} }
+// przypomnienie przy zamykaniu, gdy są zmiany bez kopii zapasowej (na komputerze)
+window.addEventListener("beforeunload", e=>{
+  if(+(localStorage.getItem(KP+"Dirty")||0) > 0){
+    e.preventDefault();
+    e.returnValue = "Masz zmiany niezapisane w kopii JSON — dane w aplikacji są bezpieczne, ale warto zrobić kopię.";
+  }
+});
+function markDirty(n){ n.ed=true; n.mo=new Date().toISOString(); saveNote(n); bumpDirty(); }
 function copyNote(n){
   const txt = (n.t?n.t+"\n\n":"") + (n.c||"") + (refLabel(n)?"\n— "+refLabel(n):"");
   navigator.clipboard.writeText(txt).then(()=>toast("Skopiowano do schowka"))
@@ -863,8 +966,7 @@ function htmlToPlain(html){
 /* ================= KOLOROWANIE ZAZNACZEŃ ================= */
 const hlBar = $("hlBar");
 hlBar.innerHTML = [1,2,3,4,5,6,7].map(i=>`<div class="sw" style="background:var(--hl${i})" data-hl="${i}" title="Podświetl"></div>`).join("") +
-  `<div class="sw" data-hl="pick" title="Dowolny kolor z palety" style="background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div>
-   <button class="tb" data-hl="0" title="Usuń kolor">⌫</button>
+  `<button class="tb" data-hl="0" title="Usuń kolor">⌫</button>
    <span class="sep"></span>
    <button class="tb fmt" data-fmt="b" title="Pogrubienie"><b>B</b></button>
    <button class="tb fmt" data-fmt="i" title="Kursywa"><i>I</i></button>
@@ -882,13 +984,16 @@ function showHlBar(){
   if(!cont){ hlBar.style.display="none"; return; }
   const r=range.getBoundingClientRect();
   hlBar.style.display="flex";
-  const w = hlBar.offsetWidth || 340;
-  hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-w/2,innerWidth-w-8))+"px";
-  // na iPadzie/iPhonie systemowe menu pojawia się NAD zaznaczeniem — nasz pasek idzie POD nie
+  const w = hlBar.offsetWidth || 380;
   if(touchUI()){
-    hlBar.style.top=Math.min(r.bottom+14, innerHeight-52)+"px";
+    // na iPadzie/iPhonie: pasek na dole ekranu, wyśrodkowany — systemowe menu tam nie sięga
+    hlBar.style.left=Math.max(8,(innerWidth-w)/2)+"px";
+    hlBar.style.top="auto";
+    hlBar.style.bottom="calc(20px + env(safe-area-inset-bottom, 0px))";
   } else {
-    hlBar.style.top=Math.max(8,r.top-48)+"px";
+    hlBar.style.bottom="auto";
+    hlBar.style.left=Math.max(8,Math.min(r.left+r.width/2-w/2,innerWidth-w-8))+"px";
+    hlBar.style.top=Math.max(8,r.top-56)+"px";
   }
 }
 document.addEventListener("mouseup", e=>{
@@ -908,7 +1013,6 @@ function saveContentEl(contEl, n){
   n.h=clean; n.c=htmlToPlain(clean);
   markDirty(n);
 }
-let pickCtx=null; // zapamiętane zaznaczenie dla palety kolorów
 hlBar.addEventListener("pointerdown", e=>{
   e.preventDefault();
   const t = e.target.closest("[data-hl],[data-fmt]");
@@ -927,12 +1031,6 @@ hlBar.addEventListener("pointerdown", e=>{
     navigator.clipboard.writeText(sel.toString()).then(()=>toast("Skopiowano zaznaczenie"));
     sel.removeAllRanges(); hlBar.style.display="none"; return;
   }
-  if(hl==="pick"){
-    pickCtx={range:range.cloneRange(), contEl, n};
-    sel.removeAllRanges(); hlBar.style.display="none";
-    $("hlColor").click();
-    return;
-  }
   if(fmt){ wrapTag(range, fmt); }
   else if(hl==="0") unwrapMarks(range,contEl);
   else applyMark(range,+hl);
@@ -940,17 +1038,6 @@ hlBar.addEventListener("pointerdown", e=>{
   hlBar.style.display="none";
   saveContentEl(contEl, n);
 }, true);
-$("hlColor").addEventListener("change", e=>{
-  if(!pickCtx) return;
-  const mark=document.createElement("mark");
-  mark.style.background=e.target.value;
-  const r=pickCtx.range;
-  try{ r.surroundContents(mark); }
-  catch(err){ const f=r.extractContents(); mark.appendChild(f); r.insertNode(mark); }
-  saveContentEl(pickCtx.contEl, pickCtx.n);
-  pickCtx=null;
-  toast("Zastosowano wybrany kolor");
-});
 function applyMark(range,color){
   const mark=document.createElement("mark");
   mark.className="hl"+color;
@@ -1034,12 +1121,17 @@ $("nnSave").onclick = ()=>{
 /* ================= MENU PLIK ================= */
 $("btnMenu").onclick = e=>{
   const dd=$("dropdown");
+  const lastBk = localStorage.getItem(KP+"LastBk");
+  const dirty = +(localStorage.getItem(KP+"Dirty")||0);
   dd.innerHTML = `
     <div data-m="import">📥 Importuj backup .jwlibrary…</div>
     <div data-m="export">📤 Eksportuj do JW Library (.jwlibrary)</div>
-    <div data-m="json">💾 Zapisz kopię danych aplikacji (JSON)</div>
+    <div class="dd-sep"></div>
+    <div data-m="json">💾 Zapisz kopię danych (JSON)</div>
     <div data-m="cloud">☁️ Zapisz kopię w chmurze (OneDrive, iCloud…)</div>
     <div data-m="loadjson">📂 Wczytaj kopię danych (JSON)…</div>
+    <div class="dd-note">${lastBk ? "Ostatnia kopia: "+lastBk : "Nie zrobiono jeszcze kopii"}${dirty>0 ? " · zmian od kopii: "+dirty : ""}</div>
+    <div class="dd-sep"></div>
     <div data-m="info">ℹ️ Gdzie zapisują się moje dane?</div>`;
   dd.style.display="block";
   const r=e.target.getBoundingClientRect();
@@ -1249,6 +1341,7 @@ async function shareBackup(){
     const file = new File([blob], name, {type:"application/json"});
     if(navigator.canShare && navigator.canShare({files:[file]})){
       await navigator.share({files:[file], title:"Kopia notatek JW Study"});
+      clearDirty();
       toast("Kopia przekazana do wybranej aplikacji");
       return;
     }
@@ -1258,6 +1351,7 @@ async function shareBackup(){
     try{
       const h = await showSaveFilePicker({suggestedName:name, types:[{description:"Kopia JSON", accept:{"application/json":[".json"]}}]});
       const w = await h.createWritable(); await w.write(blob); await w.close();
+      clearDirty();
       toast("Zapisano — jeśli wybrałeś folder OneDrive/iCloud, kopia trafi do chmury automatycznie");
       return;
     }catch(e){ if(e && e.name==="AbortError") return; }
@@ -1271,6 +1365,7 @@ async function shareBackup(){
 function exportJson(){
   download(new Blob([JSON.stringify({tags,notes})],{type:"application/json"}),
     "moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json");
+  clearDirty();
   toast("Zapisano kopię danych");
 }
 $("fileJson").onchange = async e=>{
@@ -1333,7 +1428,7 @@ try{
   if(cs.t) $("colTags").classList.add("collapsed");
   if(cs.b) $("colBooks").classList.add("collapsed");
 }catch(e){}
-$("search").addEventListener("input",e=>{query=e.target.value.trim().toLowerCase();renderAll();});
+$("search").addEventListener("input",e=>{parseQuery(e.target.value);renderAll();});
 $("sortSel").addEventListener("change",e=>{sortMode=e.target.value;renderNotes();});
 document.querySelectorAll(".overlay").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("show");}));
 

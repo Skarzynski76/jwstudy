@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="JW Study">
 <meta name="theme-color" content="#242427">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>JW Study</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%234c4c52'/%3E%3Cpath%20d='M32%2012c-4-2.5-9.5-3.6-15-3.6v28c5.5%200%2011%201.1%2015%203.6%204-2.5%209.5-3.6%2015-3.6v-28c-5.5%200-11%201.1-15%203.6z'%20fill='%23f5f2ec'/%3E%3Cpath%20d='M32%2012v28'%20stroke='%234c4c52'%20stroke-width='2.5'/%3E%3Cpath%20d='M20%2018c3.5%200%206.5.6%209%201.8M20%2024c3.5%200%206.5.6%209%201.8M44%2018c-3.5%200-6.5.6-9%201.8M44%2024c-3.5%200-6.5.6-9%201.8'%20stroke='%23b9b9c0'%20stroke-width='1.6'%20fill='none'%20stroke-linecap='round'/%3E%3Ctext%20x='32'%20y='57'%20font-family='Arial,sans-serif'%20font-size='12'%20font-weight='bold'%20fill='%23f5f2ec'%20text-anchor='middle'%3EJW%20Study%3C/text%3E%3C/svg%3E">
 <style>
@@ -246,8 +248,6 @@ mark{padding:0 1px;border-radius:3px}
   </div>
   <button class="btn primary" id="btnNew">✚ Nowa notatka</button>
   <button class="btn" id="btnMenu">⚙️ Plik ▾</button>
-  <input type="file" id="fileImport" accept=".jwlibrary" hidden>
-  <input type="file" id="fileJson" accept=".json" hidden>
 </header>
 
 <div id="mobileTabs">
@@ -280,6 +280,20 @@ mark{padding:0 1px;border-radius:3px}
   <div class="fsmodal">
     <button id="fsClose" title="Zamknij">✕</button>
     <div id="fsWrap"></div>
+  </div>
+</div>
+
+<div class="overlay" id="modalFile">
+  <div class="modal">
+    <h3 id="mfTitle"></h3>
+    <p id="mfDesc" style="font-size:13.5px;line-height:1.5"></p>
+    <div class="actions" style="justify-content:center">
+      <label class="btn primary" style="cursor:pointer">
+        📂 Wybierz plik…
+        <input type="file" id="mfInput" style="display:none">
+      </label>
+      <button class="btn" onclick="closeModal('modalFile')">Anuluj</button>
+    </div>
   </div>
 </div>
 
@@ -322,7 +336,7 @@ mark{padding:0 1px;border-radius:3px}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAEBkUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAHR9UmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -1139,11 +1153,11 @@ $("btnMenu").onclick = e=>{
   dd.onclick=ev=>{
     const m=ev.target.dataset.m;
     dd.style.display="none";
-    if(m==="import")$("fileImport").click();
+    if(m==="import")openFilePicker("jwl");
     else if(m==="export")startExport();
     else if(m==="json")exportJson();
     else if(m==="cloud")shareBackup();
-    else if(m==="loadjson")$("fileJson").click();
+    else if(m==="loadjson")openFilePicker("json");
     else if(m==="info")openModal("modalInfo");
   };
 };
@@ -1165,8 +1179,27 @@ async function getLibs(){
   if(!SQL) SQL=await initSqlJs({locateFile:f=>"https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/"+f});
 }
 
+/* ================= WYBÓR PLIKU (import / kopia JSON) ================= */
+function openFilePicker(mode){
+  $("mfTitle").textContent = mode==="jwl" ? "📥 Import backupu JW Library" : "📂 Wczytanie kopii danych";
+  $("mfDesc").textContent = mode==="jwl"
+    ? "Wybierz plik .jwlibrary (kopię zapasową z aplikacji JW Library). Aplikacja doda tylko nowe notatki — Twoje zmiany zostaną."
+    : "Wybierz zapisany wcześniej plik kopii (.json). Uwaga: wczytanie ZASTĄPI wszystkie obecne dane w aplikacji.";
+  const inp = $("mfInput");
+  inp.value = "";
+  inp.accept = mode==="jwl" ? ".jwlibrary" : ".json,application/json";
+  inp.dataset.mode = mode;
+  openModal("modalFile");
+}
+$("mfInput").addEventListener("change", e=>{
+  closeModal("modalFile");
+  if(!e.target.files.length) return;
+  if(e.target.dataset.mode==="jwl") handleImportFile(e);
+  else handleJsonFile(e);
+});
+
 /* ================= IMPORT BACKUPU ================= */
-$("fileImport").onchange = async e=>{
+async function handleImportFile(e){
   const file=e.target.files[0]; e.target.value="";
   if(!file) return;
   toast("Wczytywanie backupu…");
@@ -1184,7 +1217,7 @@ $("fileImport").onchange = async e=>{
     renderAll();
     toast(`Import: ${res.added} nowych, ${res.updated} zaktualizowanych, ${res.skipped} bez zmian`);
   }catch(err){ console.error(err); alert("Błąd importu: "+err.message); }
-};
+}
 function importFromDb(db){
   const tagRows=db.exec("SELECT TagId, Name FROM Tag WHERE Type=1");
   const tagIdMap={};
@@ -1367,7 +1400,7 @@ function exportJson(){
   clearDirty();
   toast("Zapisano kopię danych");
 }
-$("fileJson").onchange = async e=>{
+async function handleJsonFile(e){
   const f=e.target.files[0]; e.target.value="";
   if(!f) return;
   if(!confirm("Wczytanie kopii ZASTĄPI wszystkie obecne dane w aplikacji. Kontynuować?")) return;
@@ -1381,7 +1414,7 @@ $("fileJson").onchange = async e=>{
     }
     renderAll(); toast("Wczytano kopię danych");
   }catch(err){ alert("Błąd: "+err.message); }
-};
+}
 
 /* ================= POMOCNICZE ================= */
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}

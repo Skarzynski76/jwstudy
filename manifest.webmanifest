@@ -1,0 +1,22 @@
+{
+  "name": "JW Study",
+  "short_name": "JW Study",
+  "description": "Osobisty zbiór notatek z JW Library",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#232328",
+  "theme_color": "#242427",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

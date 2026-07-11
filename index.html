@@ -40,34 +40,36 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .col .list{overflow-y:auto;flex:1;padding:0 8px 20px}
 
 /* Kolumna 1 — ciemny grafit */
-#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,#303035 0%,#242428 45%,#1c1c1f 100%);border:1px solid #121214;border-top-color:#4a4a52;box-shadow:0 3px 10px rgba(30,25,15,.45),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.4)}
-#colBooks h2{color:#9a9aa0}
-#colBooks .item{color:var(--c1item);background:linear-gradient(180deg,#46464e 0%,#36363c 48%,#2c2c31 100%);border:1px solid #1d1d21;border-top-color:#5c5c64;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks .item:hover{background:linear-gradient(180deg,#54545c 0%,#424249 48%,#36363c 100%);border-top-color:#6e6e77;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colBooks .item.active .cnt{color:#f0e2b8}
-#colBooks .cnt{color:#9a9aa0}
-#colBooks .divider{color:#77777e;border-top:1px solid #3a3a40}
+#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,#393447 0%,#2e2a3a 45%,#252130 100%);border:1px solid #181521;border-top-color:#575070;box-shadow:0 3px 10px rgba(25,20,40,.5),inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.4)}
+#colBooks h2{color:#b7b0cc}
+#colBooks .item{color:#edeaf4;background:linear-gradient(180deg,#615a7a 0%,#4d4763 48%,#3e3950 100%);border:1px solid #262133;border-top-color:#847da0;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colBooks .item:hover{background:linear-gradient(180deg,#6f6889 0%,#595270 48%,#48425c 100%);border-top-color:#968fb2;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colBooks .item.active{background:linear-gradient(180deg,#6b9469 0%,#527a55 48%,#3f6144 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#2a4530;border-top-color:#93bd8f;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colBooks .item.active .cnt{color:#d9ead6}
+#colBooks .cnt{color:#b7b0cc}
+#colBooks .divider{color:#9a92b5;border-top:1px solid #443e58}
 #colBooks .list::-webkit-scrollbar{width:8px}
-#colBooks .list::-webkit-scrollbar-thumb{background:#4a4a50;border-radius:4px}
+#colBooks .list::-webkit-scrollbar-thumb{background:#57506e;border-radius:4px}
 #btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed #9a9aa2;color:#f0f0f2;border-radius:8px;cursor:pointer;font-size:12.5px}
 #btnNewTag:hover{background:#6e6e76;color:#fff}
 
 /* Kolumna 2 — szary */
-#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,#5b5b63 0%,#4a4a51 45%,#3e3e45 100%);border:1px solid #2c2c31;border-top-color:#7a7a83;box-shadow:0 3px 10px rgba(30,25,15,.4),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colTags h2{color:#d4d4da}
-#colTags .item{color:var(--c2item);background:linear-gradient(180deg,#71717a 0%,#5c5c64 48%,#4d4d55 100%);border:1px solid #3b3b41;border-top-color:#8b8b94;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item:hover{background:linear-gradient(180deg,#7f7f88 0%,#68686f 48%,#585860 100%);border-top-color:#9d9da6;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active{background:linear-gradient(180deg,#b28f2e 0%,#93711f 48%,#755815 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.4);border-color:#4a370c;border-top-color:#d3b158;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active .cnt{color:#f0e2b8}
-#colTags .cnt{color:#c4c4cc}
-#colTags .divider{color:#c0c0c8;border-top:1px solid #5f5f66}
+#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,#45454c 0%,#38383e 45%,#2d2d33 100%);border:1px solid #1e1e22;border-top-color:#61616b;box-shadow:0 3px 10px rgba(30,25,15,.4),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.35)}
+#colTags h2{color:#b8b8c0}
+#colTags .item{color:var(--c2item);background:linear-gradient(180deg,#5a5a63 0%,#48484f 48%,#3b3b42 100%);border:1px solid #26262b;border-top-color:#75757f;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item:hover{background:linear-gradient(180deg,#686871 0%,#54545c 48%,#46464d 100%);border-top-color:#8a8a95;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item.active{background:linear-gradient(180deg,#6b9469 0%,#527a55 48%,#3f6144 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#2a4530;border-top-color:#93bd8f;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item.active .cnt{color:#d9ead6}
+#colTags .cnt{color:#aeaeb8}
+#colTags .divider{color:#9d9da6;border-top:1px solid #4a4a52}
 #colTags .list::-webkit-scrollbar{width:8px}
-#colTags .list::-webkit-scrollbar-thumb{background:#6a6a72;border-radius:4px}
+#colTags .list::-webkit-scrollbar-thumb{background:#565660;border-radius:4px}
 .chwrap{display:flex;flex-wrap:wrap;gap:4px;padding:4px 10px 8px 22px}
-.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#4a4a52,#3a3a40);color:#fff;font-size:12px;cursor:pointer;border:1px solid #26262b;border-top-color:#5e5e66;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12)}
-.chip-ch:hover{background:linear-gradient(180deg,#5a5a62,#48484f)}
-.chip-ch.active{background:linear-gradient(180deg,#b28f2e,#93711f 48%,#755815);color:#fff;font-weight:700;border-color:#d3b158;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#5a5374,#463f5c);color:#fff;font-size:12px;cursor:pointer;border:1px solid #29233a;border-top-color:#746c92;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.14)}
+.chip-ch:hover{background:linear-gradient(180deg,#6a638a,#544c6e)}
+.chip-ch{position:relative;overflow:hidden}
+.chip-ch.active{font-weight:700;border-top-color:#8d85ab}
+.chip-ch.active::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:46%;height:3.5px;border-radius:0 0 4px 4px;background:linear-gradient(180deg,#c8ffab,#6ef23f);box-shadow:0 0 7px 1.5px rgba(110,242,63,.85),0 1px 2px rgba(0,0,0,.3)}
 .item .arr{width:14px;text-align:center;color:inherit;opacity:.6;font-size:10px}
 
 #colNotes{flex:1;background:linear-gradient(180deg,#faf8f3 0%,#f2efe8 55%,#eae6dc 100%);border:1px solid #cfc8b8;border-top-color:#ffffff;box-shadow:0 3px 10px rgba(30,25,15,.3),inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(0,0,0,.06)}
@@ -177,12 +179,12 @@ mark{padding:0 1px;border-radius:3px}
 .tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px}
 .tagpick label{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:13px;color:var(--text);cursor:pointer}
 #dropdown{position:fixed;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.08);border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.22);z-index:70;max-height:320px;overflow-y:auto;display:none;min-width:260px;padding:6px}
-#dropdown div{padding:9px 13px;cursor:pointer;font-size:13px;border-radius:9px;display:flex;align-items:center;gap:4px}
-#dropdown div:hover{background:var(--sel)}
-#dropdown .dd-sep{height:1px;padding:0;margin:5px 8px;background:var(--border);border-radius:0;cursor:default}
-#dropdown .dd-sep:hover{background:var(--border)}
-#dropdown .dd-note{font-size:11px;color:var(--muted);cursor:default;padding:4px 13px 6px}
-#dropdown .dd-note:hover{background:transparent}
+#dropdown div{padding:10px 13px;cursor:pointer;font-size:13px;border-radius:10px;display:flex;align-items:center;gap:5px;margin:4px 2px;background:linear-gradient(180deg,#ffffff,#f5f1e9);border:1px solid #e5dfd1;box-shadow:0 1px 2px rgba(60,50,30,.09),inset 0 1px 0 #fff}
+#dropdown div:hover{background:var(--sel);border-color:#cfc5ae;transform:translateY(-1px);box-shadow:0 3px 6px rgba(60,50,30,.14),inset 0 1px 0 #fff}
+#dropdown .dd-sep{height:1px;padding:0;margin:7px 10px;background:var(--border);border:none;border-radius:0;cursor:default;box-shadow:none}
+#dropdown .dd-sep:hover{background:var(--border);transform:none;box-shadow:none}
+#dropdown .dd-note{font-size:11px;color:var(--muted);cursor:default;padding:2px 13px 4px;background:none;border:none;box-shadow:none;margin:0 2px}
+#dropdown .dd-note:hover{background:none;transform:none;box-shadow:none}
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:14px}
 .spinner{width:36px;height:36px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -236,6 +238,7 @@ mark{padding:0 1px;border-radius:3px}
     <option value="old">Najstarsze</option>
     <option value="bible">Kolejność biblijna</option>
     <option value="alpha">Alfabetycznie</option>
+    <option value="recent">Ostatnio otwierane</option>
   </select>
   <div class="fontctl" title="Rozmiar czcionki notatek">
     <button id="fMinus">A−</button>
@@ -319,7 +322,7 @@ mark{padding:0 1px;border-radius:3px}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIACv9UWoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAEBkUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -424,6 +427,11 @@ async function boot(){
   if(typeof filt.book==="number" && filt.book>0) expandedBook = filt.book;
   buildStatic();
   renderAll();
+  // iPad/iPhone uruchomione z ikony ekranu początkowego: na iPadzie env(safe-area-inset-top)
+  // bywa równe 0 mimo paska stanu — wymuś minimalny margines
+  if(isIOS() && navigator.standalone){
+    document.querySelector("header").style.paddingTop = "max(calc(10px + env(safe-area-inset-top, 0px)), 40px)";
+  }
   $("loading").style.display = "none";
 }
 
@@ -652,7 +660,8 @@ function sortNotes(arr){
     new:(a,b)=>(b.mo||"").localeCompare(a.mo||""),
     old:(a,b)=>(a.mo||"").localeCompare(b.mo||""),
     bible:(a,b)=>(a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0)||(a.mo||"").localeCompare(b.mo||""),
-    alpha:(a,b)=>(a.t||a.c||"").localeCompare(b.t||b.c||"","pl")
+    alpha:(a,b)=>(a.t||a.c||"").localeCompare(b.t||b.c||"","pl"),
+    recent:(a,b)=>(b.la||"").localeCompare(a.la||"") || (b.mo||"").localeCompare(a.mo||"")
   }[sortMode];
   return arr.sort(by);
 }
@@ -735,11 +744,8 @@ function noteCard(n){
   const ref = refLabel(n);
   const date = (n.mo||"").substring(0,10);
   const link = finderUrl(n);
-  const iosHref = link ? link.replace("https://www.jw.org/finder","jwlibrary://finder") : null;
   const openA = link
-    ? (isIOS()
-        ? `<a class="sbtn ico" href="${iosHref}" data-act="iosfb" data-url="${link}" title="Otwórz w JW Library">↗</a>`
-        : `<a class="sbtn ico" href="${link}" target="_blank" rel="noopener" title="Otwórz w JW Library">↗</a>`)
+    ? `<a class="sbtn ico" href="${link}" target="_blank" rel="noopener" title="Otwórz w JW Library">↗</a>`
     : "";
   d.innerHTML =
     `<div class="nhead">
@@ -774,16 +780,8 @@ function noteCard(n){
   d.addEventListener("click", e=>{
     if(e.target.dataset.untag){ untag(n, +e.target.dataset.untag); return; }
     const act = e.target.dataset.act;
+    if(["fs","edit","copy","link"].includes(act) || e.target.closest("a.sbtn")) touchAccess(n);
     if(!act) return;
-    if(act==="iosfb"){
-      // iPad/iPhone: spróbuj otworzyć JW Library przez schemat; awaryjnie strona jw.org
-      e.preventDefault();
-      const a = e.target.closest("a");
-      const u = a.dataset.url;
-      try{ location.href = a.getAttribute("href"); }catch(err){}
-      setTimeout(()=>{ if(!document.hidden) window.open(u, "_blank"); }, 1400);
-      return;
-    }
     if(act==="fs"){ openFs(n); return; }
     if(act==="copy") copyNote(n);
     else if(act==="link"){ navigator.clipboard.writeText(finderUrl(n)).then(()=>toast("Skopiowano odnośnik")); }
@@ -861,6 +859,7 @@ window.addEventListener("beforeunload", e=>{
     e.returnValue = "Masz zmiany niezapisane w kopii JSON — dane w aplikacji są bezpieczne, ale warto zrobić kopię.";
   }
 });
+function touchAccess(n){ n.la = new Date().toISOString(); saveNote(n); }
 function markDirty(n){ n.ed=true; n.mo=new Date().toISOString(); saveNote(n); bumpDirty(); }
 function copyNote(n){
   const txt = (n.t?n.t+"\n\n":"") + (n.c||"") + (refLabel(n)?"\n— "+refLabel(n):"");

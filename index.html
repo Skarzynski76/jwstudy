@@ -150,16 +150,20 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7}
 #fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
 .ncontent:empty{display:none}
-.ncontent[contenteditable="true"]{outline:none;border:1.5px solid var(--accent2);border-radius:12px;padding:12px 14px;background:#fffdf7;min-height:70px;box-shadow:inset 0 2px 6px rgba(60,50,30,.08),0 0 0 4px rgba(140,111,82,.13)}
+.ncontent[contenteditable="true"]{outline:none;border:1.5px solid var(--accent2);border-radius:12px;padding:12px 14px;background:#fffdf7;min-height:70px;box-shadow:inset 0 2px 6px rgba(60,50,30,.08),0 0 0 4px rgba(140,111,82,.13);touch-action:auto;-webkit-user-select:text;user-select:text;caret-color:var(--accent2)}
 .ntitle[contenteditable="true"]{outline:none;border:1.5px solid rgba(255,255,255,.75);border-radius:10px;padding:8px 10px;background:rgba(255,255,255,.16);color:#fff;text-shadow:none;box-shadow:inset 0 1px 4px rgba(0,0,0,.28)}
 .ncontent ul,.ncontent ol{margin:4px 0 4px 24px;padding:0;white-space:normal}
 .ncontent li{margin:3px 0;white-space:pre-wrap}
-.editbar{display:flex;gap:5px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,#fbf8f2,#efeadd);border:1px solid #ddd5c3;border-radius:12px;padding:6px 9px;margin:10px 0 8px;box-shadow:0 2px 6px rgba(60,50,30,.13),inset 0 1px 0 #fff}
-.editbar button{border:1px solid #d6cdb8;background:linear-gradient(180deg,#ffffff,#f3eee2);border-radius:8px;min-width:33px;height:30px;cursor:pointer;font-size:13.5px;color:#4a3d2c;padding:0 8px}
+.editbar{display:flex;gap:5px;align-items:center;flex-wrap:nowrap;overflow-x:auto;background:linear-gradient(180deg,#fbf8f2,#efeadd);border:1px solid #ddd5c3;border-radius:12px;padding:6px 9px;margin:10px 0 8px;box-shadow:0 2px 6px rgba(60,50,30,.13),inset 0 1px 0 #fff;scrollbar-width:thin}
+.editbar button{border:1px solid #d6cdb8;background:linear-gradient(180deg,#ffffff,#f3eee2);border-radius:8px;min-width:34px;height:32px;cursor:pointer;font-size:13.5px;color:#4a3d2c;padding:0 8px;flex-shrink:0;touch-action:manipulation}
 .editbar button:hover{background:#efe6d2;border-color:#c2b48e}
 .editbar button:active{transform:translateY(1px)}
-.editbar .eb-sep{width:1px;height:20px;background:#dcd3bf}
-.editbar .eb-hint{margin-left:auto;font-size:10.5px;color:var(--muted)}
+.editbar .eb-sep{width:1px;height:20px;background:#dcd3bf;flex-shrink:0}
+.editbar .eb-block{border:1px solid #d6cdb8;background:linear-gradient(180deg,#ffffff,#f3eee2);border-radius:8px;height:32px;font-size:12.5px;color:#4a3d2c;padding:0 6px;flex-shrink:0;cursor:pointer;font-weight:600}
+.ncontent h2{font-size:calc(var(--noteFs,14px) + 6px);font-weight:700;margin:10px 0 4px;color:var(--accent)}
+.ncontent h3{font-size:calc(var(--noteFs,14px) + 3px);font-weight:700;margin:8px 0 3px}
+.ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
+.ncontent s{opacity:.75}
 mark.hl1{background:var(--hl1)}mark.hl2{background:var(--hl2)}mark.hl3{background:var(--hl3)}
 mark.hl4{background:var(--hl4)}mark.hl5{background:var(--hl5)}mark.hl6{background:var(--hl6)}
 mark.hl7{background:var(--hl7)}
@@ -265,6 +269,8 @@ html[data-theme="dark"] .editbar{background:linear-gradient(180deg,#2e2e36,#2626
 html[data-theme="dark"] .editbar button{background:linear-gradient(180deg,#3a3a44,#30303a);border-color:#4a4a56;color:var(--text)}
 html[data-theme="dark"] .editbar button:hover{background:#44444f}
 html[data-theme="dark"] .editbar .eb-sep{background:#45454f}
+html[data-theme="dark"] .editbar .eb-block{background:linear-gradient(180deg,#3a3a44,#30303a);border-color:#4a4a56;color:var(--text)}
+html[data-theme="dark"] .ncontent h2{color:var(--accent2)}
 html[data-theme="dark"] .fsmodal{background:var(--bg)}
 @media (hover:none){
   .item .more{opacity:.7}
@@ -381,7 +387,7 @@ html[data-theme="dark"] .fsmodal{background:var(--bg)}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAF2BUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAIKLUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -983,21 +989,33 @@ function buildEditbar(){
   const bar = document.createElement("div");
   bar.className = "editbar";
   bar.innerHTML = `
+    <select class="eb-block" title="Styl akapitu">
+      <option value="DIV">Treść</option>
+      <option value="H2">Tytuł</option>
+      <option value="H3">Nagłówek</option>
+    </select>
+    <span class="eb-sep"></span>
     <button data-cmd="bold" title="Pogrubienie"><b>B</b></button>
     <button data-cmd="italic" title="Kursywa"><i>I</i></button>
     <button data-cmd="underline" title="Podkreślenie"><u>U</u></button>
+    <button data-cmd="strikeThrough" title="Przekreślenie"><s>S</s></button>
     <span class="eb-sep"></span>
-    <button data-cmd="insertUnorderedList" title="Lista punktowana">• —</button>
-    <button data-cmd="insertOrderedList" title="Lista numerowana">1. —</button>
+    <button data-cmd="insertUnorderedList" title="Lista punktowana">•≡</button>
+    <button data-cmd="insertOrderedList" title="Lista numerowana">1≡</button>
+    <button data-cmd="outdent" title="Zmniejsz wcięcie">◂≡</button>
+    <button data-cmd="indent" title="Zwiększ wcięcie">▸≡</button>
     <span class="eb-sep"></span>
     <button data-cmd="justifyLeft" title="Wyrównaj do lewej">⟸</button>
     <button data-cmd="justifyCenter" title="Wyśrodkuj">⟷</button>
-    <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">☰</button>
-    <span class="eb-hint">Enter = nowy akapit</span>`;
-  bar.addEventListener("mousedown", ev=>{
-    ev.preventDefault(); // nie gub zaznaczenia
+    <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">☰</button>`;
+  bar.addEventListener("pointerdown", ev=>{
+    if(ev.target.closest("select")) return;      // lista stylów musi się otworzyć normalnie
+    ev.preventDefault();                          // nie gub zaznaczenia
     const b = ev.target.closest("[data-cmd]");
     if(b) document.execCommand(b.dataset.cmd, false, null);
+  });
+  bar.querySelector(".eb-block").addEventListener("change", ev=>{
+    document.execCommand("formatBlock", false, "<"+ev.target.value.toLowerCase()+">");
   });
   return bar;
 }
@@ -1048,6 +1066,9 @@ function sanitize(html){
         else if(tag==="B"||tag==="STRONG"){ const b=document.createElement("b"); walk(node,b); dst.appendChild(b); }
         else if(tag==="I"||tag==="EM"){ const i=document.createElement("i"); walk(node,i); dst.appendChild(i); }
         else if(tag==="U"){ const u=document.createElement("u"); walk(node,u); dst.appendChild(u); }
+        else if(tag==="S"||tag==="STRIKE"||tag==="DEL"){ const s=document.createElement("s"); walk(node,s); dst.appendChild(s); }
+        else if(tag==="H2"||tag==="H3"){ const h=document.createElement(tag.toLowerCase()); walk(node,h); dst.appendChild(h); }
+        else if(tag==="BLOCKQUOTE"){ const q=document.createElement("blockquote"); walk(node,q); dst.appendChild(q); }
         else if(tag==="UL"||tag==="OL"){ const l=document.createElement(tag.toLowerCase()); walk(node,l); dst.appendChild(l); }
         else if(tag==="LI"){ const li=document.createElement("li"); walk(node,li); dst.appendChild(li); }
         else if(tag==="DIV"||tag==="P"){
@@ -1076,7 +1097,7 @@ function htmlToPlain(html){
         if(t==="LI") out+= (ch.parentElement&&ch.parentElement.tagName==="OL")
           ? ([...ch.parentElement.children].indexOf(ch)+1)+". " : "• ";
         walk(ch);
-        if(["DIV","P","LI"].includes(t) && out && !out.endsWith("\n")) out+="\n";
+        if(["DIV","P","LI","H2","H3","BLOCKQUOTE"].includes(t) && out && !out.endsWith("\n")) out+="\n";
       }
     });
   })(tmp);
@@ -1102,6 +1123,9 @@ function showHlBar(){
   const el=cac.nodeType===1?cac:cac.parentElement;
   const cont=el?el.closest(".ncard .ncontent"):null;
   if(!cont){ hlBar.style.display="none"; return; }
+  // podczas edycji (także pisania Apple Pencil) nie wyskakuj z paskiem kolorów —
+  // formatowanie jest wtedy w pasku edycji, a Scribble musi mieć spokój
+  if(cont.isContentEditable){ hlBar.style.display="none"; return; }
   const r=range.getBoundingClientRect();
   hlBar.style.display="flex";
   const w = hlBar.offsetWidth || 380;

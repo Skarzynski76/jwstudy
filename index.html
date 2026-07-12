@@ -46,7 +46,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #colBooks h2{color:#b7b0cc}
 #colBooks .item{color:#edeaf4;background:linear-gradient(180deg,#615a7a 0%,#4d4763 48%,#3e3950 100%);border:1px solid #262133;border-top-color:#847da0;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35)}
 #colBooks .item:hover{background:linear-gradient(180deg,#6f6889 0%,#595270 48%,#48425c 100%);border-top-color:#968fb2;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks .item.active{background:linear-gradient(180deg,#6b9469 0%,#527a55 48%,#3f6144 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#2a4530;border-top-color:#93bd8f;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colBooks .item.active{background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 48%,#144335 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#0c2f24;border-top-color:#55a385;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
 #colBooks .item.active .cnt{color:#d9ead6}
 #colBooks .cnt{color:#b7b0cc}
 #colBooks .divider{color:#9a92b5;border-top:1px solid #443e58}
@@ -60,7 +60,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #colTags h2{color:#b8b8c0}
 #colTags .item{color:var(--c2item);background:linear-gradient(180deg,#5a5a63 0%,#48484f 48%,#3b3b42 100%);border:1px solid #26262b;border-top-color:#75757f;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
 #colTags .item:hover{background:linear-gradient(180deg,#686871 0%,#54545c 48%,#46464d 100%);border-top-color:#8a8a95;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active{background:linear-gradient(180deg,#6b9469 0%,#527a55 48%,#3f6144 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#2a4530;border-top-color:#93bd8f;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
+#colTags .item.active{background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 48%,#144335 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#0c2f24;border-top-color:#55a385;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
 #colTags .item.active .cnt{color:#d9ead6}
 #colTags .cnt{color:#aeaeb8}
 #colTags .divider{color:#9d9da6;border-top:1px solid #4a4a52}
@@ -143,10 +143,11 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .fontctl button:hover{background:var(--sel)}
 .fontctl button+button{border-left:1px solid var(--border)}
 /* notatka na pełnym ekranie */
-#modalFs .fsmodal{background:var(--bg);border-radius:16px;width:min(1100px,96vw);max-height:94vh;overflow-y:auto;padding:16px;position:relative;box-shadow:0 12px 50px rgba(0,0,0,.4)}
-#fsClose{position:sticky;top:0;float:right;z-index:10;border:none;background:var(--accent);color:#fff;border-radius:50%;width:36px;height:36px;font-size:17px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#modalFs{padding:0}
+#modalFs .fsmodal{background:var(--bg);border-radius:0;width:100vw;height:100vh;max-height:100vh;overflow-y:auto;padding:calc(10px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));position:relative;box-shadow:none}
+#fsClose{position:sticky;top:calc(4px + env(safe-area-inset-top,0px));float:right;z-index:10;border:none;background:var(--accent);color:#fff;border-radius:50%;width:36px;height:36px;font-size:17px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 #fsClose:hover{background:var(--accent2)}
-#fsWrap .ncard{margin:6px 0 0}
+#fsWrap .ncard{margin:6px 0 0;min-height:calc(100vh - 130px)}
 #fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7}
 #fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
 .ncontent:empty{display:none}
@@ -164,6 +165,9 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ncontent h3{font-size:calc(var(--noteFs,14px) + 3px);font-weight:700;margin:8px 0 3px}
 .ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
 .ncontent s{opacity:.75}
+.ncontent img{max-width:100%;border-radius:10px;display:block;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.editbar .eb-img{display:inline-flex;align-items:center;justify-content:center;border:1px solid #d6cdb8;background:linear-gradient(180deg,#ffffff,#f3eee2);border-radius:8px;min-width:34px;height:32px;cursor:pointer;font-size:15px;flex-shrink:0}
+.editbar .eb-img:hover{background:#efe6d2}
 mark.hl1{background:var(--hl1)}mark.hl2{background:var(--hl2)}mark.hl3{background:var(--hl3)}
 mark.hl4{background:var(--hl4)}mark.hl5{background:var(--hl5)}mark.hl6{background:var(--hl6)}
 mark.hl7{background:var(--hl7)}
@@ -205,9 +209,9 @@ mark{padding:0 1px;border-radius:3px}
 .item .more{opacity:0;font-size:15px;padding:0 4px;cursor:pointer;font-weight:bold}
 .item:hover .more{opacity:.75}
 .item .more:hover{opacity:1}
-.item.tinted{color:#2b2a27!important}
-.item.tinted .cnt{color:#5a5750!important}
-.item.tinted .more{color:#2b2a27}
+.item.tinted{color:#fff!important;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+.item.tinted .cnt{color:rgba(255,255,255,.85)!important}
+.item.tinted .more{color:#fff}
 .palrow{display:flex;gap:7px;padding:9px 14px;flex-wrap:wrap}
 .pal{width:24px;height:24px;border-radius:50%;border:1px solid rgba(0,0,0,.25);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:11px}
 .pal:hover{transform:scale(1.15)}
@@ -270,8 +274,10 @@ html[data-theme="dark"] .editbar button{background:linear-gradient(180deg,#3a3a4
 html[data-theme="dark"] .editbar button:hover{background:#44444f}
 html[data-theme="dark"] .editbar .eb-sep{background:#45454f}
 html[data-theme="dark"] .editbar .eb-block{background:linear-gradient(180deg,#3a3a44,#30303a);border-color:#4a4a56;color:var(--text)}
+html[data-theme="dark"] .editbar .eb-img{background:linear-gradient(180deg,#3a3a44,#30303a);border-color:#4a4a56}
 html[data-theme="dark"] .ncontent h2{color:var(--accent2)}
 html[data-theme="dark"] .fsmodal{background:var(--bg)}
+html[data-theme="dark"] #colNotes::before{display:none}
 @media (hover:none){
   .item .more{opacity:.7}
   .chip .x{opacity:.8}
@@ -293,6 +299,7 @@ html[data-theme="dark"] .fsmodal{background:var(--bg)}
     <option value="recent">Ostatnio otwierane</option>
   </select>
   <button class="btn" id="btnTheme" title="Motyw">🖥️</button>
+  <button class="btn" id="btnUndo" title="Cofnij ostatnią zmianę">↩️</button>
   <div class="fontctl" title="Rozmiar czcionki notatek">
     <button id="fMinus">A−</button>
     <button id="fPlus" style="font-size:15px">A+</button>
@@ -387,7 +394,7 @@ html[data-theme="dark"] .fsmodal{background:var(--bg)}
   </div>
 </div>
 
-<script id="APPDATA" type="text/plain">H4sIAGOmUmoC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
+<script id="APPDATA" type="text/plain">H4sIAMivU2oC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
 const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Prawa","Jozuego","Sędziów","Rut","1 Samuela","2 Samuela","1 Królów","2 Królów","1 Kronik","2 Kronik","Ezdrasza","Nehemiasza","Estery","Hioba","Psalmy","Przysłów","Kaznodziei","Pieśń nad Pieśniami","Izajasza","Jeremiasza","Lamentacje","Ezechiela","Daniela","Ozeasza","Joela","Amosa","Abdiasza","Jonasza","Micheasza","Nahuma","Habakuka","Sofoniasza","Aggeusza","Zachariasza","Malachiasza","Mateusza","Marka","Łukasza","Jana","Dzieje Apostolskie","Rzymian","1 Koryntian","2 Koryntian","Galatów","Efezjan","Filipian","Kolosan","1 Tesaloniczan","2 Tesaloniczan","1 Tymoteusza","2 Tymoteusza","Tytusa","Filemona","Hebrajczyków","Jakuba","1 Piotra","2 Piotra","1 Jana","2 Jana","3 Jana","Judy","Objawienie"];
@@ -417,6 +424,7 @@ function idbOpen(){return new Promise((res,rej)=>{
 });}
 function idbAll(store){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).getAll();t.onsuccess=()=>res(t.result);t.onerror=rej;});}
 function idbPut(store,val,key){return new Promise((res,rej)=>{const t=idb.transaction(store,"readwrite").objectStore(store).put(val,key);t.onsuccess=()=>res();t.onerror=rej;});}
+function idbDelKey(store,key){return new Promise((res,rej)=>{const t=idb.transaction(store,"readwrite").objectStore(store).delete(key);t.onsuccess=()=>res();t.onerror=rej;});}
 function idbGet(store,key){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).get(key);t.onsuccess=()=>res(t.result);t.onerror=rej;});}
 function idbBulk(store,items){return new Promise((res,rej)=>{const tx=idb.transaction(store,"readwrite");const os=tx.objectStore(store);items.forEach(i=>os.put(i));tx.oncomplete=()=>res();tx.onerror=rej;});}
 async function idbBulkChunked(store,items){
@@ -490,6 +498,7 @@ async function boot(){
   const sf = localStorage.getItem(KP+"Filt");
   if(sf){ try{ Object.assign(filt, JSON.parse(sf)); }catch(e){} }
   if(typeof filt.book==="number" && filt.book>0) expandedBook = filt.book;
+  if(idb){ try{ deletedTagNames = (await idbGet("meta","deletedTags")) || []; }catch(e){} }
   buildStatic();
   renderAll();
   // iPad/iPhone uruchomione z ikony ekranu początkowego: na iPadzie env(safe-area-inset-top)
@@ -498,6 +507,10 @@ async function boot(){
     document.querySelector("header").style.paddingTop = "max(calc(10px + env(safe-area-inset-top, 0px)), 40px)";
   }
   $("loading").style.display = "none";
+  // tryb offline: zapamiętaj aplikację w pamięci podręcznej urządzenia
+  if(location.protocol.indexOf("http")===0 && "serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
 }
 
 /* ================= FILTRY ================= */
@@ -576,11 +589,20 @@ function renderTags(){
     }
   });
 }
-const TAGCOLORS = ["#ffe97d","#ffcf8f","#f5b0b0","#f0c4dd","#d9b8f0","#a8d5f2","#b7e4a7","#d7ccb8","#e8e8ea"];
+const TAGCOLORS = ["#b28f2e","#b0703a","#a85454","#a45f92","#7c67a8","#4f7cab","#3f7d55","#6e8577","#7a7a88"];
+function shade(hex,f){
+  const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255;
+  const t=f<0?0:255, p=Math.abs(f);
+  r=Math.round(r+(t-r)*p); g=Math.round(g+(t-g)*p); b=Math.round(b+(t-b)*p);
+  return "#"+((r<<16|g<<8|b).toString(16).padStart(6,"0"));
+}
+function metalStyle(c){
+  return `background:linear-gradient(180deg,${shade(c,.20)} 0%,${c} 48%,${shade(c,-.24)} 100%);border-color:${shade(c,-.5)};border-top-color:${shade(c,.45)}`;
+}
 function tagItem(key,name,cnt,user,color){
   const active = String(filt.tag)===String(key);
   const tinted = !active && color;
-  const st = tinted ? ` style="background:${color}"` : "";
+  const st = tinted ? ` style="${metalStyle(color)}"` : "";
   return `<div class="item ${active?"active":""} ${tinted?"tinted":""} ${cnt?"":"zero"}" data-k="${key}" ${user?'data-droppable="1"':""}${st}>
     <span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje zakładki">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
 }
@@ -594,6 +616,7 @@ function cmpTags(a,b){
 function sortTags(){ tags.sort(cmpTags); }
 function ensureOrd(){ sortTags(); tags.forEach((t,i)=>{ if(t.ord===undefined) t.ord=i; }); }
 function moveTag(id,dir){
+  pushUndo({type:"tags", label:"zmianę kolejności zakładek", tags:cloneTags()});
   ensureOrd();
   const i = tags.findIndex(t=>t.id===id);
   if(i<0) return;
@@ -614,13 +637,15 @@ function tagMenu(e, t){
      <div class="palrow"><span class="pal" data-pc="" style="background:#fff" title="Bez koloru">✕</span>${TAGCOLORS.map(c=>`<span class="pal" data-pc="${c}" style="background:${c}"></span>`).join("")}</div>
      <div data-tm="up">▲ Przesuń w górę</div>
      <div data-tm="down">▼ Przesuń w dół</div>
-     <div data-tm="top">⤒ Na samą górę</div>`;
+     <div data-tm="top">⤒ Na samą górę</div>
+     <div data-tm="del" style="color:#a33">🗑 Usuń zakładkę</div>`;
   dd.style.display = "block";
   const r = e.target.getBoundingClientRect();
   dd.style.left = Math.min(r.left, innerWidth-260)+"px";
   dd.style.top = Math.min(r.bottom+4, innerHeight-230)+"px";
   dd.onclick = ev=>{
     if(ev.target.dataset.pc!==undefined){
+      pushUndo({type:"tags", label:"zmianę koloru zakładki", tags:cloneTags()});
       t.color = ev.target.dataset.pc || undefined;
       saveTags(); dd.style.display="none"; renderAll(); return;
     }
@@ -631,6 +656,7 @@ function tagMenu(e, t){
     else if(m==="up") moveTag(t.id,-1);
     else if(m==="down") moveTag(t.id,1);
     else if(m==="top") moveTag(t.id,"top");
+    else if(m==="del") deleteTag(t);
   };
 }
 function createTag(name){
@@ -638,6 +664,8 @@ function createTag(name){
   if(!name) return null;
   const ex = tags.find(t=>t.name===name);
   if(ex) return ex;
+  pushUndo({type:"tags", label:"utworzenie zakładki", tags:cloneTags()});
+  deletedTagNames = deletedTagNames.filter(nm=>nm!==name); saveDeletedTags();
   const t = {id: Math.max(0,...tags.map(x=>x.id))+1, name, nw:true};
   if(tags.some(x=>x.ord!==undefined)) t.ord = Math.max(...tags.map(x=>x.ord||0))+1;
   tags.push(t);
@@ -652,11 +680,28 @@ $("btnNewTag").onclick = ()=>{
     renderTags(); toast("Utworzono zakładkę „"+t.name+"”");
   }
 };
+let deletedTagNames = [];
+function saveDeletedTags(){ if(idb) idbPut("meta", deletedTagNames, "deletedTags").catch(()=>{}); }
+function deleteTag(t){
+  const cnt = notes.filter(n=>!n.del && n.tg.includes(t.id)).length;
+  if(!confirm("Usunąć zakładkę „"+t.name+"”?"+(cnt?"\n\nNotatki ("+cnt+") NIE zostaną usunięte — stracą tylko tę zakładkę.":""))) return;
+  pushUndo({type:"delTag", label:"usunięcie zakładki „"+t.name+"”", name:(t.orig||t.name), tags:cloneTags(), notes:notes.filter(n=>n.tg.includes(t.id)).map(cloneNote)});
+  deletedTagNames.push(t.orig || t.name);
+  saveDeletedTags();
+  tags = tags.filter(x=>x.id!==t.id);
+  const affected = [];
+  notes.forEach(n=>{ if(n.tg.includes(t.id)){ n.tg=n.tg.filter(x=>x!==t.id); n.tgd=true; affected.push(n); } });
+  if(idb){ idbDelKey("tags", t.id).catch(()=>{}); if(affected.length) idbBulkChunked("notes", affected).catch(()=>{}); }
+  bumpDirty();
+  if(filt.tag===t.id){ filt.tag="all"; persistFilt(); }
+  renderAll(); toast("Usunięto zakładkę „"+t.name+"”");
+}
 function renameTag(id){
   const t = tags.find(x=>x.id===id); if(!t) return;
   const name = prompt("Nowa nazwa zakładki:", t.name);
   if(!name || !name.trim() || name.trim()===t.name) return;
   if(tags.find(x=>x.name===name.trim())){ alert("Zakładka o tej nazwie już istnieje."); return; }
+  pushUndo({type:"tags", label:"zmianę nazwy zakładki", tags:cloneTags()});
   if(!t.orig) t.orig = t.name;   // zapamiętaj oryginalną nazwę do eksportu
   t.name = name.trim();
   sortTags();
@@ -784,8 +829,13 @@ function hilite(html){
 }
 function contentHtml(n){ return hilite(n.h ? n.h : esc(n.c||"")); }
 function renderNotes(){
-  const arr = sortNotes(filteredNotes());
-  $("counts").textContent = arr.length + (arr.length===1?" notatka":(arr.length%10>=2&&arr.length%10<=4&&(arr.length%100<12||arr.length%100>14))?" notatki":" notatek");
+  let arr;
+  if(sortMode==="recent"){
+    arr = notes.filter(n=>!n.del && n.la).sort((a,b)=>b.la.localeCompare(a.la)).slice(0,5);
+  } else {
+    arr = sortNotes(filteredNotes());
+  }
+  $("counts").textContent = sortMode==="recent" ? (arr.length ? "Ostatnio otwierane ("+arr.length+")" : "Nie otwierałeś jeszcze żadnej notatki") : arr.length + (arr.length===1?" notatka":(arr.length%10>=2&&arr.length%10<=4&&(arr.length%100<12||arr.length%100>14))?" notatki":" notatek");
   $("hCount").textContent = "· " + notes.filter(n=>!n.del).length + " notatek";
   const el = $("noteList");
   el.innerHTML = "";
@@ -822,7 +872,7 @@ function noteCard(n){
        ${n.ks?`<span class="pill ks">${esc(n.ks)}</span>`:""}
        <span class="pill date">🕓 ${date}</span>
      </div>
-     <div class="chips">${n.tg.map(tid=>{const t=tags.find(x=>x.id===tid);return t?`<span class="chip"${t.color?` style="background:${t.color};color:#2b2a27"`:""}>${esc(t.name)}<span class="x" data-untag="${tid}" title="Usuń z zakładki">×</span></span>`:"";}).join("")}</div>
+     <div class="chips">${n.tg.map(tid=>{const t=tags.find(x=>x.id===tid);return t?`<span class="chip"${t.color?` style="background:linear-gradient(180deg,${shade(t.color,.15)},${shade(t.color,-.18)});color:#fff"`:""}>${esc(t.name)}<span class="x" data-untag="${tid}" title="Usuń z zakładki">×</span></span>`:"";}).join("")}</div>
      <div class="ncontent">${contentHtml(n)}</div>
      <div class="ntools">
        <div class="btnrow">
@@ -830,6 +880,7 @@ function noteCard(n){
          <button class="sbtn ico" data-act="fs" title="Otwórz na pełnym ekranie">⛶</button>
          <button class="sbtn ico" data-act="copy" title="Kopiuj treść">⧉</button>
          ${link?`<button class="sbtn ico" data-act="link" title="Kopiuj odnośnik">🔗</button>`:""}
+         <button class="sbtn ico" data-act="exp" title="Eksportuj notatkę (Word / PDF)">⤓</button>
          <button class="sbtn ico" data-act="mic" title="Dyktuj (mowa → tekst)">🎤</button>
          <button class="sbtn ico" data-act="edit" title="Edytuj notatkę">✏️</button>
          <button class="sbtn ico warn" data-act="del" title="Usuń notatkę">🗑</button>
@@ -848,6 +899,20 @@ function noteCard(n){
     if(["fs","edit","copy","link"].includes(act) || e.target.closest("a.sbtn")) touchAccess(n);
     if(!act) return;
     if(act==="fs"){ openFs(n); return; }
+    if(act==="exp"){
+      const dd=$("dropdown");
+      dd.innerHTML = `<div data-x="doc">📄 Word (.doc)</div><div data-x="pdf">🖨 PDF / Drukuj</div>`;
+      dd.style.display="block";
+      const r=e.target.getBoundingClientRect();
+      dd.style.left=Math.min(r.left, innerWidth-220)+"px";
+      dd.style.top=Math.min(r.bottom+4, innerHeight-120)+"px";
+      dd.onclick = ev=>{
+        const x=ev.target.dataset.x; dd.style.display="none";
+        if(x==="doc") exportNoteWord(n);
+        else if(x==="pdf") exportNotePdf(n);
+      };
+      return;
+    }
     if(act==="copy") copyNote(n);
     else if(act==="link"){ navigator.clipboard.writeText(finderUrl(n)).then(()=>toast("Skopiowano odnośnik")); }
     else if(act==="md") downloadMd(n);
@@ -870,6 +935,7 @@ function noteCard(n){
     }
     else if(act==="tagmove"){
       const tid = +d.querySelector('[data-role="tagsel"]').value;
+      pushUndo({type:"note", label:"przeniesienie do zakładki", before:cloneNote(n)});
       n.tg = [tid]; n.tgd = true; markDirty(n); renderAll();
       toast("Notatka jest teraz tylko w „"+(tags.find(t=>t.id===tid)||{}).name+"”");
     }
@@ -943,6 +1009,35 @@ window.addEventListener("beforeunload", e=>{
     e.returnValue = "Masz zmiany niezapisane w kopii JSON — dane w aplikacji są bezpieczne, ale warto zrobić kopię.";
   }
 });
+/* ================= COFNIJ ================= */
+const undoStack = [];
+function cloneNote(n){ return JSON.parse(JSON.stringify(n)); }
+function cloneTags(){ return JSON.parse(JSON.stringify(tags)); }
+function pushUndo(u){ undoStack.push(u); if(undoStack.length>30) undoStack.shift(); updateUndoBtn(); }
+function updateUndoBtn(){ const b=$("btnUndo"); b.disabled=!undoStack.length; b.style.opacity=undoStack.length?"1":".45"; }
+function doUndo(){
+  const u = undoStack.pop(); updateUndoBtn();
+  if(!u){ toast("Nie ma czego cofnąć"); return; }
+  if(u.type==="note"){
+    const i = notes.findIndex(x=>x.g===u.before.g);
+    if(i>=0) notes[i]=u.before; else notes.push(u.before);
+    saveNote(u.before);
+  } else if(u.type==="newNote"){
+    const i = notes.findIndex(x=>x.g===u.g);
+    if(i>=0){ notes.splice(i,1); if(idb) idbDelKey("notes", u.g).catch(()=>{}); }
+  } else if(u.type==="tags"){
+    tags = u.tags; saveTags();
+  } else if(u.type==="delTag"){
+    tags = u.tags; saveTags();
+    u.notes.forEach(b=>{ const i=notes.findIndex(x=>x.g===b.g); if(i>=0){ notes[i]=b; saveNote(b); } });
+    deletedTagNames = deletedTagNames.filter(nm=>nm!==u.name);
+    saveDeletedTags();
+  }
+  renderAll(); toast("Cofnięto: "+(u.label||"ostatnią zmianę"));
+}
+$("btnUndo").onclick = doUndo;
+updateUndoBtn();
+
 function touchAccess(n){ n.la = new Date().toISOString(); saveNote(n); }
 function markDirty(n){ n.ed=true; n.mo=new Date().toISOString(); saveNote(n); bumpDirty(); }
 function copyNote(n){
@@ -966,16 +1061,18 @@ function downloadMd(n){
 }
 function delNote(n){
   if(!confirm("Usunąć tę notatkę?")) return;
+  pushUndo({type:"note", label:"usunięcie notatki", before:cloneNote(n)});
   n.del=true; markDirty(n); renderAll(); toast("Notatka usunięta");
 }
-function untag(n,tid){ n.tg=n.tg.filter(t=>t!==tid); n.tgd=true; markDirty(n); renderAll(); }
+function untag(n,tid){ pushUndo({type:"note", label:"zmianę zakładek notatki", before:cloneNote(n)}); n.tg=n.tg.filter(t=>t!==tid); n.tgd=true; markDirty(n); renderAll(); }
 function addTag(n,tid){
-  if(!n.tg.includes(tid)){ n.tg.push(tid); n.tgd=true; markDirty(n); renderAll(); toast("Dodano do zakładki „"+(tags.find(t=>t.id===tid)||{}).name+"”"); }
+  if(!n.tg.includes(tid)){ pushUndo({type:"note", label:"dodanie do zakładki", before:cloneNote(n)}); n.tg.push(tid); n.tgd=true; markDirty(n); renderAll(); toast("Dodano do zakładki „"+(tags.find(t=>t.id===tid)||{}).name+"”"); }
   else toast("Notatka już jest w tej zakładce");
 }
 function dropOnTag(e,tid){
   const g = e.dataTransfer.getData("text/plain");
   const n = notes.find(x=>x.g===g); if(!n) return;
+  pushUndo({type:"note", label:"przeniesienie notatki", before:cloneNote(n)});
   if(typeof filt.tag==="number" && n.tg.includes(filt.tag) && filt.tag!==tid){
     n.tg = n.tg.filter(t=>t!==filt.tag);
     if(!n.tg.includes(tid)) n.tg.push(tid);
@@ -1007,9 +1104,11 @@ function buildEditbar(){
     <span class="eb-sep"></span>
     <button data-cmd="justifyLeft" title="Wyrównaj do lewej">⟸</button>
     <button data-cmd="justifyCenter" title="Wyśrodkuj">⟷</button>
-    <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">☰</button>`;
+    <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">☰</button>
+    <span class="eb-sep"></span>
+    <label class="eb-img" title="Wstaw zdjęcie / ilustrację">🖼<input type="file" accept="image/*" style="display:none"></label>`;
   bar.addEventListener("pointerdown", ev=>{
-    if(ev.target.closest("select")) return;      // lista stylów musi się otworzyć normalnie
+    if(ev.target.closest("select, label.eb-img")){ edSavedRange = captureRange(); return; }
     ev.preventDefault();                          // nie gub zaznaczenia
     const b = ev.target.closest("[data-cmd]");
     if(b) document.execCommand(b.dataset.cmd, false, null);
@@ -1017,7 +1116,32 @@ function buildEditbar(){
   bar.querySelector(".eb-block").addEventListener("change", ev=>{
     document.execCommand("formatBlock", false, "<"+ev.target.value.toLowerCase()+">");
   });
+  bar.querySelector(".eb-img input").addEventListener("change", async ev=>{
+    const f = ev.target.files[0]; ev.target.value="";
+    if(!f) return;
+    try{
+      const url = await compressImage(f);
+      const img = document.createElement("img"); img.src = url;
+      if(edSavedRange){ edSavedRange.collapse(false); edSavedRange.insertNode(img); }
+      else { const ce = bar.parentElement.querySelector(".ncontent"); ce.appendChild(img); }
+      toast("Wstawiono zdjęcie — pamiętaj o 💾 Zapisz");
+    }catch(err){ alert("Nie udało się wczytać zdjęcia: "+err.message); }
+  });
   return bar;
+}
+let edSavedRange = null;
+function captureRange(){
+  const s = getSelection();
+  return s.rangeCount ? s.getRangeAt(0).cloneRange() : null;
+}
+async function compressImage(file){
+  const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+  const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
+  const max = 1200; let w=img.width, h=img.height;
+  if(Math.max(w,h)>max){ const k=max/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
+  const cv = document.createElement("canvas"); cv.width=w; cv.height=h;
+  cv.getContext("2d").drawImage(img,0,0,w,h);
+  return cv.toDataURL("image/jpeg", 0.82);
 }
 function toggleEdit(card,n){
   const editing = card.classList.contains("editing");
@@ -1039,6 +1163,7 @@ function toggleEdit(card,n){
     card.querySelector(".editbar")?.remove();
     titleEl.contentEditable="false"; contEl.contentEditable="false";
     btn.textContent="✏️ Edytuj";
+    pushUndo({type:"note", label:"edycję notatki", before:cloneNote(n)});
     n.t = titleEl.textContent.trim();
     const clean = sanitize(contEl.innerHTML);
     n.h = clean; n.c = htmlToPlain(clean);
@@ -1069,6 +1194,10 @@ function sanitize(html){
         else if(tag==="S"||tag==="STRIKE"||tag==="DEL"){ const s=document.createElement("s"); walk(node,s); dst.appendChild(s); }
         else if(tag==="H2"||tag==="H3"){ const h=document.createElement(tag.toLowerCase()); walk(node,h); dst.appendChild(h); }
         else if(tag==="BLOCKQUOTE"){ const q=document.createElement("blockquote"); walk(node,q); dst.appendChild(q); }
+        else if(tag==="IMG"){
+          const src=node.getAttribute("src")||"";
+          if(src.startsWith("data:image")||src.startsWith("http")){ const im=document.createElement("img"); im.src=src; dst.appendChild(im); }
+        }
         else if(tag==="UL"||tag==="OL"){ const l=document.createElement(tag.toLowerCase()); walk(node,l); dst.appendChild(l); }
         else if(tag==="LI"){ const li=document.createElement("li"); walk(node,li); dst.appendChild(li); }
         else if(tag==="DIV"||tag==="P"){
@@ -1094,6 +1223,7 @@ function htmlToPlain(html){
       else if(ch.nodeType===1){
         const t=ch.tagName;
         if(t==="BR"){ out+="\n"; return; }
+        if(t==="IMG"){ out+="[ilustracja]"; return; }
         if(t==="LI") out+= (ch.parentElement&&ch.parentElement.tagName==="OL")
           ? ([...ch.parentElement.children].indexOf(ch)+1)+". " : "• ";
         walk(ch);
@@ -1161,6 +1291,7 @@ document.addEventListener("selectionchange", ()=>{
 document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 60); }, {passive:true});
 document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen") setTimeout(showHlBar, 60); }, {passive:true});
 function saveContentEl(contEl, n){
+  pushUndo({type:"note", label:"zmianę w treści notatki", before:cloneNote(n)});
   contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
   const clean=sanitize(contEl.innerHTML);
   contEl.innerHTML=hilite(clean);
@@ -1269,6 +1400,7 @@ $("nnSave").onclick = ()=>{
     tg:[...$("nnTags").querySelectorAll("input:checked")].map(i=>+i.value),
     nw:true, tgd:true };
   notes.unshift(n); saveNote(n);
+  pushUndo({type:"newNote", g:n.g, label:"dodanie notatki"});
   closeModal("modalNew"); renderAll(); toast("Notatka dodana");
 };
 
@@ -1365,6 +1497,7 @@ function importFromDb(db){
   if(tagRows.length){
     tagRows[0].values.forEach(([tid,name])=>{
       name=(name||"").trim();
+      if(deletedTagNames.includes(name)){ return; }
       let t=tags.find(x=>x.name===name || x.orig===name);
       if(!t){ t={id:Math.max(0,...tags.map(x=>x.id),tid)+1,name,nw:true}; tags.push(t); }
       tagIdMap[tid]=t.id;
@@ -1453,6 +1586,15 @@ function applyChangesToDb(db){
   const r3=db.exec("SELECT TagId, MAX(Position) FROM TagMap GROUP BY TagId");
   if(r3.length) r3[0].values.forEach(([id,p])=>tpos[id]=p);
   const nextPos=tid=>{tpos[tid]=(tpos[tid]===undefined?-1:tpos[tid])+1;return tpos[tid];};
+  // zakładki usunięte w aplikacji — usuń też z eksportowanej bazy
+  deletedTagNames.forEach(nm=>{
+    const did = tname[nm];
+    if(did!==undefined){
+      db.run("DELETE FROM TagMap WHERE TagId=?",[did]);
+      db.run("DELETE FROM Tag WHERE TagId=?",[did]);
+      delete tname[nm];
+    }
+  });
   const appTagToDb={};
   tags.forEach(t=>{
     // szukaj w bazie po nazwie oryginalnej (przed zmianą) lub bieżącej
@@ -1503,6 +1645,51 @@ function applyChangesToDb(db){
     }
   });
   try{ db.run("UPDATE LastModified SET LastModified=?",[nowIso]); }catch(e){}
+}
+
+/* ================= EKSPORT NOTATKI (WORD / PDF) ================= */
+function noteExportHtml(n){
+  const ref = refLabel(n);
+  return `<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8"><title>${esc(n.t||ref||"Notatka")}</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;line-height:1.6;max-width:720px;margin:24px auto;padding:0 18px;color:#222}
+h1{font-size:22px;color:#1e5b46;border-bottom:2px solid #2e7a5f;padding-bottom:6px;margin:0 0 6px}
+.meta{color:#777;font-size:12px;margin-bottom:16px}
+mark{padding:0 2px;border-radius:3px}
+mark.hl1{background:#ffe97d}mark.hl2{background:#b7e4a7}mark.hl3{background:#a8d5f2}mark.hl4{background:#d9b8f0}
+mark.hl5{background:#f5b0b0}mark.hl6{background:#ffcf8f}mark.hl7{background:#9fe3d5}
+blockquote{margin:6px 0 6px 22px;padding-left:10px;border-left:3px solid #ccc}
+img{max-width:100%}
+h2{font-size:18px;color:#5b4636;margin:12px 0 4px}h3{font-size:15px;margin:10px 0 3px}
+ul,ol{margin:4px 0 4px 24px}
+.content{white-space:pre-wrap}
+</style></head><body>
+<h1>${esc(n.t||"")}</h1>
+<div class="meta">${esc(ref)}${n.ks?" · "+esc(n.ks):""} · ${(n.mo||"").substring(0,10)}</div>
+<div class="content">${n.h || esc(n.c||"")}</div>
+</body></html>`;
+}
+function exportFileName(n){
+  return ((refLabel(n)||n.t||"notatka").replace(/[^\p{L}\p{N} ,-]/gu,"").trim().substring(0,50)||"notatka");
+}
+function exportNoteWord(n){
+  const blob = new Blob(["\ufeff"+noteExportHtml(n)], {type:"application/msword"});
+  download(blob, exportFileName(n)+".doc");
+  toast("Pobrano dokument Word");
+}
+function exportNotePdf(n){
+  const ifr = document.createElement("iframe");
+  ifr.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";
+  document.body.appendChild(ifr);
+  ifr.srcdoc = noteExportHtml(n);
+  ifr.onload = ()=>{
+    setTimeout(()=>{
+      try{ ifr.contentWindow.focus(); ifr.contentWindow.print(); }
+      catch(e){ alert("Nie udało się otworzyć okna drukowania."); }
+      setTimeout(()=>ifr.remove(), 3000);
+    }, 300);
+  };
+  toast("W oknie drukowania wybierz „Zapisz jako PDF”");
 }
 
 /* ================= KOPIA DO CHMURY ================= */

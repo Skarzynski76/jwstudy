@@ -39,7 +39,8 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 /* kolumny jako oddzielne sztaby z frezem */
 .col::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.07) 47%,rgba(255,255,255,.02) 53%,transparent 62%)}
 .col h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin:0;padding:12px 14px 6px}
-.col .list{overflow-y:auto;flex:1;padding:0 8px 20px}
+.col .list{overflow-y:auto;flex:1;padding:0 8px 20px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;transform:translateZ(0)}
+#bookList .item,#bookList .chip-ch{contain:layout paint}
 
 /* Kolumna 1 — ciemny grafit */
 #colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,#393447 0%,#2e2a3a 45%,#252130 100%);border:1px solid #181521;border-top-color:#575070;box-shadow:0 3px 10px rgba(25,20,40,.5),inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.4)}
@@ -151,8 +152,9 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #fsClose{position:sticky;top:calc(4px + env(safe-area-inset-top,0px));float:right;z-index:10;border:none;background:var(--accent);color:#fff;border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 #fsClose:hover{background:var(--accent2)}
 #fsWrap{min-height:0}
-#fsWrap .ncard{margin:0;min-height:calc(100dvh - 84px);overflow:visible;border-radius:0}
-#fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7}
+#fsWrap .ncard{margin:0;min-height:calc(100dvh - 84px);overflow:visible;border-radius:0;display:flex;flex-direction:column}
+#fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7;flex:1 0 auto}
+#fsWrap .ntools{margin-top:auto}
 #fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
 .ntitle{cursor:pointer}
 .ncontent:empty{display:none}
@@ -173,9 +175,9 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
 .ncontent s{opacity:.75}
 .ncontent img{max-width:100%;height:auto;border-radius:10px;display:block;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.ncontent[contenteditable="true"] img{cursor:grab;touch-action:none}
-.ncontent[contenteditable="true"] img.dragging{opacity:.45;cursor:grabbing}
-#dropCaret{position:fixed;display:none;width:2px;background:var(--accent2);border-radius:2px;z-index:128;pointer-events:none;box-shadow:0 0 4px rgba(140,111,82,.6)}
+.ncontent[contenteditable="true"] img{cursor:pointer}
+body.img-placing{cursor:copy}
+body.img-placing .ncontent[contenteditable="true"]{outline:2px dashed var(--accent2);outline-offset:2px}
 .ncontent img.img-s{width:35%}
 .ncontent img.img-m{width:60%}
 .ncontent img.img-l{width:100%}
@@ -185,6 +187,10 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ncontent img.img-inline{display:inline;float:none;vertical-align:middle;margin:0 4px}
 .ncontent img.imgsel{outline:2px dashed var(--accent2);outline-offset:3px}
 .editbar .ic{width:19px;height:19px}
+.editbar .eb-sw{width:24px;min-width:24px;height:24px;border-radius:50%;border:1px solid rgba(0,0,0,.22);padding:0;flex-shrink:0;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.editbar .eb-sw:hover{transform:scale(1.12)}
+.editbar .eb-sw-none{background:var(--panel);color:var(--muted);font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+html[data-theme="dark"] .editbar .eb-sw{border-color:rgba(255,255,255,.25)}
 #imgHandles{position:fixed;display:none;pointer-events:none;z-index:129}
 #imgHandles .h{position:absolute;width:15px;height:15px;background:#fff;border:2px solid var(--accent2);border-radius:50%;pointer-events:auto;box-shadow:0 1px 3px rgba(0,0,0,.35);touch-action:none}
 #imgHandles .tl{left:-8px;top:-8px;cursor:nwse-resize}
@@ -379,12 +385,14 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="hlBar"></div>
 <div id="imgBar">
   <span class="ib-lbl">Rozmiar</span>
-  <input type="range" id="imgSize" min="20" max="100" value="60" title="Przeciągnij, aby zmienić rozmiar obrazu">
+  <input type="range" id="imgSize" min="10" max="100" value="60" title="Przeciągnij, aby zmienić rozmiar obrazu">
   <span class="sep"></span>
   <button data-iw="img-left" title="Tekst oblewa z prawej"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8" height="8" rx="1"/><path d="M14 6h7M14 10h7M3 16h18M3 20h18"/></svg></button>
   <button data-iw="img-center" title="Wyśrodkuj (bez oblewania)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="4" width="10" height="8" rx="1"/><path d="M4 16h16M4 20h16"/></svg></button>
   <button data-iw="img-right" title="Tekst oblewa z lewej"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="4" width="8" height="8" rx="1"/><path d="M3 6h7M3 10h7M3 16h18M3 20h18"/></svg></button>
   <button data-iw="img-inline" title="W linii tekstu"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5"/><rect x="9" y="4" width="6" height="6" rx="1"/><path d="M16 7h5M3 13h18M3 17h18"/></svg></button>
+  <span class="sep"></span>
+  <button data-imove="1" title="Przenieś w tekście — potem dotknij miejsca"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M4 12h16"/><path d="M9 7l3-3 3 3M9 17l3 3 3-3M7 9l-3 3 3 3M17 9l3 3-3 3"/></svg></button>
   <span class="sep"></span>
   <button data-idel="1" title="Usuń obraz"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
 </div>
@@ -493,6 +501,18 @@ async function idbBulkChunked(store,items){
 }
 function idbCount(store){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).count();t.onsuccess=()=>res(t.result);t.onerror=rej;});}
 function saveNote(n){ if(idb) idbPut("notes", n).catch(()=>{}); }
+/* natychmiastowy zapis treści edytowanej notatki (np. po operacji na zdjęciu) */
+function commitLiveEdit(ce){
+  if(!ce) return;
+  const card = ce.closest && ce.closest(".ncard"); if(!card) return;
+  const n = notes.find(x=>x.g===card.dataset.g); if(!n) return;
+  try{
+    const clean = sanitize(ce.innerHTML);
+    n.h = clean; n.c = htmlToPlain(clean);
+    n.ed = true; n.mo = new Date().toISOString();
+    saveNote(n); if(typeof bumpDirty==="function") bumpDirty();
+  }catch(e){}
+}
 function saveTags(){ if(idb) idbBulk("tags", tags).catch(()=>{}); if(typeof bumpDirty==="function") bumpDirty(); }
 
 /* ================= START ================= */
@@ -1175,9 +1195,25 @@ function buildEditbar(){
     <button data-cmd="justifyCenter" title="Wyśrodkuj">${ICO.alignCenter}</button>
     <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">${ICO.alignJustify}</button>
     <span class="eb-sep"></span>
+    ${[1,2,3,4,5,6,7].map(i=>`<button class="eb-sw" data-hl="${i}" style="background:var(--hl${i})" title="Kolor / podświetlenie zaznaczonego tekstu"></button>`).join("")}
+    <button class="eb-sw eb-sw-none" data-hl="0" title="Usuń kolor z zaznaczenia">✕</button>
+    <span class="eb-sep"></span>
     <label class="eb-img" title="Wstaw zdjęcie / ilustrację">${ICO.image}<input type="file" accept="image/*" style="display:none"></label>`;
   bar.addEventListener("pointerdown", ev=>{
     if(ev.target.closest("select, label.eb-img")){ edSavedRange = captureRange(); return; }
+    const sw = ev.target.closest(".eb-sw");
+    if(sw){
+      ev.preventDefault();
+      const ce = bar.parentElement.querySelector(".ncontent");
+      const sel = getSelection();
+      if(sel.rangeCount && !sel.isCollapsed && ce && ce.contains(sel.getRangeAt(0).commonAncestorContainer)){
+        const range = sel.getRangeAt(0);
+        if(sw.dataset.hl==="0") unwrapMarks(range, ce); else applyMark(range, +sw.dataset.hl);
+        sel.removeAllRanges();
+        commitLiveEdit(ce);
+      } else toast("Najpierw zaznacz tekst w notatce");
+      return;
+    }
     ev.preventDefault();                          // nie gub zaznaczenia
     const b = ev.target.closest("[data-cmd]");
     if(b) document.execCommand(b.dataset.cmd, false, null);
@@ -1191,9 +1227,13 @@ function buildEditbar(){
     try{
       const url = await compressImage(f);
       const img = document.createElement("img"); img.src = url;
+      const ceIns = bar.parentElement.querySelector(".ncontent");
       if(edSavedRange){ edSavedRange.collapse(false); edSavedRange.insertNode(img); }
-      else { const ce = bar.parentElement.querySelector(".ncontent"); ce.appendChild(img); }
-      toast("Wstawiono zdjęcie — pamiętaj o zapisaniu");
+      else if(ceIns){ ceIns.appendChild(img); }
+      img.classList.add("img-m");
+      commitLiveEdit(ceIns);
+      showImgBar(img);
+      toast("Wstawiono zdjęcie");
     }catch(err){ alert("Nie udało się wczytać zdjęcia: "+err.message); }
   });
   return bar;
@@ -1215,7 +1255,7 @@ function showImgBar(img){
   if(si){
     let wv = parseInt(img.style.width);
     if(!wv){ const pw = img.parentElement ? img.parentElement.getBoundingClientRect().width : 1; wv = Math.round(img.getBoundingClientRect().width / (pw||1) * 100); }
-    si.value = Math.max(20, Math.min(100, wv || 60));
+    si.value = Math.max(10, Math.min(100, wv || 60));
   }
   positionHandles(img);
 }
@@ -1244,16 +1284,17 @@ document.querySelectorAll("#imgHandles .h").forEach(handle=>{
     const move = ev=>{
       let dx = ev.clientX - startX; if(leftSide) dx = -dx;
       let pct = Math.round((startW + dx) / parentW * 100);
-      pct = Math.max(15, Math.min(100, pct));
+      pct = Math.max(10, Math.min(100, pct));
       selImg.classList.remove("img-s","img-m","img-l");
       selImg.style.width = pct + "%";
       positionHandles(selImg);
-      const si = document.getElementById("imgSize"); if(si) si.value = Math.max(20, Math.min(100, pct));
+      const si = document.getElementById("imgSize"); if(si) si.value = pct;
     };
     const up = ()=>{
       handle.removeEventListener("pointermove", move);
       handle.removeEventListener("pointerup", up);
       handle.removeEventListener("pointercancel", up);
+      commitLiveEdit(selImg && selImg.closest(".ncontent"));
     };
     handle.addEventListener("pointermove", move);
     handle.addEventListener("pointerup", up);
@@ -1264,15 +1305,19 @@ $("imgBar").addEventListener("pointerdown", e=>{
   if(e.target.closest("#imgSize")) return;   // pozwól przeciągać suwak
   e.preventDefault();
   if(!selImg) return;
+  if(e.target.closest("[data-imove]")){ startImgMove(); return; }
   const w = e.target.closest("[data-iw]"), del = e.target.closest("[data-idel]");
-  if(w){ ["img-left","img-right","img-center","img-inline"].forEach(c=>selImg.classList.remove(c)); selImg.classList.add(w.dataset.iw); }
-  else if(del){ const im = selImg; hideImgBar(); im.remove(); return; }
+  if(w){ ["img-left","img-right","img-center","img-inline"].forEach(c=>selImg.classList.remove(c)); selImg.classList.add(w.dataset.iw); commitLiveEdit(selImg.closest(".ncontent")); }
+  else if(del){ const im = selImg; const ce = im.closest(".ncontent"); hideImgBar(); im.remove(); commitLiveEdit(ce); return; }
   showImgBar(selImg);
 });
 document.getElementById("imgSize").addEventListener("input", e=>{
   if(!selImg) return;
   selImg.classList.remove("img-s","img-m","img-l");
   selImg.style.width = e.target.value + "%";
+});
+document.getElementById("imgSize").addEventListener("change", e=>{
+  if(selImg) commitLiveEdit(selImg.closest(".ncontent"));
 });
 let suppressImgClick = false;
 document.addEventListener("click", e=>{
@@ -1282,61 +1327,45 @@ document.addEventListener("click", e=>{
   if(!e.target.closest("#imgBar") && !e.target.closest("#imgHandles")) hideImgBar();
 });
 
-/* ===== przeciąganie zdjęcia w dowolne miejsce notatki (mysz + palec) ===== */
-let imgMove = null;
+/* ===== przenoszenie zdjęcia: „dotknij, by umieścić” (niezawodne na dotyku) ===== */
+let movePending = null;
 function caretRangeFromPoint(x,y){
   if(document.caretRangeFromPoint) return document.caretRangeFromPoint(x,y);
   if(document.caretPositionFromPoint){ const p=document.caretPositionFromPoint(x,y); if(p){ const r=document.createRange(); r.setStart(p.offsetNode,p.offset); r.collapse(true); return r; } }
   return null;
 }
-function showDropCaret(range){
-  const c=document.getElementById("dropCaret"); if(!c) return;
-  let r=range.getBoundingClientRect();
-  if(!r || (!r.height && !r.top && !r.left)){ const rs=range.getClientRects(); if(rs.length) r=rs[0]; }
-  if(!r || (!r.height && !r.width)){ c.style.display="none"; return; }
-  c.style.display="block"; c.style.left=r.left+"px"; c.style.top=r.top+"px"; c.style.height=(r.height||18)+"px";
+function startImgMove(){
+  if(!selImg) return;
+  movePending = selImg;
+  document.body.classList.add("img-placing");
+  hideImgBar();
+  toast("Dotknij miejsca w tekście, gdzie wstawić zdjęcie");
 }
-function hideDropCaret(){ const c=document.getElementById("dropCaret"); if(c) c.style.display="none"; }
+function cancelImgMove(){ movePending=null; document.body.classList.remove("img-placing"); }
 document.addEventListener("pointerdown", e=>{
-  const img=e.target.closest(".ncontent img");
-  if(!img || !img.closest('[contenteditable="true"]')) return;
-  if(e.target.closest("#imgHandles")) return;
-  imgMove={img, x:e.clientX, y:e.clientY, id:e.pointerId, moved:false};
-});
-document.addEventListener("pointermove", e=>{
-  if(!imgMove || e.pointerId!==imgMove.id) return;
-  const dx=e.clientX-imgMove.x, dy=e.clientY-imgMove.y;
-  if(!imgMove.moved){
-    if(Math.hypot(dx,dy)<8) return;
-    imgMove.moved=true; hideImgBar();
-    imgMove.img.classList.add("dragging");
-    document.body.style.userSelect="none";
+  if(!movePending) return;
+  if(e.target.closest("#imgBar") || e.target.closest("#imgHandles")) return;
+  const img = movePending;
+  const ce = e.target.closest(".ncontent");
+  if(!ce || !ce.isContentEditable){ cancelImgMove(); return; }
+  e.preventDefault(); e.stopPropagation();
+  const range = caretRangeFromPoint(e.clientX, e.clientY);
+  cancelImgMove();
+  if(range && ce.contains(range.startContainer)){
+    const rect = ce.getBoundingClientRect();
+    const side = (e.clientX - rect.left) < rect.width*0.5 ? "img-left" : "img-right";
+    try{
+      range.insertNode(img);
+      img.classList.remove("img-center","img-inline","img-left","img-right");
+      img.classList.add(side);
+    }catch(_){}
+    commitLiveEdit(ce);
+    suppressImgClick = true;
+    showImgBar(img);
   }
-  e.preventDefault();
-  const ce=imgMove.img.closest(".ncontent");
-  const range=caretRangeFromPoint(e.clientX,e.clientY);
-  if(ce && range && ce.contains(range.startContainer)) showDropCaret(range); else hideDropCaret();
-}, {passive:false});
-document.addEventListener("pointerup", e=>{
-  if(!imgMove) return;
-  const mv=imgMove; imgMove=null;
-  if(!mv.moved) return;
-  const img=mv.img;
-  img.classList.remove("dragging");
-  document.body.style.userSelect="";
-  hideDropCaret();
-  suppressImgClick=true;
-  const ce=img.closest(".ncontent");
-  const range=caretRangeFromPoint(e.clientX,e.clientY);
-  if(ce && range && ce.contains(range.startContainer)){
-    const rect=ce.getBoundingClientRect();
-    const side=(e.clientX-rect.left) < rect.width*0.5 ? "img-left" : "img-right";
-    try{ range.insertNode(img); }catch(_){}
-    img.classList.remove("img-center","img-inline","img-left","img-right");
-    img.classList.add(side);
-  }
-  showImgBar(img);
-});
+}, true);
+/* nie pozwól iOS uruchomić natywnego przeciągania obrazka w edytowanej notatce */
+document.addEventListener("dragstart", e=>{ if(e.target.closest('.ncontent[contenteditable="true"] img')) e.preventDefault(); });
 addEventListener("scroll", ()=>{ if(selImg && $("imgBar").style.display==="flex") showImgBar(selImg); }, true);
 addEventListener("resize", ()=>{ if(selImg) hideImgBar(); });
 addEventListener("orientationchange", ()=>{ if(selImg) hideImgBar(); });
@@ -1508,6 +1537,14 @@ document.addEventListener("selectionchange", ()=>{
 });
 document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 60); }, {passive:true});
 document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen") setTimeout(showHlBar, 60); }, {passive:true});
+// kliknięcie w pokolorowany fragment (poza edycją) → zaznacz go i pokaż paletę do zmiany koloru
+document.addEventListener("click", e=>{
+  const m = e.target.closest(".ncard .ncontent mark");
+  if(!m || m.closest('[contenteditable="true"]')) return;
+  const range=document.createRange(); range.selectNodeContents(m);
+  const sel=getSelection(); sel.removeAllRanges(); sel.addRange(range);
+  setTimeout(showHlBar, 0);
+});
 function saveContentEl(contEl, n){
   pushUndo({type:"note", label:"zmianę w treści notatki", before:cloneNote(n)});
   contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
@@ -1542,10 +1579,13 @@ hlBar.addEventListener("pointerdown", e=>{
   saveContentEl(contEl, n);
 }, true);
 function applyMark(range,color){
+  // wyjmij zaznaczenie, usuń z niego istniejące kolory (żeby się nie nakładały), potem nałóż nowy
+  const frag=range.extractContents();
+  frag.querySelectorAll("mark").forEach(m=>{ while(m.firstChild) m.parentNode.insertBefore(m.firstChild,m); m.remove(); });
   const mark=document.createElement("mark");
   mark.className="hl"+color;
-  try{ range.surroundContents(mark); }
-  catch(err){ const frag=range.extractContents(); mark.appendChild(frag); range.insertNode(mark); }
+  mark.appendChild(frag);
+  range.insertNode(mark);
 }
 function wrapTag(range,tag){
   const el=document.createElement(tag);
@@ -1856,16 +1896,19 @@ function exportFileName(n){
   return ((refLabel(n)||n.t||"notatka").replace(/[^\p{L}\p{N} ,-]/gu,"").trim().substring(0,50)||"notatka");
 }
 async function saveFile(blob, filename, title){
-  try{
-    if(navigator.canShare && typeof File!=="undefined"){
-      const file = new File([blob], filename, {type: blob.type});
-      if(navigator.canShare({files:[file]})){
-        await navigator.share({files:[file], title: title || filename});
-        return true;
+  const isMobile = navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if(isMobile){
+    try{
+      if(navigator.canShare && typeof File!=="undefined"){
+        const file = new File([blob], filename, {type: blob.type});
+        if(navigator.canShare({files:[file]})){
+          await navigator.share({files:[file], title: title || filename});
+          return true;
+        }
       }
-    }
-  }catch(err){ if(err && err.name==="AbortError") return true; }
-  download(blob, filename);
+    }catch(err){ if(err && err.name==="AbortError") return true; }
+  }
+  download(blob, filename);   // komputer: zwykłe pobranie → dwuklik otwiera w Wordzie
   return true;
 }
 function exportNoteWord(n){

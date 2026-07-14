@@ -21,6 +21,7 @@
   --hl1:#ffe97d; --hl2:#b7e4a7; --hl3:#a8d5f2; --hl4:#d9b8f0; --hl5:#f5b0b0; --hl6:#ffcf8f; --hl7:#9fe3d5;
 }
 *{box-sizing:border-box}
+button,.item,.sbtn,.chip-ch,.pal,.eb-sw,a,label,select,summary,#imgBar button,#hlBar .sw,#hlBar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
 header{display:flex;align-items:center;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top, 0px));background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
@@ -239,12 +240,36 @@ mark{padding:0 1px;border-radius:3px}
 .modal p{font-size:13.5px;line-height:1.55}
 .tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px}
 .tagpick label{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:13px;color:var(--text);cursor:pointer}
-#dropdown{position:fixed;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(0,0,0,.08);border-radius:14px;box-shadow:0 12px 36px rgba(0,0,0,.22);z-index:70;max-height:320px;overflow-y:auto;display:none;min-width:260px;padding:6px}
-#dropdown div{padding:10px 13px;cursor:pointer;font-size:13px;border-radius:10px;display:flex;align-items:center;gap:5px;margin:4px 2px;background:linear-gradient(180deg,#ffffff,#f5f1e9);border:1px solid #e5dfd1;box-shadow:0 1px 2px rgba(60,50,30,.09),inset 0 1px 0 #fff}
-#dropdown div:hover{background:var(--sel);border-color:#cfc5ae;transform:translateY(-1px);box-shadow:0 3px 6px rgba(60,50,30,.14),inset 0 1px 0 #fff}
+#dropdown{position:fixed;background:var(--panel);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.26);z-index:70;max-height:76vh;overflow-y:auto;display:none;min-width:250px;padding:8px}
+#dropdown div{padding:10px 12px;cursor:pointer;font-size:13.5px;border-radius:11px;display:flex;align-items:center;gap:10px;margin:1px 0;background:none;border:none;box-shadow:none;color:var(--text)}
+#dropdown div:hover{background:var(--sel);transform:none;box-shadow:none}
+#dropdown div .ic{width:18px;height:18px;flex-shrink:0;color:var(--muted)}
+#dropdown .dd-danger{color:#c0392b}
+#dropdown .dd-danger .ic{color:#c0392b}
+html[data-theme="dark"] #dropdown .dd-danger{color:#e39a9a}
+html[data-theme="dark"] #dropdown .dd-danger .ic{color:#e39a9a}
 #dropdown .dd-sep{height:1px;padding:0;margin:7px 10px;background:var(--border);border:none;border-radius:0;cursor:default;box-shadow:none}
 #dropdown .dd-sep:hover{background:var(--border);transform:none;box-shadow:none}
 #dropdown .dd-note{font-size:11px;color:var(--muted);cursor:default;padding:2px 13px 4px;background:none;border:none;box-shadow:none;margin:0 2px}
+#dropdown .dd-lbl{font-size:11.5px;color:var(--text);font-weight:600;cursor:default;padding:8px 12px 2px;background:none;border:none;box-shadow:none;margin:0}
+#dropdown .dd-lbl:hover{background:none;transform:none;box-shadow:none}
+#dropdown .palrow{background:none;border:none;box-shadow:none;padding:3px 10px 6px;margin:0}
+#dropdown .palrow:hover{background:none;transform:none;box-shadow:none}
+#colorMenu{position:fixed;display:none;z-index:130;min-width:294px;max-width:330px;background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 18px 48px rgba(0,0,0,.28);padding:14px 16px}
+#colorMenu .cm-title{font-size:13.5px;font-weight:600;color:var(--text);padding:0 0 4px}
+#colorMenu .cm-sec{padding:11px 0 3px;border-top:1px solid var(--border)}
+#colorMenu .cm-sec:first-of-type{border-top:none;padding-top:8px}
+#colorMenu .cm-lbl{font-size:12px;color:var(--muted);margin-bottom:9px}
+#colorMenu .cm-row{display:flex;flex-wrap:wrap;gap:9px}
+#colorMenu .cm-sw{width:27px;height:27px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.45);transition:transform .12s ease}
+#colorMenu .cm-sw:hover{transform:scale(1.14)}
+#colorMenu .cm-sw:active{transform:scale(.96)}
+#colorMenu .cm-sw.sel{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent),inset 0 1px 0 rgba(255,255,255,.45)}
+#colorMenu .cm-sw.sel::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+#colorMenu .cm-none{background:var(--bg);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:12px;border-color:var(--border)}
+#colorMenu .cm-none.sel{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent)}
+#colorMenu .cm-none.sel::after{content:""}
+html[data-theme="dark"] #colorMenu{box-shadow:0 18px 48px rgba(0,0,0,.55)}
 #dropdown .dd-note:hover{background:none;transform:none;box-shadow:none}
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:14px}
 .spinner{width:36px;height:36px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
@@ -255,9 +280,13 @@ mark{padding:0 1px;border-radius:3px}
 .item.tinted{color:#fff!important;text-shadow:0 1px 1px rgba(0,0,0,.3)}
 .item.tinted .cnt{color:rgba(255,255,255,.85)!important}
 .item.tinted .more{color:#fff}
-.palrow{display:flex;gap:7px;padding:9px 14px;flex-wrap:wrap}
-.pal{width:24px;height:24px;border-radius:50%;border:1px solid rgba(0,0,0,.25);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:11px}
-.pal:hover{transform:scale(1.15)}
+.palrow{display:flex;gap:8px;padding:6px 10px 8px;flex-wrap:wrap}
+.pal{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:12px;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.45);transition:transform .12s ease}
+.pal:hover{transform:scale(1.14)}
+.pal:active{transform:scale(.96)}
+.pal.sel{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent),inset 0 1px 0 rgba(255,255,255,.45)}
+.pal.sel:not(.pal-none)::after{content:"✓";position:absolute;color:#fff;font-size:12px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+.pal-none{background:var(--bg);color:var(--muted)}
 /* zwijanie kolumn */
 .colToggle{float:right;border:none;background:rgba(255,255,255,.12);color:inherit;border-radius:6px;cursor:pointer;font-size:12px;padding:2px 8px;margin-top:-2px}
 .colToggle:hover{background:rgba(255,255,255,.25)}
@@ -306,9 +335,9 @@ html[data-theme="dark"] .tagrow select{color:var(--text);border-color:#1c1c22;bo
 html[data-theme="dark"] .pill.ks{background:#33333c;color:#b6b3bf}
 html[data-theme="dark"] .pill.date{background:#2e2e36;color:#9c99a3}
 html[data-theme="dark"] .chip{background:#3a3a44}
-html[data-theme="dark"] #dropdown{background:rgba(42,42,49,.97);border-color:rgba(255,255,255,.09)}
-html[data-theme="dark"] #dropdown div{background:linear-gradient(180deg,#34343e,#2b2b33);border-color:#41414c;color:var(--text)}
-html[data-theme="dark"] #dropdown div:hover{background:#3f3f4b}
+html[data-theme="dark"] #dropdown{background:rgba(42,42,49,.98);border-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] #dropdown div{background:none;border:none;color:var(--text)}
+html[data-theme="dark"] #dropdown div:hover{background:var(--sel)}
 html[data-theme="dark"] #dropdown .dd-sep{background:#3a3a44;border:none}
 html[data-theme="dark"] #dropdown .dd-note{background:none;border:none}
 html[data-theme="dark"] #hlBar{background:rgba(45,45,52,.95);border-color:rgba(255,255,255,.1)}
@@ -349,6 +378,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <option value="recent">Ostatnio otwierane</option>
   </select>
   <button class="btn" id="btnTheme" title="Motyw">🖥️</button>
+  <button class="btn" id="btnColors" title="Kolory kolumn i belek">🎨</button>
   <button class="btn" id="btnUndo" title="Cofnij ostatnią zmianę">↩️</button>
   <div class="fontctl" title="Rozmiar czcionki notatek">
     <button id="fMinus">A−</button>
@@ -400,6 +430,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="dropCaret"></div>
 <div id="toast"></div>
 <div id="dropdown"></div>
+<div id="colorMenu"></div>
 
 <div class="overlay" id="modalFs">
   <div class="fsmodal">
@@ -678,6 +709,48 @@ function shade(hex,f){
 function metalStyle(c){
   return `background:linear-gradient(180deg,${shade(c,.20)} 0%,${c} 48%,${shade(c,-.24)} 100%);border-color:${shade(c,-.5)};border-top-color:${shade(c,.45)}`;
 }
+/* ===== kolory kolumn i belki notatki (metaliczna paleta) ===== */
+function colGrad(c,a,b,d){ return `linear-gradient(180deg,${shade(c,a)} 0%,${shade(c,b)} 48%,${shade(c,d)} 100%)`; }
+function loadColorCfg(){ try{ return JSON.parse(localStorage.getItem(KP+"Colors")||"{}"); }catch(e){ return {}; } }
+function buildColorCSS(){
+  const cfg = loadColorCfg(); let css="";
+  ["colBooks","colTags"].forEach(id=>{
+    const c=cfg[id]; if(!c) return;
+    css+=`#${id}{background:${colGrad(c,-.02,-.2,-.34)};border-color:${shade(c,-.6)};border-top-color:${shade(c,.35)}}`;
+    css+=`#${id} h2,#${id} .divider,#${id} .cnt{color:${shade(c,.72)}!important}`;
+    css+=`#${id} .item{background:${colGrad(c,.2,.02,-.12)};border-color:${shade(c,-.5)};border-top-color:${shade(c,.5)};color:#fff}`;
+    css+=`#${id} .item:hover{background:${colGrad(c,.28,.1,-.04)}}`;
+    css+=`#${id} .item.active{background:${colGrad(c,-.12,-.3,-.44)};border-top-color:${shade(c,.2)};color:#fff}`;
+    css+=`#${id} .item.active .cnt{color:#fff!important}`;
+  });
+  if(cfg.colNotes){ const c=cfg.colNotes; css+=`#colNotes{background:${colGrad(c,.62,.52,.42)};border-top-color:${shade(c,.85)};border-color:${shade(c,.1)}}`; }
+  if(cfg.nhead){ const c=cfg.nhead; css+=`.nhead{background:${colGrad(c,.16,0,-.28)}!important;border-bottom-color:${shade(c,-.55)}!important}`; }
+  return css;
+}
+function applyColors(){
+  let s=document.getElementById("colorOverrides");
+  if(!s){ s=document.createElement("style"); s.id="colorOverrides"; document.head.appendChild(s); }
+  s.textContent = buildColorCSS();
+}
+function openColorMenu(e){
+  const cm=$("colorMenu"); const cfg=loadColorCfg();
+  const sw=(target,c)=>{
+    const sel = c===null ? !cfg[target] : cfg[target]===c;
+    return `<span class="cm-sw ${c===null?"cm-none":""} ${sel?"sel":""}" data-pc="${c||""}" style="${c===null?"":metalStyle(c)}" title="${c||"Domyślny"}">${c===null?"✕":""}</span>`;
+  };
+  const sec=(target,label)=>`<div class="cm-sec"><div class="cm-lbl">${label}</div><div class="cm-row" data-target="${target}">`+
+    sw(target,null)+TAGCOLORS.map(c=>sw(target,c)).join("")+`</div></div>`;
+  cm.innerHTML = `<div class="cm-title">🎨 Kolory kolumn i belek</div>`+
+    sec("colBooks","Kolumna „Księgi”")+
+    sec("colTags","Kolumna „Zakładki”")+
+    sec("colNotes","Tło kolumny „Notatki”")+
+    sec("nhead","Belka każdej notatki");
+  cm.style.display="block";
+  const r=e.target.getBoundingClientRect();
+  const w=cm.offsetWidth||300, h=cm.offsetHeight||380;
+  cm.style.left=Math.max(8,Math.min(r.right-w, innerWidth-w-8))+"px";
+  cm.style.top=Math.min(r.bottom+6, Math.max(8, innerHeight-h-8))+"px";
+}
 function tagItem(key,name,cnt,user,color){
   const active = String(filt.tag)===String(key);
   const tinted = !active && color;
@@ -711,17 +784,24 @@ function moveTag(id,dir){
 }
 function tagMenu(e, t){
   const dd = $("dropdown");
+  const upI=_svg('<path d="M12 19V5M6 11l6-6 6 6"/>');
+  const downI=_svg('<path d="M12 5v14M6 13l6 6 6-6"/>');
+  const topI=_svg('<path d="M5 5h14M12 20V9M7 14l5-5 5 5"/>');
+  const pal=(c)=>{ const s=(c||"")===(t.color||""); return `<span class="pal ${c?"":"pal-none"} ${s?"sel":""}" data-pc="${c||""}" style="${c?metalStyle(c):""}" title="${c||"Bez koloru"}">${c?"":"✕"}</span>`; };
   dd.innerHTML =
-    `<div data-tm="ren">✎ Zmień nazwę</div>
-     <div class="palrow"><span class="pal" data-pc="" style="background:#fff" title="Bez koloru">✕</span>${TAGCOLORS.map(c=>`<span class="pal" data-pc="${c}" style="${metalStyle(c)}"></span>`).join("")}</div>
-     <div data-tm="up">▲ Przesuń w górę</div>
-     <div data-tm="down">▼ Przesuń w dół</div>
-     <div data-tm="top">⤒ Na samą górę</div>
-     <div data-tm="del" style="color:#a33">🗑 Usuń zakładkę</div>`;
+    `<div data-tm="ren">${ICO.edit}Zmień nazwę</div>
+     <div class="dd-lbl">Kolor zakładki</div>
+     <div class="palrow">${pal("")}${TAGCOLORS.map(c=>pal(c)).join("")}</div>
+     <div class="dd-sep"></div>
+     <div data-tm="up">${upI}Przesuń w górę</div>
+     <div data-tm="down">${downI}Przesuń w dół</div>
+     <div data-tm="top">${topI}Na samą górę</div>
+     <div class="dd-sep"></div>
+     <div data-tm="del" class="dd-danger">${ICO.trash}Usuń zakładkę</div>`;
   dd.style.display = "block";
   const r = e.target.getBoundingClientRect();
-  dd.style.left = Math.min(r.left, innerWidth-260)+"px";
-  dd.style.top = Math.min(r.bottom+4, innerHeight-230)+"px";
+  dd.style.left = Math.min(r.left, innerWidth-270)+"px";
+  dd.style.top = Math.min(r.bottom+6, innerHeight-260)+"px";
   dd.onclick = ev=>{
     if(ev.target.dataset.pc!==undefined){
       pushUndo({type:"tags", label:"zmianę koloru zakładki", tags:cloneTags()});
@@ -1046,7 +1126,12 @@ function renderAll(){ visibleCount=60; renderTags(); renderBooks(); renderNotes(
 
 /* ================= NOTATKA NA PEŁNYM EKRANIE ================= */
 let fsGuid = null;
-function openFs(n){ fsGuid = n.g; renderFs(); openModal("modalFs"); }
+function openFs(n){
+  // jeśli notatka jest właśnie edytowana — zapisz treść (ze zdjęciami), zanim przerysujemy pełny ekran
+  const ec = document.querySelector('.ncard.editing[data-g="'+n.g+'"] .ncontent');
+  if(ec) commitLiveEdit(ec);
+  fsGuid = n.g; renderFs(); openModal("modalFs");
+}
 function renderFs(){
   const n = notes.find(x=>x.g===fsGuid);
   if(!n || n.del){ closeFs(); return; }
@@ -1078,6 +1163,22 @@ $("btnTheme").onclick = ()=>{
   toast("Motyw: " + (themeMode==="light"?"dzień ☀️":themeMode==="dark"?"noc 🌙":"jak w systemie 🖥️"));
 };
 applyTheme();
+$("btnColors").onclick = openColorMenu;
+$("colorMenu").addEventListener("click", e=>{
+  const swEl=e.target.closest(".cm-sw"); const row=e.target.closest("[data-target]");
+  if(!swEl||!row) return;
+  const cfg=loadColorCfg();
+  if(swEl.dataset.pc) cfg[row.dataset.target]=swEl.dataset.pc; else delete cfg[row.dataset.target];
+  localStorage.setItem(KP+"Colors", JSON.stringify(cfg));
+  applyColors();
+  row.querySelectorAll(".cm-sw").forEach(s=>s.classList.remove("sel"));
+  swEl.classList.add("sel");
+});
+document.addEventListener("click", e=>{
+  const cm=$("colorMenu");
+  if(cm.style.display==="block" && !e.target.closest("#colorMenu") && e.target.id!=="btnColors"){ cm.style.display="none"; }
+}, true);
+applyColors();
 
 /* ================= ROZMIAR CZCIONKI ================= */
 let noteFs = 14;
@@ -1342,16 +1443,25 @@ function startImgMove(){
   toast("Dotknij miejsca w tekście, gdzie wstawić zdjęcie");
 }
 function cancelImgMove(){ movePending=null; document.body.classList.remove("img-placing"); }
-document.addEventListener("pointerdown", e=>{
+// umieszczenie: po dotknięciu iPad sam stawia kursor w tekście — używamy właśnie tego kursora
+document.addEventListener("click", e=>{
   if(!movePending) return;
   if(e.target.closest("#imgBar") || e.target.closest("#imgHandles")) return;
   const img = movePending;
   const ce = e.target.closest(".ncontent");
   if(!ce || !ce.isContentEditable){ cancelImgMove(); return; }
-  e.preventDefault(); e.stopPropagation();
-  const range = caretRangeFromPoint(e.clientX, e.clientY);
   cancelImgMove();
-  if(range && ce.contains(range.startContainer)){
+  // 1) spróbuj użyć kursora ustawionego przez dotknięcie/klik
+  let range = null;
+  const sel = getSelection();
+  if(sel && sel.rangeCount){
+    const r = sel.getRangeAt(0);
+    if(ce.contains(r.startContainer)) range = r.cloneRange();
+  }
+  // 2) awaryjnie: z punktu kliknięcia
+  if(!range){ const rp = caretRangeFromPoint(e.clientX, e.clientY); if(rp && ce.contains(rp.startContainer)) range = rp; }
+  if(range){
+    range.collapse(true);
     const rect = ce.getBoundingClientRect();
     const side = (e.clientX - rect.left) < rect.width*0.5 ? "img-left" : "img-right";
     try{
@@ -1360,12 +1470,18 @@ document.addEventListener("pointerdown", e=>{
       img.classList.add(side);
     }catch(_){}
     commitLiveEdit(ce);
-    suppressImgClick = true;
     showImgBar(img);
+  } else {
+    toast("Nie udało się ustalić miejsca — spróbuj dotknąć wyraźnie w tekście");
   }
-}, true);
+});
 /* nie pozwól iOS uruchomić natywnego przeciągania obrazka w edytowanej notatce */
 document.addEventListener("dragstart", e=>{ if(e.target.closest('.ncontent[contenteditable="true"] img')) e.preventDefault(); });
+/* zapisz treść, gdy pole edycji traci ostrość (np. dotknięcie pełnego ekranu) — chroni zdjęcia przed zniknięciem */
+document.addEventListener("focusout", e=>{
+  const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
+  if(ce) commitLiveEdit(ce);
+}, true);
 addEventListener("scroll", ()=>{ if(selImg && $("imgBar").style.display==="flex") showImgBar(selImg); }, true);
 addEventListener("resize", ()=>{ if(selImg) hideImgBar(); });
 addEventListener("orientationchange", ()=>{ if(selImg) hideImgBar(); });
@@ -1376,11 +1492,11 @@ function captureRange(){
 async function compressImage(file){
   const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
   const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
-  const max = 1200; let w=img.width, h=img.height;
+  const max = 1000; let w=img.width, h=img.height;
   if(Math.max(w,h)>max){ const k=max/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
   const cv = document.createElement("canvas"); cv.width=w; cv.height=h;
   cv.getContext("2d").drawImage(img,0,0,w,h);
-  return cv.toDataURL("image/jpeg", 0.82);
+  return cv.toDataURL("image/jpeg", 0.78);
 }
 function toggleEdit(card,n){
   const editing = card.classList.contains("editing");
@@ -1533,7 +1649,7 @@ document.addEventListener("mouseup", e=>{
 let selTimer=null;
 document.addEventListener("selectionchange", ()=>{
   clearTimeout(selTimer);
-  selTimer=setTimeout(showHlBar, 120);
+  selTimer=setTimeout(showHlBar, 50);
 });
 document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 60); }, {passive:true});
 document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen") setTimeout(showHlBar, 60); }, {passive:true});

@@ -173,12 +173,14 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
 .ncontent s{opacity:.75}
 .ncontent img{max-width:100%;height:auto;border-radius:10px;display:block;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-.ncontent[contenteditable="true"] img{cursor:pointer}
+.ncontent[contenteditable="true"] img{cursor:grab;touch-action:none}
+.ncontent[contenteditable="true"] img.dragging{opacity:.45;cursor:grabbing}
+#dropCaret{position:fixed;display:none;width:2px;background:var(--accent2);border-radius:2px;z-index:128;pointer-events:none;box-shadow:0 0 4px rgba(140,111,82,.6)}
 .ncontent img.img-s{width:35%}
 .ncontent img.img-m{width:60%}
 .ncontent img.img-l{width:100%}
-.ncontent img.img-left{float:left;margin:4px 16px 8px 0;max-width:62%}
-.ncontent img.img-right{float:right;margin:4px 0 8px 16px;max-width:62%}
+.ncontent img.img-left{float:left;margin:5px 12px 6px 0}
+.ncontent img.img-right{float:right;margin:5px 0 6px 12px}
 .ncontent img.img-center{display:block;float:none;margin-left:auto;margin-right:auto}
 .ncontent img.img-inline{display:inline;float:none;vertical-align:middle;margin:0 4px}
 .ncontent img.imgsel{outline:2px dashed var(--accent2);outline-offset:3px}
@@ -387,6 +389,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <button data-idel="1" title="Usuń obraz"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
 </div>
 <div id="imgHandles"><span class="h tl"></span><span class="h tr"></span><span class="h bl"></span><span class="h br"></span></div>
+<div id="dropCaret"></div>
 <div id="toast"></div>
 <div id="dropdown"></div>
 
@@ -415,7 +418,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="modal">
     <h3>Nowa notatka</h3>
     <label>Tytuł</label><input type="text" id="nnTitle">
-    <label>Treść <button type="button" id="nnMic" class="sbtn" style="float:right;margin-top:-4px">🎤 Dyktuj</button></label><textarea id="nnContent"></textarea>
+    <label>Treść</label><textarea id="nnContent"></textarea>
     <div class="row">
       <div><label>Księga Biblii (opcjonalnie)</label><select id="nnBook"></select></div>
       <div><label>Rozdział</label><input type="text" id="nnCh" inputmode="numeric"></div>
@@ -957,7 +960,6 @@ function noteCard(n){
          <button class="sbtn ico" data-act="copy" title="Kopiuj treść">${ICO.copy}</button>
          ${link?`<button class="sbtn ico" data-act="link" title="Kopiuj odnośnik">${ICO.link}</button>`:""}
          <button class="sbtn ico" data-act="exp" title="Eksportuj notatkę (Word / PDF)">${ICO.file}</button>
-         <button class="sbtn ico" data-act="mic" title="Dyktuj (mowa → tekst)">${ICO.mic}</button>
          <button class="sbtn ico" data-act="edit" title="Edytuj notatkę">${ICO.edit}</button>
          <button class="sbtn ico warn" data-act="del" title="Usuń notatkę">${ICO.trash}</button>
        </div>
@@ -994,17 +996,6 @@ function noteCard(n){
     if(act==="copy") copyNote(n);
     else if(act==="link"){ navigator.clipboard.writeText(finderUrl(n)).then(()=>toast("Skopiowano odnośnik")); }
     else if(act==="md") downloadMd(n);
-    else if(act==="mic"){
-      const contEl = d.querySelector(".ncontent");
-      dictate(e.target, txt=>{
-        contEl.style.display = "block";
-        contEl.innerHTML = (contEl.innerHTML ? contEl.innerHTML + " " : "") + esc(txt);
-        contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
-        const clean = sanitize(contEl.innerHTML);
-        n.h = clean; n.c = htmlToPlain(clean);
-        markDirty(n);
-      });
-    }
     else if(act==="edit") toggleEdit(d, n);
     else if(act==="del") delNote(n);
     else if(act==="tagtoggle"){
@@ -1283,10 +1274,68 @@ document.getElementById("imgSize").addEventListener("input", e=>{
   selImg.classList.remove("img-s","img-m","img-l");
   selImg.style.width = e.target.value + "%";
 });
+let suppressImgClick = false;
 document.addEventListener("click", e=>{
+  if(suppressImgClick){ suppressImgClick = false; return; }
   const img = e.target.closest(".ncontent img");
   if(img && img.closest('[contenteditable="true"]')){ e.preventDefault(); showImgBar(img); return; }
   if(!e.target.closest("#imgBar") && !e.target.closest("#imgHandles")) hideImgBar();
+});
+
+/* ===== przeciąganie zdjęcia w dowolne miejsce notatki (mysz + palec) ===== */
+let imgMove = null;
+function caretRangeFromPoint(x,y){
+  if(document.caretRangeFromPoint) return document.caretRangeFromPoint(x,y);
+  if(document.caretPositionFromPoint){ const p=document.caretPositionFromPoint(x,y); if(p){ const r=document.createRange(); r.setStart(p.offsetNode,p.offset); r.collapse(true); return r; } }
+  return null;
+}
+function showDropCaret(range){
+  const c=document.getElementById("dropCaret"); if(!c) return;
+  let r=range.getBoundingClientRect();
+  if(!r || (!r.height && !r.top && !r.left)){ const rs=range.getClientRects(); if(rs.length) r=rs[0]; }
+  if(!r || (!r.height && !r.width)){ c.style.display="none"; return; }
+  c.style.display="block"; c.style.left=r.left+"px"; c.style.top=r.top+"px"; c.style.height=(r.height||18)+"px";
+}
+function hideDropCaret(){ const c=document.getElementById("dropCaret"); if(c) c.style.display="none"; }
+document.addEventListener("pointerdown", e=>{
+  const img=e.target.closest(".ncontent img");
+  if(!img || !img.closest('[contenteditable="true"]')) return;
+  if(e.target.closest("#imgHandles")) return;
+  imgMove={img, x:e.clientX, y:e.clientY, id:e.pointerId, moved:false};
+});
+document.addEventListener("pointermove", e=>{
+  if(!imgMove || e.pointerId!==imgMove.id) return;
+  const dx=e.clientX-imgMove.x, dy=e.clientY-imgMove.y;
+  if(!imgMove.moved){
+    if(Math.hypot(dx,dy)<8) return;
+    imgMove.moved=true; hideImgBar();
+    imgMove.img.classList.add("dragging");
+    document.body.style.userSelect="none";
+  }
+  e.preventDefault();
+  const ce=imgMove.img.closest(".ncontent");
+  const range=caretRangeFromPoint(e.clientX,e.clientY);
+  if(ce && range && ce.contains(range.startContainer)) showDropCaret(range); else hideDropCaret();
+}, {passive:false});
+document.addEventListener("pointerup", e=>{
+  if(!imgMove) return;
+  const mv=imgMove; imgMove=null;
+  if(!mv.moved) return;
+  const img=mv.img;
+  img.classList.remove("dragging");
+  document.body.style.userSelect="";
+  hideDropCaret();
+  suppressImgClick=true;
+  const ce=img.closest(".ncontent");
+  const range=caretRangeFromPoint(e.clientX,e.clientY);
+  if(ce && range && ce.contains(range.startContainer)){
+    const rect=ce.getBoundingClientRect();
+    const side=(e.clientX-rect.left) < rect.width*0.5 ? "img-left" : "img-right";
+    try{ range.insertNode(img); }catch(_){}
+    img.classList.remove("img-center","img-inline","img-left","img-right");
+    img.classList.add(side);
+  }
+  showImgBar(img);
 });
 addEventListener("scroll", ()=>{ if(selImg && $("imgBar").style.display==="flex") showImgBar(selImg); }, true);
 addEventListener("resize", ()=>{ if(selImg) hideImgBar(); });
@@ -1509,41 +1558,6 @@ function unwrapMarks(range,contEl){
     m.remove();
   });
 }
-
-/* ================= DYKTOWANIE (mowa → tekst) ================= */
-let rec = null, recBtn = null;
-function stopDictation(){ if(rec){ try{ rec.stop(); }catch(e){} } }
-function dictate(btn, onText){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){ alert("Dyktowanie nie jest tu obsługiwane.\n\n• Na komputerze użyj Chrome lub Edge (wymagany internet i zgoda na mikrofon).\n• Na iPadzie/iPhonie: kliknij ✏️ Edytuj i użyj mikrofonu 🎤 na klawiaturze ekranowej — systemowe dyktowanie Apple wpisze tekst prosto do notatki."); return; }
-  if(rec && recBtn===btn){ stopDictation(); return; } // drugie kliknięcie = stop
-  stopDictation();
-  rec = new SR(); recBtn = btn;
-  rec.lang = "pl-PL"; rec.continuous = true; rec.interimResults = false;
-  btn.dataset.orig = btn.innerHTML;
-  btn.classList.add("rec"); btn.innerHTML = btn.classList.contains("ico") ? '<svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>' : "⏹ Zatrzymaj";
-  rec.onresult = e=>{
-    let txt = "";
-    for(let i=e.resultIndex;i<e.results.length;i++) if(e.results[i].isFinal) txt += e.results[i][0].transcript;
-    if(txt.trim()) onText(txt.trim());
-  };
-  rec.onerror = e=>{
-    if(e.error==="not-allowed") toast("Brak zgody na mikrofon — sprawdź ustawienia przeglądarki");
-    else if(e.error!=="no-speech" && e.error!=="aborted") toast("Błąd dyktowania: "+e.error);
-  };
-  rec.onend = ()=>{
-    if(recBtn){ recBtn.classList.remove("rec"); recBtn.innerHTML = recBtn.dataset.orig || ICO.mic; }
-    rec = null; recBtn = null;
-  };
-  try{ rec.start(); toast("Słucham… mów, a tekst dopisze się do notatki"); }
-  catch(e){ toast("Nie można uruchomić mikrofonu"); rec=null; recBtn=null; btn.classList.remove("rec"); btn.innerHTML=btn.dataset.orig||ICO.mic; }
-}
-$("nnMic").onclick = ()=>{
-  dictate($("nnMic"), txt=>{
-    const ta = $("nnContent");
-    ta.value = (ta.value ? ta.value + " " : "") + txt;
-  });
-};
 
 /* ================= NOWA NOTATKA ================= */
 function buildStatic(){
@@ -1841,10 +1855,23 @@ ul,ol{margin:4px 0 4px 24px}
 function exportFileName(n){
   return ((refLabel(n)||n.t||"notatka").replace(/[^\p{L}\p{N} ,-]/gu,"").trim().substring(0,50)||"notatka");
 }
+async function saveFile(blob, filename, title){
+  try{
+    if(navigator.canShare && typeof File!=="undefined"){
+      const file = new File([blob], filename, {type: blob.type});
+      if(navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title: title || filename});
+        return true;
+      }
+    }
+  }catch(err){ if(err && err.name==="AbortError") return true; }
+  download(blob, filename);
+  return true;
+}
 function exportNoteWord(n){
   const blob = new Blob(["\ufeff"+noteExportHtml(n)], {type:"application/msword"});
-  download(blob, exportFileName(n)+".doc");
-  toast("Pobrano dokument Word");
+  saveFile(blob, exportFileName(n)+".doc", "Notatka (Word)");
+  toast("Przygotowano dokument Word");
 }
 function exportNotePdf(n){
   const ifr = document.createElement("iframe");

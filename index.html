@@ -1920,9 +1920,10 @@ $("expGo").onclick = async ()=>{
     manifest.userDataBackup.lastModifiedDate=iso;
     manifest.userDataBackup.deviceName="MojeNotatki";
     zip.file("manifest.json",JSON.stringify(manifest));
-    const blob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
-    download(blob,manifest.name);
-    toast("Plik .jwlibrary gotowy — pobrano");
+    const zblob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
+    const blob=new Blob([zblob],{type:"application/octet-stream"});
+    await saveFile(blob, manifest.name, "Kopia JW Library");
+    toast("Plik .jwlibrary gotowy — wybierz „Zapisz w Plikach” lub otwórz w JW Library");
   }catch(err){ console.error(err); alert("Błąd eksportu: "+err.message); }
 };
 function applyChangesToDb(db){
@@ -2028,7 +2029,8 @@ function exportFileName(n){
   return ((refLabel(n)||n.t||"notatka").replace(/[^\p{L}\p{N} ,-]/gu,"").trim().substring(0,50)||"notatka");
 }
 async function saveFile(blob, filename, title){
-  const isMobile = navigator.maxTouchPoints > 0 && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // iPadOS w Safari udaje „Maca” — isIOS() wykrywa to poprawnie (maxTouchPoints)
+  const isMobile = (typeof isIOS==="function" && isIOS()) || /Android/i.test(navigator.userAgent);
   if(isMobile){
     try{
       if(navigator.canShare && typeof File!=="undefined"){
@@ -2158,8 +2160,9 @@ async function shareBackup(){
 
 /* ================= KOPIA JSON ================= */
 function exportJson(){
-  download(new Blob([JSON.stringify({tags,notes})],{type:"application/json"}),
-    "moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json");
+  const name="moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json";
+  const blob=new Blob([JSON.stringify({tags,notes})],{type:"application/json"});
+  saveFile(blob, name, "Kopia notatek (JSON)");
   clearDirty();
   toast("Zapisano kopię danych");
 }

@@ -35,7 +35,7 @@ select,button,input{font-family:inherit}
 .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn.primary:hover{background:var(--accent2)}
 #sortSel{padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--panel);font-size:13px}
-main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gradient(180deg,#d8d2c5,#cfc8ba)}
+main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gradient(900px 520px at 12% -5%,rgba(150,140,185,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(120,170,180,.36),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(190,160,130,.32),transparent 60%),linear-gradient(180deg,#d8d2c5,#cfc8ba)}
 .col{display:flex;flex-direction:column;min-height:0;position:relative;border-radius:14px;overflow:hidden}
 /* kolumny jako oddzielne sztaby z frezem */
 .col::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.07) 47%,rgba(255,255,255,.02) 53%,transparent 62%)}
@@ -44,7 +44,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #bookList .item,#bookList .chip-ch{contain:layout paint}
 
 /* Kolumna 1 — ciemny grafit */
-#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,rgba(62,57,80,.52) 0%,rgba(46,42,58,.48) 45%,rgba(37,33,48,.46) 100%);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(20,15,35,.26),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.22)}
+#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,rgba(62,57,80,.52) 0%,rgba(46,42,58,.48) 45%,rgba(37,33,48,.46) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(20,15,35,.26),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.22)}
 #colBooks h2{color:#eee9f7;text-shadow:0 1px 2px rgba(20,15,35,.5);font-weight:700}
 #colBooks .item{color:#edeaf4;background:linear-gradient(180deg,#615a7a 0%,#4d4763 48%,#3e3950 100%);border:1px solid #262133;border-top-color:#847da0;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35)}
 #colBooks .item:hover{background:linear-gradient(180deg,#6f6889 0%,#595270 48%,#48425c 100%);border-top-color:#968fb2;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.35)}
@@ -58,7 +58,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 #btnNewTag:hover{background:#6e6e76;color:#fff}
 
 /* Kolumna 2 — szary */
-#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,rgba(80,80,88,.5) 0%,rgba(58,58,66,.47) 45%,rgba(46,46,52,.45) 100%);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(30,25,15,.22),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.2)}
+#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,rgba(80,80,88,.5) 0%,rgba(58,58,66,.47) 45%,rgba(46,46,52,.45) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(30,25,15,.22),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.2)}
 #colTags h2{color:#f0f0f5;text-shadow:0 1px 2px rgba(15,15,20,.5);font-weight:700}
 #colTags .item{color:var(--c2item);background:linear-gradient(180deg,#5a5a63 0%,#48484f 48%,#3b3b42 100%);border:1px solid #26262b;border-top-color:#75757f;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
 #colTags .item:hover{background:linear-gradient(180deg,#686871 0%,#54545c 48%,#46464d 100%);border-top-color:#8a8a95;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
@@ -76,7 +76,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .chip-ch.active::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:46%;height:3.5px;border-radius:0 0 4px 4px;background:linear-gradient(180deg,#c8ffab,#6ef23f);box-shadow:0 0 7px 1.5px rgba(110,242,63,.85),0 1px 2px rgba(0,0,0,.3)}
 .item .arr{width:14px;text-align:center;color:inherit;opacity:.6;font-size:10px}
 
-#colNotes{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(248,245,238,.45) 55%,rgba(240,236,226,.42) 100%);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.6);border-top-color:#ffffff;box-shadow:0 10px 30px rgba(60,50,30,.14),inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(0,0,0,.05)}
+#colNotes{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(248,245,238,.45) 55%,rgba(240,236,226,.42) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.6);border-top-color:#ffffff;box-shadow:0 10px 30px rgba(60,50,30,.14),inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(0,0,0,.05)}
 .item{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:13.5px;margin:6px 3px;position:relative;overflow:hidden;transition:transform .1s ease, box-shadow .1s ease}
 /* metaliczny błysk na kafelkach */
 #colBooks .item::after,#colTags .item::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.11) 44%,rgba(255,255,255,.04) 52%,transparent 64%)}
@@ -321,7 +321,7 @@ html[data-theme="dark"]{
   --bg:#1d1d21; --panel:#292930; --border:#3b3b44; --text:#e7e5e0; --muted:#9c99a3;
   --accent:#b3966f; --accent2:#c9ad85; --sel:#3a3a45;
 }
-html[data-theme="dark"] main{background:linear-gradient(180deg,#141416,#0e0e10)}
+html[data-theme="dark"] main{background:radial-gradient(900px 520px at 12% -5%,rgba(90,80,140,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(40,90,110,.4),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(110,80,60,.32),transparent 60%),linear-gradient(180deg,#141416,#0e0e10)}
 html[data-theme="dark"] #colBooks{background:linear-gradient(180deg,rgba(72,67,92,.46) 0%,rgba(44,40,58,.44) 45%,rgba(34,31,46,.42) 100%);border-color:rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.3)}
 html[data-theme="dark"] #colTags{background:linear-gradient(180deg,rgba(66,66,74,.46) 0%,rgba(46,46,54,.44) 45%,rgba(36,36,42,.42) 100%);border-color:rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.3)}
 html[data-theme="dark"] #colNotes{background:linear-gradient(180deg,rgba(46,46,54,.5) 0%,rgba(32,32,38,.46) 55%,rgba(25,25,30,.44) 100%);border-color:rgba(255,255,255,.08);border-top-color:rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
@@ -720,14 +720,14 @@ function buildColorCSS(){
   const cfg = loadColorCfg(); let css="";
   ["colBooks","colTags"].forEach(id=>{
     const c=cfg[id]; if(!c) return;
-    css+=`#${id}{background:${glassGrad(c,.02,-.2,.52)};-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);border-color:${hexA(shade(c,-.5),.5)};border-top-color:rgba(255,255,255,.34)}`;
+    css+=`#${id}{background:${glassGrad(c,.02,-.2,.52)};-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border-color:${hexA(shade(c,-.5),.5)};border-top-color:rgba(255,255,255,.34)}`;
     css+=`#${id} h2,#${id} .divider,#${id} .cnt{color:${shade(c,.72)}!important}`;
     css+=`#${id} .item{background:${colGrad(c,.2,.02,-.12)};border-color:${shade(c,-.5)};border-top-color:${shade(c,.5)};color:#fff}`;
     css+=`#${id} .item:hover{background:${colGrad(c,.28,.1,-.04)}}`;
     css+=`#${id} .item.active{background:${colGrad(c,-.12,-.3,-.44)};border-top-color:${shade(c,.2)};color:#fff}`;
     css+=`#${id} .item.active .cnt{color:#fff!important}`;
   });
-  if(cfg.colNotes){ const c=cfg.colNotes; css+=`#colNotes{background:${glassGrad(c,.6,.48,.5)};-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border-top-color:${hexA(shade(c,.85),.7)};border-color:${hexA(shade(c,.2),.5)}}`; }
+  if(cfg.colNotes){ const c=cfg.colNotes; css+=`#colNotes{background:${glassGrad(c,.6,.48,.5)};-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border-top-color:${hexA(shade(c,.85),.7)};border-color:${hexA(shade(c,.2),.5)}}`; }
   if(cfg.nhead){ const c=cfg.nhead; css+=`.nhead{background:${colGrad(c,.16,0,-.28)}!important;border-bottom-color:${shade(c,-.55)}!important}`; }
   return css;
 }
@@ -791,6 +791,8 @@ function tagMenu(e, t){
   const upI=_svg('<path d="M12 19V5M6 11l6-6 6 6"/>');
   const downI=_svg('<path d="M12 5v14M6 13l6 6 6-6"/>');
   const topI=_svg('<path d="M5 5h14M12 20V9M7 14l5-5 5 5"/>');
+  const printI=_svg('<path d="M6 9V4h12v5"/><path d="M6 17H4a1 1 0 0 1-1-1v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a1 1 0 0 1-1 1h-2"/><rect x="7" y="13" width="10" height="7" rx="1"/>');
+  const cnt=notes.filter(n=>!n.del && n.tg.includes(t.id)).length;
   const pal=(c)=>{ const s=(c||"")===(t.color||""); return `<span class="pal ${c?"":"pal-none"} ${s?"sel":""}" data-pc="${c||""}" style="${c?metalStyle(c):""}" title="${c||"Bez koloru"}">${c?"":"✕"}</span>`; };
   dd.innerHTML =
     `<div data-tm="ren">${ICO.edit}Zmień nazwę</div>
@@ -800,6 +802,10 @@ function tagMenu(e, t){
      <div data-tm="up">${upI}Przesuń w górę</div>
      <div data-tm="down">${downI}Przesuń w dół</div>
      <div data-tm="top">${topI}Na samą górę</div>
+     <div class="dd-sep"></div>
+     <div class="dd-lbl">Eksport całej zakładki${cnt?" ("+cnt+" notatek)":""}</div>
+     <div data-tm="expw">${ICO.file}Zapisz do Word</div>
+     <div data-tm="expp">${printI}Zapisz / drukuj do PDF</div>
      <div class="dd-sep"></div>
      <div data-tm="del" class="dd-danger">${ICO.trash}Usuń zakładkę</div>`;
   dd.style.display = "block";
@@ -819,6 +825,8 @@ function tagMenu(e, t){
     else if(m==="up") moveTag(t.id,-1);
     else if(m==="down") moveTag(t.id,1);
     else if(m==="top") moveTag(t.id,"top");
+    else if(m==="expw") exportTagWord(t);
+    else if(m==="expp") exportTagPdf(t);
     else if(m==="del") deleteTag(t);
   };
 }
@@ -2053,6 +2061,70 @@ function exportNotePdf(n){
     }, 300);
   };
   toast("W oknie drukowania wybierz „Zapisz jako PDF”");
+}
+
+/* ===== eksport CAŁEJ ZAKŁADKI (wszystkie notatki) do Word / PDF ===== */
+function tagNotesSorted(t){
+  return notes.filter(n=>!n.del && n.tg.includes(t.id))
+    .sort((a,b)=>(a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0)||(a.mo||"").localeCompare(b.mo||""));
+}
+function notesExportHtml(list, heading){
+  const body = list.map(n=>{
+    const ref=refLabel(n);
+    return `<section class="note"><h1>${esc(n.t||ref||"Notatka")}</h1>
+      <div class="meta">${esc(ref||"")}${n.ks?" · "+esc(n.ks):""}${n.mo?" · "+(n.mo||"").substring(0,10):""}</div>
+      <div class="content">${n.h || esc(n.c||"")}</div></section>`;
+  }).join("");
+  return `<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8"><title>${esc(heading)}</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;line-height:1.6;max-width:760px;margin:24px auto;padding:0 18px;color:#222}
+.doc-title{font-size:24px;color:#1e5b46;margin:0 0 3px;font-weight:bold}
+.doc-sub{color:#777;font-size:12px;margin-bottom:22px}
+.note{margin:0 0 24px;padding:0 0 18px;border-bottom:1px solid #e2ddd2}
+.note:last-child{border-bottom:none}
+h1{font-size:19px;color:#1e5b46;border-bottom:2px solid #2e7a5f;padding-bottom:5px;margin:0 0 6px}
+.meta{color:#777;font-size:12px;margin-bottom:12px}
+mark{padding:0 2px;border-radius:3px}
+mark.hl1{background:#ffe97d}mark.hl2{background:#b7e4a7}mark.hl3{background:#a8d5f2}mark.hl4{background:#d9b8f0}mark.hl5{background:#f5b0b0}mark.hl6{background:#ffcf8f}mark.hl7{background:#9fe3d5}
+blockquote{margin:6px 0 6px 22px;padding-left:10px;border-left:3px solid #ccc}
+img{max-width:100%;height:auto;float:right;margin:4px 0 8px 16px}
+img.img-left{float:left;margin:4px 16px 8px 0}
+img.img-center{float:none;display:block;margin:10px auto}
+img.img-inline{float:none;display:inline;margin:0 4px}
+h2{font-size:17px;color:#5b4636;margin:12px 0 4px}h3{font-size:15px;margin:10px 0 3px}
+ul,ol{margin:4px 0 4px 24px}
+.content{white-space:pre-wrap}
+.content::after{content:"";display:block;clear:both}
+@media print{.note{page-break-inside:avoid}}
+</style></head><body>
+<div class="doc-title">${esc(heading)}</div>
+<div class="doc-sub">Zakładka · ${list.length} ${list.length===1?"notatka":"notatek"} · ${new Date().toLocaleDateString("pl")}</div>
+${body}
+</body></html>`;
+}
+function safeName(s){ return (s||"zakladka").replace(/[^\p{L}\p{N} ,-]/gu,"").trim().substring(0,50)||"zakladka"; }
+function exportTagWord(t){
+  const list = tagNotesSorted(t);
+  if(!list.length){ toast("Ta zakładka nie ma notatek"); return; }
+  const blob = new Blob(["﻿"+notesExportHtml(list, t.name)], {type:"application/msword"});
+  saveFile(blob, safeName(t.name)+".doc", "Zakładka „"+t.name+"” (Word)");
+  toast("Przygotowano Word — "+list.length+" notatek");
+}
+function exportTagPdf(t){
+  const list = tagNotesSorted(t);
+  if(!list.length){ toast("Ta zakładka nie ma notatek"); return; }
+  const ifr = document.createElement("iframe");
+  ifr.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";
+  document.body.appendChild(ifr);
+  ifr.srcdoc = notesExportHtml(list, t.name);
+  ifr.onload = ()=>{
+    setTimeout(()=>{
+      try{ ifr.contentWindow.focus(); ifr.contentWindow.print(); }
+      catch(e){ alert("Nie udało się otworzyć okna drukowania."); }
+      setTimeout(()=>ifr.remove(), 4000);
+    }, 350);
+  };
+  toast("W oknie drukowania wybierz „Zapisz jako PDF” — "+list.length+" notatek");
 }
 
 /* ================= KOPIA DO CHMURY ================= */

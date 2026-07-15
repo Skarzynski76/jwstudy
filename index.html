@@ -175,16 +175,16 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:linear-gr
 .ncontent h3{font-size:calc(var(--noteFs,14px) + 3px);font-weight:700;margin:8px 0 3px}
 .ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
 .ncontent s{opacity:.75}
-.ncontent img{max-width:100%;height:auto;border-radius:10px;display:block;margin:8px 0;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.ncontent img{max-width:100%;height:auto;border-radius:10px;float:right;margin:4px 0 8px 16px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .ncontent[contenteditable="true"] img{cursor:pointer}
 body.img-placing{cursor:copy}
 body.img-placing .ncontent[contenteditable="true"]{outline:2px dashed var(--accent2);outline-offset:2px}
 .ncontent img.img-s{width:35%}
 .ncontent img.img-m{width:60%}
 .ncontent img.img-l{width:100%}
-.ncontent img.img-left{float:left;margin:5px 12px 6px 0}
-.ncontent img.img-right{float:right;margin:5px 0 6px 12px}
-.ncontent img.img-center{display:block;float:none;margin-left:auto;margin-right:auto}
+.ncontent img.img-left{float:left;margin:4px 16px 8px 0}
+.ncontent img.img-right{float:right;margin:4px 0 8px 16px}
+.ncontent img.img-center{display:block;float:none;margin:10px auto}
 .ncontent img.img-inline{display:inline;float:none;vertical-align:middle;margin:0 4px}
 .ncontent img.imgsel{outline:2px dashed var(--accent2);outline-offset:3px}
 .editbar .ic{width:19px;height:19px}
@@ -1331,7 +1331,8 @@ function buildEditbar(){
       const ceIns = bar.parentElement.querySelector(".ncontent");
       if(edSavedRange){ edSavedRange.collapse(false); edSavedRange.insertNode(img); }
       else if(ceIns){ ceIns.appendChild(img); }
-      img.classList.add("img-m");
+      img.classList.add("img-right");   // domyślnie zdjęcie pływa (tekst je opływa)
+      img.style.width = "45%";
       commitLiveEdit(ceIns);
       showImgBar(img);
       toast("Wstawiono zdjęcie");
@@ -1422,6 +1423,7 @@ document.getElementById("imgSize").addEventListener("change", e=>{
 });
 let suppressImgClick = false;
 document.addEventListener("click", e=>{
+  if(movePending) return;   // w trybie przenoszenia obsługą zajmuje się placeImgAt
   if(suppressImgClick){ suppressImgClick = false; return; }
   const img = e.target.closest(".ncontent img");
   if(img && img.closest('[contenteditable="true"]')){ e.preventDefault(); showImgBar(img); return; }
@@ -1443,38 +1445,37 @@ function startImgMove(){
   toast("Dotknij miejsca w tekście, gdzie wstawić zdjęcie");
 }
 function cancelImgMove(){ movePending=null; document.body.classList.remove("img-placing"); }
-// umieszczenie: po dotknięciu iPad sam stawia kursor w tekście — używamy właśnie tego kursora
-document.addEventListener("click", e=>{
+// umieszczenie: kliknij/dotknij miejsca w tekście, a zdjęcie tam wskoczy
+function placeImgAt(e){
   if(!movePending) return;
   if(e.target.closest("#imgBar") || e.target.closest("#imgHandles")) return;
-  const img = movePending;
   const ce = e.target.closest(".ncontent");
-  if(!ce || !ce.isContentEditable){ cancelImgMove(); return; }
+  if(!ce || !ce.isContentEditable) return;   // klik poza treścią — nie anuluj, pozwól spróbować ponownie
+  const img = movePending;
+  // 1) najpewniejsze: pozycja kursora z punktu kliknięcia
+  let range = caretRangeFromPoint(e.clientX, e.clientY);
+  if(!range || !ce.contains(range.startContainer)){
+    const sel = getSelection();
+    if(sel && sel.rangeCount && ce.contains(sel.getRangeAt(0).startContainer)) range = sel.getRangeAt(0).cloneRange();
+  }
+  // 2) ostatecznie: koniec treści (żeby zawsze coś się stało)
+  if(!range || !ce.contains(range.startContainer)){
+    range = document.createRange(); range.selectNodeContents(ce); range.collapse(false);
+  }
   cancelImgMove();
-  // 1) spróbuj użyć kursora ustawionego przez dotknięcie/klik
-  let range = null;
-  const sel = getSelection();
-  if(sel && sel.rangeCount){
-    const r = sel.getRangeAt(0);
-    if(ce.contains(r.startContainer)) range = r.cloneRange();
-  }
-  // 2) awaryjnie: z punktu kliknięcia
-  if(!range){ const rp = caretRangeFromPoint(e.clientX, e.clientY); if(rp && ce.contains(rp.startContainer)) range = rp; }
-  if(range){
-    range.collapse(true);
-    const rect = ce.getBoundingClientRect();
-    const side = (e.clientX - rect.left) < rect.width*0.5 ? "img-left" : "img-right";
-    try{
-      range.insertNode(img);
-      img.classList.remove("img-center","img-inline","img-left","img-right");
-      img.classList.add(side);
-    }catch(_){}
-    commitLiveEdit(ce);
-    showImgBar(img);
-  } else {
-    toast("Nie udało się ustalić miejsca — spróbuj dotknąć wyraźnie w tekście");
-  }
-});
+  range.collapse(true);
+  const rect = ce.getBoundingClientRect();
+  const side = (e.clientX - rect.left) < rect.width*0.5 ? "img-left" : "img-right";
+  try{
+    range.insertNode(img);
+    img.classList.remove("img-center","img-inline","img-left","img-right");
+    img.classList.add(side);
+  }catch(_){ try{ ce.appendChild(img); }catch(__){} }
+  commitLiveEdit(ce);
+  showImgBar(img);
+  toast("Przeniesiono zdjęcie");
+}
+document.addEventListener("click", placeImgAt);
 /* nie pozwól iOS uruchomić natywnego przeciągania obrazka w edytowanej notatce */
 document.addEventListener("dragstart", e=>{ if(e.target.closest('.ncontent[contenteditable="true"] img')) e.preventDefault(); });
 /* zapisz treść, gdy pole edycji traci ostrość (np. dotknięcie pełnego ekranu) — chroni zdjęcia przed zniknięciem */
@@ -1554,9 +1555,12 @@ function sanitize(html){
           const src=node.getAttribute("src")||"";
           if(src.startsWith("data:image")||src.startsWith("http")){
             const im=document.createElement("img"); im.src=src;
-            const keep=(node.className||"").split(/\s+/).filter(c=>/^img-(s|m|l|left|right|center|inline)$/.test(c));
-            if(keep.length) im.className=keep.join(" ");
-            const w=node.style && node.style.width;
+            let keep=(node.className||"").split(/\s+/).filter(c=>/^img-(s|m|l|left|right|center|inline)$/.test(c));
+            // jeśli zdjęcie nie ma ustawionego opływu — nadaj domyślny (pływa w prawo), żeby tekst je opływał
+            if(!keep.some(c=>/^img-(left|right|center|inline)$/.test(c))) keep.push("img-right");
+            im.className=keep.join(" ");
+            let w=node.style && node.style.width;
+            if(!(w && /^\d{1,3}(\.\d+)?%$/.test(w)) && !keep.some(c=>/^img-(s|m|l)$/.test(c))) w="45%";
             if(w && /^\d{1,3}(\.\d+)?%$/.test(w)) im.style.width=w;
             dst.appendChild(im);
           }

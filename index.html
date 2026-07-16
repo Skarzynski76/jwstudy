@@ -228,19 +228,35 @@ mark{padding:0 1px;border-radius:3px}
 #hlBar button.tb:hover{background:var(--sel)}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 20px;border-radius:24px;font-size:13.5px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99;max-width:80%;text-align:center}
 #toast.show{opacity:1}
-.overlay{position:fixed;inset:0;background:rgba(40,35,25,.45);display:none;align-items:center;justify-content:center;z-index:60}
+.overlay{position:fixed;inset:0;background:rgba(30,26,18,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:60}
 .overlay.show{display:flex}
-.modal{background:var(--panel);border-radius:14px;padding:22px;width:min(560px,92vw);max-height:88vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
-.modal h3{margin:0 0 14px;color:var(--accent)}
-.modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
-.modal input[type=text],.modal textarea,.modal select{width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:14px}
-.modal textarea{min-height:120px;resize:vertical}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:22px 24px;width:min(560px,92vw);max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.34)}
+.modal h3{margin:0 0 14px;color:var(--accent);font-size:18px}
+.modal label{display:block;font-size:11.5px;font-weight:600;letter-spacing:.02em;color:var(--muted);margin:12px 0 5px;text-transform:uppercase}
+.modal input[type=text],.modal textarea,.modal select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:11px;font-size:14.5px;background:var(--bg);color:var(--text);transition:border-color .15s ease, box-shadow .15s ease}
+.modal input[type=text]:focus,.modal textarea:focus,.modal select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.18)}
+.modal textarea{min-height:130px;resize:vertical;line-height:1.5}
 .modal .row{display:flex;gap:10px}
 .modal .row>div{flex:1}
-.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
 .modal p{font-size:13.5px;line-height:1.55}
-.tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:6px}
-.tagpick label{display:flex;align-items:center;gap:6px;margin:2px 0;font-size:13px;color:var(--text);cursor:pointer}
+/* nagłówek okna z ikoną */
+.nn-head{display:flex;align-items:center;gap:11px;margin:0 0 6px}
+.nn-head h3{margin:0}
+.nn-ic{width:38px;height:38px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;background:linear-gradient(180deg,#2e7a5f,#1e5b46);box-shadow:0 2px 6px rgba(30,91,70,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+/* karta powiązania z wersetem */
+.nn-ref{margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--bg)}
+.nn-ref-lbl{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px}
+.nn-ref-lbl span{color:var(--muted);font-weight:400}
+.nn-ref .row>div{flex:1}
+.nn-ref .col-book{flex:2}
+.nn-ref label{margin-top:6px}
+.nn-ref input,.nn-ref select{background:var(--panel)}
+/* wybór zakładek jako „chipy” */
+.tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:7px;background:var(--bg)}
+.tagpick label{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:13px;color:var(--text);cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 12px 5px 9px;transition:background .12s, border-color .12s}
+.tagpick label:hover{border-color:var(--accent2)}
+.tagpick input:checked+span,.tagpick label:has(input:checked){border-color:var(--accent);background:var(--sel)}
 #dropdown{position:fixed;background:var(--panel);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.26);z-index:70;max-height:76vh;overflow-y:auto;display:none;min-width:250px;padding:8px}
 #dropdown div{padding:10px 12px;cursor:pointer;font-size:13.5px;border-radius:11px;display:flex;align-items:center;gap:10px;margin:1px 0;background:none;border:none;box-shadow:none;color:var(--text)}
 #dropdown div:hover{background:var(--sel);transform:none;box-shadow:none}
@@ -457,19 +473,24 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 </div>
 
 <div class="overlay" id="modalNew">
-  <div class="modal">
-    <h3>Nowa notatka</h3>
-    <label>Tytuł</label><input type="text" id="nnTitle">
-    <label>Treść</label><textarea id="nnContent"></textarea>
-    <div class="row">
-      <div><label>Księga Biblii (opcjonalnie)</label><select id="nnBook"></select></div>
-      <div><label>Rozdział</label><input type="text" id="nnCh" inputmode="numeric"></div>
-      <div><label>Werset</label><input type="text" id="nnV" inputmode="numeric"></div>
+  <div class="modal nn-modal">
+    <div class="nn-head"><span class="nn-ic">✎</span><h3>Nowa notatka</h3></div>
+    <label>Tytuł</label>
+    <input type="text" id="nnTitle" placeholder="np. Zaufanie do Jehowy">
+    <label>Treść</label>
+    <textarea id="nnContent" placeholder="Wpisz treść notatki…"></textarea>
+    <div class="nn-ref">
+      <div class="nn-ref-lbl">📖 Powiązanie z wersetem <span>(opcjonalnie)</span></div>
+      <div class="row">
+        <div class="col-book"><label>Księga</label><select id="nnBook"></select></div>
+        <div><label>Rozdział</label><input type="text" id="nnCh" inputmode="numeric" placeholder="—"></div>
+        <div><label>Werset</label><input type="text" id="nnV" inputmode="numeric" placeholder="—"></div>
+      </div>
     </div>
     <label>Zakładki</label><div class="tagpick" id="nnTags"></div>
     <div class="actions">
       <button class="btn" onclick="closeModal('modalNew')">Anuluj</button>
-      <button class="btn primary" id="nnSave">Zapisz</button>
+      <button class="btn primary" id="nnSave">＋ Utwórz notatkę</button>
     </div>
   </div>
 </div>

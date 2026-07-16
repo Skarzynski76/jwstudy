@@ -11,7 +11,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <title>JW Study</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%232f2f34'/%3E%3Crect%20x='0'%20y='50'%20width='64'%20height='14'%20fill='%235b8a5a'/%3E%3Cpath%20d='M31%2015c-5-3-12-4.5-18-4.5v29c6%200%2013%201.5%2018%204.5%205-3%2012-4.5%2018-4.5v-29c-6%200-13%201.5-18%204.5z'%20fill='%23efe9dd'%20stroke='%2326262a'%20stroke-width='2'%20stroke-linejoin='round'/%3E%3Cpath%20d='M31%2015v29'%20stroke='%2326262a'%20stroke-width='1.8'%20stroke-linecap='round'/%3E%3Cpath%20d='M45%206h7v20l-3.5-3-3.5%203z'%20fill='%23c99a34'/%3E%3Ctext%20x='32'%20y='61'%20font-family='Arial%2Csans-serif'%20font-size='11'%20font-weight='bold'%20fill='%23fff'%20text-anchor='middle'%3EJW%20Study%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
 :root{
   --bg:#f4f2ee; --panel:#ffffff; --border:#e2ddd4; --text:#2b2a27; --muted:#8a857b;
@@ -370,7 +371,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><svg width="26" height="26" viewBox="0 0 64 64" style="vertical-align:-6px;margin-right:4px"><rect width="64" height="64" rx="14" fill="#4c4c52"/><path d="M32 16c-4.5-2.8-11-4.2-17-4.2v32c6 0 12.5 1.4 17 4.2 4.5-2.8 11-4.2 17-4.2v-32c-6 0-12.5 1.4-17 4.2z" fill="#f5f2ec"/><path d="M32 16v32" stroke="#4c4c52" stroke-width="2.5"/><path d="M20 23c3.5 0 6.5.6 9 1.8M20 30c3.5 0 6.5.6 9 1.8M20 37c3.5 0 6.5.6 9 1.8M44 23c-3.5 0-6.5.6-9 1.8M44 30c-3.5 0-6.5.6-9 1.8M44 37c-3.5 0-6.5.6-9 1.8" stroke="#b9b9c0" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>JW Study <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1922,8 +1923,8 @@ $("expGo").onclick = async ()=>{
     zip.file("manifest.json",JSON.stringify(manifest));
     const zblob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
     const blob=new Blob([zblob],{type:"application/octet-stream"});
-    await saveFile(blob, manifest.name, "Kopia JW Library");
-    toast("Plik .jwlibrary gotowy — wybierz „Zapisz w Plikach” lub otwórz w JW Library");
+    chooseSaveOrShare(blob, manifest.name, "Kopia JW Library");
+    toast("Plik .jwlibrary gotowy");
   }catch(err){ console.error(err); alert("Błąd eksportu: "+err.message); }
 };
 function applyChangesToDb(db){
@@ -1942,6 +1943,25 @@ function applyChangesToDb(db){
   const r3=db.exec("SELECT TagId, MAX(Position) FROM TagMap GROUP BY TagId");
   if(r3.length) r3[0].values.forEach(([id,p])=>tpos[id]=p);
   const nextPos=tid=>{tpos[tid]=(tpos[tid]===undefined?-1:tpos[tid])+1;return tpos[tid];};
+  // powiązanie notatki z wersetem Biblii (Location), żeby JW Library przypięło ją do wersetu
+  let maxLocId = one("SELECT MAX(LocationId) FROM Location")||0;
+  const locCache={};
+  function bibleLocation(book,chapter){
+    const kk=book+"_"+chapter;
+    if(locCache[kk]!==undefined) return locCache[kk];
+    let meps=0, key="nwtsty";
+    try{
+      const mr=db.exec("SELECT MepsLanguage, KeySymbol FROM Location WHERE KeySymbol IN ('nwtsty','nwt') AND BookNumber IS NOT NULL LIMIT 1");
+      if(mr.length){ meps=mr[0].values[0][0]; key=mr[0].values[0][1]||"nwtsty"; }
+    }catch(e){}
+    try{
+      const ex=db.exec(`SELECT LocationId FROM Location WHERE KeySymbol='${key}' AND BookNumber=${book} AND ChapterNumber=${chapter} AND DocumentId IS NULL AND (IssueTagNumber=0 OR IssueTagNumber IS NULL) LIMIT 1`);
+      if(ex.length){ locCache[kk]=ex[0].values[0][0]; return locCache[kk]; }
+    }catch(e){}
+    maxLocId++;
+    db.run("INSERT INTO Location (LocationId, BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, IssueTagNumber) VALUES (?,?,?,?,?,0,0)",[maxLocId,book,chapter,key,meps]);
+    locCache[kk]=maxLocId; return maxLocId;
+  }
   // zakładki usunięte w aplikacji — usuń też z eksportowanej bazy
   deletedTagNames.forEach(nm=>{
     const did = tname[nm];
@@ -1978,8 +1998,18 @@ function applyChangesToDb(db){
     }
     if(n.nw&&dbId===undefined){
       maxNoteId++;
-      db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, NoteId) VALUES (?,?,?,?,?,0,NULL,?)",
-        [n.g,n.t||null,n.c||null,n.mo||nowIso,n.cr||nowIso,maxNoteId]);
+      let locId=null, blockType=0, blockId=null;
+      try{
+        if(n.b && n.ch){
+          locId = bibleLocation(n.b, n.ch);
+          if(locId!=null){
+            if(n.v){ blockType=2; blockId=n.v; }   // przypięcie do konkretnego wersetu
+            else { blockType=1; blockId=n.ch; }    // do rozdziału, gdy brak wersetu
+          }
+        }
+      }catch(e){ locId=null; blockType=0; blockId=null; }
+      db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, LocationId, NoteId) VALUES (?,?,?,?,?,?,?,?,?)",
+        [n.g,n.t||null,n.c||null,n.mo||nowIso,n.cr||nowIso,blockType,blockId,locId,maxNoteId]);
       n.tg.forEach(tid=>{
         const dt=appTagToDb[tid]; if(dt===undefined)return;
         maxTagMapId++;
@@ -2044,6 +2074,31 @@ async function saveFile(blob, filename, title){
   }
   download(blob, filename);   // komputer: zwykłe pobranie → dwuklik otwiera w Wordzie
   return true;
+}
+function canShareFiles(blob, filename){
+  try{ return !!(navigator.canShare && typeof File!=="undefined" && navigator.canShare({files:[new File([blob],filename,{type:blob.type})]})); }
+  catch(e){ return false; }
+}
+// wybór: zapis na dysku albo udostępnienie (Mail, SMS, AirDrop) — działa na Macu i iPadzie/iPhonie
+function chooseSaveOrShare(blob, filename, title){
+  const shareIcon=_svg('<path d="M12 3v13M8 7l4-4 4 4"/><path d="M5 12v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6"/>');
+  const dd=$("dropdown");
+  dd.innerHTML = `<div class="dd-lbl">${esc(filename)}</div>`+
+    `<div data-sv="disk">${ICO.file}Zapisz na dysku</div>`+
+    (canShareFiles(blob,filename)?`<div data-sv="share">${shareIcon}Udostępnij (Mail, SMS, AirDrop)</div>`:``);
+  dd.style.display="block";
+  const w=dd.offsetWidth||270;
+  dd.style.left=Math.max(8,(innerWidth-w)/2)+"px";
+  dd.style.top=Math.min(90, Math.max(8, innerHeight-220))+"px";
+  dd.onclick=async ev=>{
+    const a=ev.target.closest("[data-sv]"); if(!a) return;
+    dd.style.display="none";
+    if(a.dataset.sv==="disk"){ download(blob, filename); toast("Zapisano na dysku"); }
+    else{
+      try{ await navigator.share({files:[new File([blob],filename,{type:blob.type})], title:title||filename}); }
+      catch(e){ if(!(e&&e.name==="AbortError")){ download(blob, filename); } }
+    }
+  };
 }
 function exportNoteWord(n){
   const blob = new Blob(["\ufeff"+noteExportHtml(n)], {type:"application/msword"});

@@ -176,9 +176,11 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 /* notatka na pełnym ekranie */
 #modalFs{padding:0}
 #modalFs .fsmodal{background:var(--bg);border-radius:0;width:100vw;height:100vh;height:100dvh;max-height:100dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) calc(14px + env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,0px);position:relative;box-shadow:none}
-#fsClose{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);float:right;margin:0 12px 0 0;z-index:12;border:none;background:#ffffff;color:#1e5b46;border-radius:50%;width:38px;height:38px;font-size:20px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 9px rgba(0,0,0,.4)}
-#fsClose:hover{background:#eef2ef;transform:scale(1.07)}
-#fsClose:active{transform:scale(.93)}
+#fsClose{display:none}
+/* przycisk zamknięcia wewnątrz zielonej belki nagłówka (pełny ekran) */
+.fsCloseInline{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:none;background:#fff;color:#1e5b46;font-size:19px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:4;display:flex;align-items:center;justify-content:center}
+.fsCloseInline:hover{background:#eef2ef}
+.fsCloseInline:active{transform:translateY(-50%) scale(.93)}
 #fsWrap .drag{display:none}
 #fsWrap .ncard{border:none}
 #fsWrap .nhead{padding-right:56px;border-radius:0}
@@ -437,7 +439,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v42</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v44</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1328,6 +1330,14 @@ function renderFs(){
   w.innerHTML = "";
   const card = noteCard(n);
   card.querySelector('[data-act="fs"]')?.remove(); // bez przycisku pełnego ekranu w pełnym ekranie
+  // przycisk zamknięcia WEWNĄTRZ zielonej belki (pewne umiejscowienie w prawym rogu)
+  const nh = card.querySelector(".nhead");
+  if(nh){
+    const x = document.createElement("button");
+    x.className = "fsCloseInline"; x.type="button"; x.setAttribute("aria-label","Zamknij"); x.textContent = "✕"; x.title = "Zamknij";
+    x.onclick = closeFs;
+    nh.appendChild(x);
+  }
   w.appendChild(card);
 }
 function closeFs(){ fsGuid = null; closeModal("modalFs"); }
@@ -1530,15 +1540,8 @@ function buildEditbar(){
     if(!f) return;
     try{
       const url = await compressImage(f);
-      const img = document.createElement("img"); img.src = url;
       const ceIns = bar.parentElement.querySelector(".ncontent");
-      if(edSavedRange){ edSavedRange.collapse(false); edSavedRange.insertNode(img); }
-      else if(ceIns){ ceIns.appendChild(img); }
-      img.classList.add("img-right");   // domyślnie zdjęcie pływa (tekst je opływa)
-      img.style.width = "45%";
-      commitLiveEdit(ceIns);
-      showImgBar(img);
-      toast("Wstawiono zdjęcie");
+      insertImageUrl(ceIns, url, edSavedRange);
     }catch(err){ alert("Nie udało się wczytać zdjęcia: "+err.message); }
   });
   return bar;
@@ -1640,17 +1643,32 @@ function caretRangeFromPoint(x,y){
   if(document.caretPositionFromPoint){ const p=document.caretPositionFromPoint(x,y); if(p){ const r=document.createRange(); r.setStart(p.offsetNode,p.offset); r.collapse(true); return r; } }
   return null;
 }
-function startImgMove(){
-  if(!selImg) return;
-  movePending = selImg;
+function startImgMoveFor(img){
+  if(!img) return;
+  movePending = img;
   document.body.classList.add("img-placing");
   hideImgBar();
   toast("Dotknij miejsca w tekście, gdzie wstawić zdjęcie");
 }
+function startImgMove(){ startImgMoveFor(selImg); }
 function cancelImgMove(){ movePending=null; document.body.classList.remove("img-placing"); }
+/* wstawienie zdjęcia (z pliku, wklejenia lub upuszczenia) — jedna wspólna funkcja */
+function insertImageUrl(ce, url, range){
+  if(!ce) return null;
+  const img=document.createElement("img"); img.src=url;
+  img.classList.add("img-right"); img.style.width="45%";   // domyślnie pływa, tekst opływa
+  try{
+    let r=(range && ce.contains(range.startContainer))?range:null;
+    if(!r){ const sel=getSelection(); if(sel && sel.rangeCount && ce.contains(sel.getRangeAt(0).startContainer)) r=sel.getRangeAt(0); }
+    if(r){ r.collapse(false); r.insertNode(img); } else ce.appendChild(img);
+  }catch(_){ try{ ce.appendChild(img); }catch(__){} }
+  commitLiveEdit(ce); showImgBar(img); toast("Wstawiono zdjęcie");
+  return img;
+}
 // umieszczenie: kliknij/dotknij miejsca w tekście, a zdjęcie tam wskoczy
 function placeImgAt(e){
   if(!movePending) return;
+  if(suppressImgClick){ suppressImgClick=false; return; }   // pomiń klik-zwolnienie po long-press
   if(e.target.closest("#imgBar") || e.target.closest("#imgHandles")) return;
   const ce = e.target.closest(".ncontent");
   if(!ce || !ce.isContentEditable) return;   // klik poza treścią — nie anuluj, pozwól spróbować ponownie
@@ -1681,6 +1699,52 @@ function placeImgAt(e){
 document.addEventListener("click", placeImgAt);
 /* nie pozwól iOS uruchomić natywnego przeciągania obrazka w edytowanej notatce */
 document.addEventListener("dragstart", e=>{ if(e.target.closest('.ncontent[contenteditable="true"] img')) e.preventDefault(); });
+/* WKLEJANIE obrazu (Ctrl/Cmd+V lub „Wklej") do edytowanej notatki */
+document.addEventListener("paste", async e=>{
+  const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
+  if(!ce) return;
+  const items = e.clipboardData && e.clipboardData.items; if(!items) return;
+  for(const it of items){
+    if(it.type && it.type.indexOf("image")===0){
+      e.preventDefault();
+      const f=it.getAsFile();
+      if(f){ try{ const url=await compressImage(f); insertImageUrl(ce, url, null); }catch(err){ toast("Nie udało się wkleić obrazu"); } }
+      return;
+    }
+  }
+});
+/* PRZECIĄGNIJ plik obrazu z pulpitu na edytowaną notatkę (komputer) */
+document.addEventListener("dragover", e=>{
+  const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
+  if(ce && e.dataTransfer && Array.from(e.dataTransfer.types||[]).indexOf("Files")>=0) e.preventDefault();
+});
+document.addEventListener("drop", async e=>{
+  const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
+  if(!ce) return;
+  const files = e.dataTransfer && e.dataTransfer.files;
+  if(files && files.length && Array.from(files).some(f=>f.type && f.type.indexOf("image")===0)){
+    e.preventDefault();
+    let range = caretRangeFromPoint(e.clientX, e.clientY);
+    if(!(range && ce.contains(range.startContainer))) range=null;
+    for(const f of files){ if(f.type && f.type.indexOf("image")===0){ try{ const url=await compressImage(f); insertImageUrl(ce, url, range); range=null; }catch(_){} } }
+  }
+});
+/* PRZYTRZYMAJ zdjęcie (long-press / przytrzymanie myszy) → podnieś do przeniesienia, potem dotknij miejsca */
+let lpTimer=null, lpImg=null, lpXY=null;
+document.addEventListener("pointerdown", e=>{
+  const img = e.target.closest && e.target.closest('.ncontent img');
+  if(!img || !img.closest('[contenteditable="true"]')) return;
+  if(e.target.closest("#imgHandles")) return;
+  if(movePending) return;
+  lpImg=img; lpXY={x:e.clientX,y:e.clientY};
+  clearTimeout(lpTimer);
+  lpTimer=setTimeout(()=>{ if(lpImg){ startImgMoveFor(lpImg); suppressImgClick=true; lpImg=null; } }, 450);
+});
+document.addEventListener("pointermove", e=>{
+  if(lpImg && lpXY && Math.hypot(e.clientX-lpXY.x, e.clientY-lpXY.y)>10){ clearTimeout(lpTimer); lpImg=null; }
+});
+document.addEventListener("pointerup", ()=>{ clearTimeout(lpTimer); lpImg=null; });
+document.addEventListener("pointercancel", ()=>{ clearTimeout(lpTimer); lpImg=null; });
 /* zapisz treść, gdy pole edycji traci ostrość (np. dotknięcie pełnego ekranu) — chroni zdjęcia przed zniknięciem */
 document.addEventListener("focusout", e=>{
   const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');

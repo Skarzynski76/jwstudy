@@ -214,9 +214,18 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .ncontent ul,.ncontent ol{margin:4px 0 4px 24px;padding:0;white-space:normal}
 .ncontent li{margin:3px 0;white-space:pre-wrap}
 .editbar{display:flex;gap:3px;align-items:center;flex-wrap:nowrap;overflow-x:auto;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:6px 8px;margin:10px 0 10px;box-shadow:0 3px 12px rgba(60,50,30,.09);scrollbar-width:thin;position:sticky;top:0;z-index:8}
-.editbar button{border:none;background:transparent;border-radius:10px;min-width:36px;height:36px;cursor:pointer;font-size:14px;color:var(--text);padding:0 9px;flex-shrink:0;touch-action:manipulation;display:inline-flex;align-items:center;justify-content:center;transition:background .12s ease}
+.editbar button{border:none;background:transparent;border-radius:10px;min-width:38px;height:38px;cursor:pointer;font-size:14px;color:var(--text);padding:0 10px;flex-shrink:0;touch-action:manipulation;display:inline-flex;align-items:center;justify-content:center;transition:background .12s ease}
 .editbar button:hover{background:var(--sel)}
 .editbar button:active{background:var(--sel);transform:translateY(1px)}
+.editbar button.active{background:var(--sel);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent2)}
+.editbar .eb-color{font-size:17px}
+.editbar .eb-more{font-size:19px;font-weight:700}
+#ebPop{position:fixed;display:none;z-index:135;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 44px rgba(0,0,0,.28);padding:6px;min-width:216px}
+#ebPop div[data-cmd],#ebPop div[data-clear]{padding:10px 11px;border-radius:10px;font-size:13.5px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px}
+#ebPop div[data-cmd]:hover,#ebPop div[data-clear]:hover{background:var(--sel)}
+#ebPop div .ic{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+#ebPop .dd-sep{height:1px;background:var(--border);margin:5px 8px}
+#ebPop .ebpal{display:flex;gap:10px;flex-wrap:wrap;padding:8px 6px;max-width:230px}
 .editbar .eb-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 3px}
 .editbar .eb-block{border:1px solid var(--border);background:var(--bg);border-radius:10px;height:36px;font-size:12.5px;color:var(--text);padding:0 10px;flex-shrink:0;cursor:pointer;font-weight:600}
 .ncontent h2{font-size:calc(var(--noteFs,14px) + 6px);font-weight:700;margin:10px 0 4px;color:var(--accent)}
@@ -439,7 +448,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v44</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v45</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -503,6 +512,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="toast"></div>
 <div id="dropdown"></div>
 <div id="colorMenu"></div>
+<div id="ebPop"></div>
 <button id="readExit">✎ Pokaż narzędzia</button>
 
 <div class="overlay" id="modalFs">
@@ -1495,42 +1505,24 @@ function buildEditbar(){
       <option value="H3">Nagłówek</option>
     </select>
     <span class="eb-sep"></span>
-    <button data-cmd="bold" title="Pogrubienie"><b>B</b></button>
-    <button data-cmd="italic" title="Kursywa"><i>I</i></button>
-    <button data-cmd="underline" title="Podkreślenie"><u>U</u></button>
-    <button data-cmd="strikeThrough" title="Przekreślenie"><s>S</s></button>
+    <button data-cmd="bold" data-st="bold" title="Pogrubienie"><b>B</b></button>
+    <button data-cmd="italic" data-st="italic" title="Kursywa"><i>I</i></button>
+    <button data-cmd="underline" data-st="underline" title="Podkreślenie"><u>U</u></button>
+    <button data-cmd="strikeThrough" data-st="strikeThrough" title="Przekreślenie"><s>S</s></button>
     <span class="eb-sep"></span>
-    <button data-cmd="insertUnorderedList" title="Lista punktowana">${ICO.ul}</button>
-    <button data-cmd="insertOrderedList" title="Lista numerowana">${ICO.ol}</button>
-    <button data-cmd="outdent" title="Zmniejsz wcięcie">${ICO.outdent}</button>
-    <button data-cmd="indent" title="Zwiększ wcięcie">${ICO.indent}</button>
+    <button data-cmd="insertUnorderedList" data-st="insertUnorderedList" title="Lista punktowana">${ICO.ul}</button>
+    <button data-cmd="insertOrderedList" data-st="insertOrderedList" title="Lista numerowana">${ICO.ol}</button>
     <span class="eb-sep"></span>
-    <button data-cmd="justifyLeft" title="Wyrównaj do lewej">${ICO.alignLeft}</button>
-    <button data-cmd="justifyCenter" title="Wyśrodkuj">${ICO.alignCenter}</button>
-    <button data-cmd="justifyFull" title="Wyjustuj (równe brzegi)">${ICO.alignJustify}</button>
-    <span class="eb-sep"></span>
-    ${[1,2,3,4,5,6,7].map(i=>`<button class="eb-sw" data-hl="${i}" style="background:var(--hl${i})" title="Kolor / podświetlenie zaznaczonego tekstu"></button>`).join("")}
-    <button class="eb-sw eb-sw-none" data-hl="0" title="Usuń kolor z zaznaczenia">✕</button>
-    <span class="eb-sep"></span>
-    <label class="eb-img" title="Wstaw zdjęcie / ilustrację">${ICO.image}<input type="file" accept="image/*" style="display:none"></label>`;
+    <button class="eb-color" data-pop="color" title="Kolor / podświetlenie">🎨</button>
+    <label class="eb-img" title="Wstaw zdjęcie / ilustrację">${ICO.image}<input type="file" accept="image/*" style="display:none"></label>
+    <button class="eb-more" data-pop="more" title="Więcej: wcięcia, wyrównanie, cytat, wyczyść">⋯</button>`;
   bar.addEventListener("pointerdown", ev=>{
     if(ev.target.closest("select, label.eb-img")){ edSavedRange = captureRange(); return; }
-    const sw = ev.target.closest(".eb-sw");
-    if(sw){
-      ev.preventDefault();
-      const ce = bar.parentElement.querySelector(".ncontent");
-      const sel = getSelection();
-      if(sel.rangeCount && !sel.isCollapsed && ce && ce.contains(sel.getRangeAt(0).commonAncestorContainer)){
-        const range = sel.getRangeAt(0);
-        if(sw.dataset.hl==="0") unwrapMarks(range, ce); else applyMark(range, +sw.dataset.hl);
-        sel.removeAllRanges();
-        commitLiveEdit(ce);
-      } else toast("Najpierw zaznacz tekst w notatce");
-      return;
-    }
+    const pop = ev.target.closest("[data-pop]");
+    if(pop){ ev.preventDefault(); edSavedRange = captureRange(); openEbPop(pop.dataset.pop, pop, bar); return; }
     ev.preventDefault();                          // nie gub zaznaczenia
     const b = ev.target.closest("[data-cmd]");
-    if(b) document.execCommand(b.dataset.cmd, false, null);
+    if(b){ document.execCommand(b.dataset.cmd, false, null); updateEditbarState(bar); }
   });
   bar.querySelector(".eb-block").addEventListener("change", ev=>{
     document.execCommand("formatBlock", false, "<"+ev.target.value.toLowerCase()+">");
@@ -1546,6 +1538,67 @@ function buildEditbar(){
   });
   return bar;
 }
+/* aktywny stan przycisków (B, I, U, S, listy) wg miejsca kursora */
+function updateEditbarState(bar){
+  if(!bar) return;
+  bar.querySelectorAll("[data-st]").forEach(b=>{
+    let on=false; try{ on=document.queryCommandState(b.dataset.st); }catch(e){}
+    b.classList.toggle("active", !!on);
+  });
+}
+document.addEventListener("selectionchange", ()=>{ const eb=document.querySelector(".ncard.editing .editbar"); if(eb) updateEditbarState(eb); });
+/* rozwijane menu paska: kolory albo „Więcej" (wcięcia, wyrównanie, cytat, wyczyść) */
+function openEbPop(kind, btn, bar){
+  const pop=$("ebPop"); const ce=bar.parentElement.querySelector(".ncontent");
+  if(kind==="color"){
+    pop.innerHTML = `<div class="ebpal">`+
+      [1,2,3,4,5,6,7].map(i=>`<span class="pal" data-hl="${i}" style="background:var(--hl${i})" title="Kolor"></span>`).join("")+
+      `<span class="pal pal-none" data-hl="0" title="Usuń kolor">✕</span></div>`;
+  } else {
+    pop.innerHTML =
+      `<div data-cmd="outdent">${ICO.outdent}Zmniejsz wcięcie</div>
+       <div data-cmd="indent">${ICO.indent}Zwiększ wcięcie</div>
+       <div class="dd-sep"></div>
+       <div data-cmd="justifyLeft">${ICO.alignLeft}Do lewej</div>
+       <div data-cmd="justifyCenter">${ICO.alignCenter}Wyśrodkuj</div>
+       <div data-cmd="justifyFull">${ICO.alignJustify}Wyjustuj</div>
+       <div class="dd-sep"></div>
+       <div data-cmd="formatBlock:blockquote">❝ Cytat</div>
+       <div data-clear="1">🧹 Wyczyść formatowanie</div>`;
+  }
+  pop.dataset.ce = ""; pop._ce = ce;
+  pop.style.display="block";
+  const r=btn.getBoundingClientRect(); const w=pop.offsetWidth||230, h=pop.offsetHeight||120;
+  pop.style.left=Math.max(8,Math.min(r.left, innerWidth-w-8))+"px";
+  pop.style.top=Math.min(r.bottom+6, innerHeight-h-8)+"px";
+}
+$("ebPop").addEventListener("pointerdown", ev=>{
+  ev.preventDefault();
+  const pop=$("ebPop"); const ce=pop._ce;
+  const sw=ev.target.closest("[data-hl]");
+  if(sw){
+    const range = edSavedRange;   // zapamiętane zaznaczenie z chwili otwarcia palety
+    if(range && !range.collapsed && ce && ce.contains(range.commonAncestorContainer)){
+      if(sw.dataset.hl==="0") unwrapMarks(range,ce); else applyMark(range,+sw.dataset.hl);
+      commitLiveEdit(ce);
+    } else toast("Najpierw zaznacz tekst, potem 🎨 Kolor");
+    pop.style.display="none"; return;
+  }
+  const cmd=ev.target.closest("[data-cmd]");
+  if(cmd){
+    const c=cmd.dataset.cmd;
+    if(c.indexOf("formatBlock:")===0) document.execCommand("formatBlock",false,"<"+c.split(":")[1]+">");
+    else document.execCommand(c,false,null);
+    pop.style.display="none"; return;
+  }
+  if(ev.target.closest("[data-clear]")){
+    document.execCommand("removeFormat");
+    const sel=getSelection(); if(sel.rangeCount && ce) unwrapMarks(sel.getRangeAt(0), ce);
+    if(ce) commitLiveEdit(ce);
+    pop.style.display="none"; return;
+  }
+});
+document.addEventListener("pointerdown", e=>{ const p=$("ebPop"); if(p && p.style.display==="block" && !e.target.closest("#ebPop") && !e.target.closest("[data-pop]")) p.style.display="none"; }, true);
 let edSavedRange = null;
 /* ===== pasek narzędzi obrazu (rozmiar / oblewanie tekstem — jak w Wordzie) ===== */
 let selImg = null;

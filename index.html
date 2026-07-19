@@ -25,16 +25,20 @@
 button,.item,.sbtn,.chip-ch,.pal,.eb-sw,a,label,select,summary,#imgBar button,#hlBar .sw,#hlBar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top, 0px));background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
-header h1{font-size:17px;margin:0;color:var(--accent);white-space:nowrap}
+header{display:flex;align-items:center;gap:9px;padding:9px 16px;padding-top:calc(9px + env(safe-area-inset-top, 0px));background:linear-gradient(180deg,var(--panel),var(--bg));border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06);flex-wrap:wrap;position:relative;z-index:20}
+header h1{font-size:17px;margin:0;color:var(--accent);white-space:nowrap;display:flex;align-items:center;font-weight:700}
 header h1 small{font-weight:normal;color:var(--muted);font-size:12px}
-#search{flex:1;min-width:160px;padding:7px 12px;border:1px solid var(--border);border-radius:20px;font-size:14px;outline:none;background:var(--bg)}
-#search:focus{border-color:var(--accent2)}
+#search{flex:1;min-width:160px;padding:9px 15px;border:1px solid var(--border);border-radius:22px;font-size:14px;outline:none;background:var(--bg);transition:border-color .15s ease, box-shadow .15s ease}
+#search:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.16)}
 select,button,input{font-family:inherit}
-.btn{padding:7px 12px;border:1px solid var(--border);border-radius:8px;background:var(--panel);cursor:pointer;font-size:13px;white-space:nowrap;color:var(--text)}
+.btn{padding:8px 13px;border:1px solid var(--border);border-radius:11px;background:var(--panel);cursor:pointer;font-size:13px;white-space:nowrap;color:var(--text);transition:background .12s ease, border-color .12s ease, transform .08s ease}
 .btn:hover{background:var(--sel)}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn.primary:hover{background:var(--accent2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(180deg,var(--accent),var(--accent2));color:#fff;border-color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.2)}
+.btn.primary:hover{filter:brightness(1.05)}
+#btnBackup.badge-warn{background:#f6d98a;border-color:#e0b24a;color:#6b4e10;font-weight:600;animation:bkpulse 2s ease-in-out infinite}
+@keyframes bkpulse{50%{box-shadow:0 0 0 3px rgba(224,178,74,.3)}}
+html[data-theme="dark"] #btnBackup.badge-warn{background:#5a4a1e;border-color:#8a6f2a;color:#f2dfa4}
 #sortSel{padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--panel);font-size:13px}
 main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gradient(900px 520px at 12% -5%,rgba(150,140,185,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(120,170,180,.36),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(190,160,130,.32),transparent 60%),linear-gradient(180deg,#d8d2c5,#cfc8ba)}
 .col{display:flex;flex-direction:column;min-height:0;position:relative;border-radius:14px;overflow:hidden}
@@ -70,7 +74,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 #colTags .list::-webkit-scrollbar{width:8px}
 #colTags .list::-webkit-scrollbar-thumb{background:#565660;border-radius:4px}
 .chwrap{display:flex;flex-wrap:wrap;gap:4px;padding:4px 10px 8px 22px}
-.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#5a5374,#463f5c);color:#fff;font-size:12px;cursor:pointer;border:1px solid #29233a;border-top-color:#746c92;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.14)}
+.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#5a5374,#463f5c);color:#fff;font-size:calc(var(--colFs,13.5px) - 1.5px);cursor:pointer;border:1px solid #29233a;border-top-color:#746c92;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.14)}
 .chip-ch:hover{background:linear-gradient(180deg,#6a638a,#544c6e)}
 .chip-ch{position:relative;overflow:hidden}
 .chip-ch.active{font-weight:700;border-top-color:#8d85ab}
@@ -78,7 +82,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .item .arr{width:14px;text-align:center;color:inherit;opacity:.6;font-size:10px}
 
 #colNotes{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(248,245,238,.45) 55%,rgba(240,236,226,.42) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.6);border-top-color:#ffffff;box-shadow:0 10px 30px rgba(60,50,30,.14),inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(0,0,0,.05)}
-.item{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:13.5px;margin:6px 3px;position:relative;overflow:hidden;transition:transform .1s ease, box-shadow .1s ease}
+.item{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:var(--colFs,13.5px);margin:6px 3px;position:relative;overflow:hidden;transition:transform .1s ease, box-shadow .1s ease}
 /* metaliczny błysk na kafelkach */
 #colBooks .item::after,#colTags .item::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.11) 44%,rgba(255,255,255,.04) 52%,transparent 64%)}
 #colBooks .item:hover::after,#colTags .item:hover::after{background:linear-gradient(115deg,transparent 26%,rgba(255,255,255,.17) 42%,rgba(255,255,255,.06) 54%,transparent 68%)}
@@ -95,8 +99,29 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 
 #noteList{padding:10px 14px 40px}
 #counts{font-size:12px;color:var(--muted);padding:10px 14px 0;font-weight:600}
+.marksSec{margin:16px 14px 30px}
+.marksHdr{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin:0 4px 8px}
+.marksBox{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--panel);box-shadow:0 1px 3px rgba(60,50,30,.07)}
+.markRow{display:flex;align-items:center;gap:11px;padding:10px 12px;border-top:1px solid var(--border)}
+.markRow:first-child{border-top:none}
+.markDot{width:14px;height:14px;border-radius:4px;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.markInfo{flex:1;min-width:0}
+.markRef{font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.markSub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.markOpen{flex-shrink:0;border:1px solid var(--border);background:var(--bg);color:var(--accent);border-radius:14px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.markOpen:hover{background:var(--sel)}
+.marksMore{padding:8px 12px;font-size:12px;color:var(--muted);text-align:center}
+.marksToggle{color:var(--accent);cursor:pointer;font-weight:600;white-space:nowrap;border-bottom:1px dotted var(--accent)}
+.marksToggle:hover{color:var(--accent2)}
 .ncard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px 18px;margin-bottom:13px;position:relative;box-shadow:0 1px 3px rgba(60,50,30,.07);transition:box-shadow .15s ease;overflow:hidden}
 .ncard:hover{box-shadow:0 5px 16px rgba(60,50,30,.13)}
+.ncard.pinned{box-shadow:0 0 0 1.5px var(--accent2),0 3px 10px rgba(60,50,30,.12)}
+/* wirtualizacja: karty poza ekranem nie są renderowane (płynniej, mniej pamięci) */
+#noteList .ncard{content-visibility:auto;contain-intrinsic-size:auto 240px}
+#noteList .ncard.editing{content-visibility:visible}
+.pinmark{font-size:13px;vertical-align:1px}
+.sbtn.ico.pinon{color:#a9821a;background:linear-gradient(180deg,#fff8e6,#fbecbe);border-color:#e6cf8a}
+html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;color:#e9c862}
 .drag{position:absolute;top:9px;right:10px;cursor:grab;color:rgba(255,255,255,.75);font-size:15px;padding:2px 6px;border-radius:6px;z-index:2}
 .drag:hover{background:rgba(255,255,255,.18);color:#fff}
 /* metalicznie zielony pasek tytułu notatki */
@@ -144,8 +169,8 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .tagrow input{padding:5px 8px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;width:120px}
 .ncontent{font-size:var(--noteFs,14px);line-height:1.6;white-space:pre-wrap;word-wrap:break-word;min-height:8px;margin-top:4px}
 /* regulacja czcionki */
-.fontctl{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.fontctl button{border:none;background:var(--panel);cursor:pointer;padding:7px 10px;font-size:12px;color:var(--text)}
+.fontctl{display:flex;border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.fontctl button{border:none;background:var(--panel);cursor:pointer;padding:8px 11px;font-size:12px;color:var(--text)}
 .fontctl button:hover{background:var(--sel)}
 .fontctl button+button{border-left:1px solid var(--border)}
 /* notatka na pełnym ekranie */
@@ -248,6 +273,11 @@ mark{padding:0 1px;border-radius:3px}
 .nn-head{display:flex;align-items:center;gap:11px;margin:0 0 6px}
 .nn-head h3{margin:0}
 .nn-ic{width:38px;height:38px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;background:linear-gradient(180deg,#2e7a5f,#1e5b46);box-shadow:0 2px 6px rgba(30,91,70,.4),inset 0 1px 0 rgba(255,255,255,.3)}
+.help-list{margin:12px 0 4px;display:flex;flex-direction:column}
+.help-row{display:flex;gap:11px;align-items:flex-start;padding:10px 4px;border-top:1px solid var(--border);font-size:13.5px;line-height:1.5;color:var(--text)}
+.help-row:first-child{border-top:none}
+.help-ic{font-size:20px;flex-shrink:0;width:26px;text-align:center;line-height:1.3}
+.help-modal code{background:var(--sel);padding:1px 6px;border-radius:6px;font-size:12.5px;font-family:inherit}
 /* karta powiązania z wersetem */
 .nn-ref{margin-top:14px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:var(--bg)}
 .nn-ref-lbl{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px}
@@ -391,7 +421,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v32</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v41</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -403,10 +433,11 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <button class="btn" id="btnTheme" title="Motyw">🖥️</button>
   <button class="btn" id="btnColors" title="Kolory kolumn i belek">🎨</button>
   <button class="btn" id="btnUndo" title="Cofnij ostatnią zmianę">↩️</button>
-  <div class="fontctl" title="Rozmiar czcionki notatek">
+  <div class="fontctl" title="Rozmiar czcionki (notatki i kolumny)">
     <button id="fMinus">A−</button>
     <button id="fPlus" style="font-size:15px">A+</button>
   </div>
+  <button class="btn" id="btnBackup" title="Kopia zapasowa danych">💾</button>
   <button class="btn primary" id="btnNew">✚ Nowa notatka</button>
   <button class="btn" id="btnMenu">⚙️ Plik ▾</button>
 </header>
@@ -520,6 +551,24 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   </div>
 </div>
 
+<div class="overlay" id="modalHelp">
+  <div class="modal help-modal">
+    <div class="nn-head"><span class="nn-ic">👋</span><h3>Witaj w JW Study</h3></div>
+    <p style="margin-top:2px;color:var(--muted)">W skrócie, gdzie co jest:</p>
+    <div class="help-list">
+      <div class="help-row"><span class="help-ic">📚</span><div><b>Trzy kolumny</b> — Księgi Biblii, Zakładki, Notatki. Klikasz pozycję, żeby zawęzić listę notatek.</div></div>
+      <div class="help-row"><span class="help-ic">🔍</span><div><b>Szukaj</b> u góry — notatki po słowach; podkreślenia po odnośniku, publikacji lub kolorze.</div></div>
+      <div class="help-row"><span class="help-ic">✚</span><div><b>Nowa notatka</b> — dodaj notatkę i (opcjonalnie) przypnij do konkretnego wersetu.</div></div>
+      <div class="help-row"><span class="help-ic">📌</span><div><b>Przypnij</b> ważne notatki — zawsze będą na górze listy.</div></div>
+      <div class="help-row"><span class="help-ic">🖍</span><div><b>Podkreślenia z JW Library</b> — kliknij licznik „🖍 …” na górze kolumny notatek, żeby je przeglądać; „Otwórz ↗” prowadzi do miejsca w JW Library.</div></div>
+      <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje notatki i podkreślenia z JW Library.</div></div>
+      <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.</div></div>
+      <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
+    </div>
+    <div class="actions"><button class="btn primary" onclick="closeModal('modalHelp')">Zaczynajmy</button></div>
+  </div>
+</div>
+
 <script id="APPDATA" type="text/plain">H4sIAMivU2oC/6tWKklML1ayio7VUcrLL0mFMouLkv0Sc1OVrJSUdJTKlKyMagHDyHnYKQAAAA==</script>
 <script>
 "use strict";
@@ -527,9 +576,9 @@ const BOOKS = ["","Rodzaju","Wyjścia","Kapłańska","Liczb","Powtórzonego Praw
 
 const DBNAME = "jwStudyClean";   // nazwa pamięci tej kopii aplikacji
 const KP = "jws";               // prefiks ustawień
-let notes = [], tags = [];
+let notes = [], tags = [], marks = [], pubMarks = [];
 let filt = {tag:"all", book:"all", ch:null};
-let query = "", sortMode = "new";
+let query = "", sortMode = "new", showMarks = false;
 let visibleCount = 60;
 let expandedBook = null;
 let idb = null;
@@ -637,6 +686,8 @@ async function boot(){
   if(sf){ try{ Object.assign(filt, JSON.parse(sf)); }catch(e){} }
   if(typeof filt.book==="number" && filt.book>0) expandedBook = filt.book;
   if(idb){ try{ deletedTagNames = (await idbGet("meta","deletedTags")) || []; }catch(e){} }
+  if(idb){ try{ marks = (await idbGet("meta","marks")) || []; }catch(e){} }
+  pubMarks = marks.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
   buildStatic();
   renderAll();
   // iPad/iPhone uruchomione z ikony ekranu początkowego: na iPadzie env(safe-area-inset-top)
@@ -645,6 +696,9 @@ async function boot(){
     document.querySelector("header").style.paddingTop = "max(calc(10px + env(safe-area-inset-top, 0px)), 40px)";
   }
   $("loading").style.display = "none";
+  updateBackupBadge();
+  if(backupStale()) setTimeout(()=>toast("💾 Warto zrobić kopię danych — kliknij 💾 na górze"), 1500);
+  if(!localStorage.getItem(KP+"Onboarded")){ setTimeout(()=>openModal("modalHelp"),400); try{ localStorage.setItem(KP+"Onboarded","1"); }catch(e){} }
   // tryb offline: zapamiętaj aplikację w pamięci podręcznej urządzenia
   if(location.protocol.indexOf("http")===0 && "serviceWorker" in navigator){
     navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -970,7 +1024,12 @@ function sortNotes(arr){
     alpha:(a,b)=>(a.t||a.c||"").localeCompare(b.t||b.c||"","pl"),
     recent:(a,b)=>(b.la||"").localeCompare(a.la||"") || (b.mo||"").localeCompare(a.mo||"")
   }[sortMode];
-  return arr.sort(by);
+  return arr.sort((a,b)=> ((b.pin?1:0)-(a.pin?1:0)) || by(a,b));   // przypięte zawsze na górze
+}
+function togglePin(n){
+  n.pin = !n.pin;
+  markDirty(n); renderAll();
+  toast(n.pin ? "Przypięto notatkę na górze" : "Odpięto notatkę");
 }
 function refLabel(n){
   if(n.b){ let s=BOOKS[n.b]; if(n.ch)s+=" "+n.ch+(n.v?":"+n.v:""); return s; }
@@ -993,18 +1052,7 @@ function isIOS(){
   return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
          (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
 }
-function openInJWL(n){
-  const url = finderUrl(n);
-  if(!url) return;
-  if(isIOS()){
-    // na iPhonie/iPadzie otwórz JW Library bezpośrednio przez schemat aplikacji
-    location.href = url.replace("https://www.jw.org/finder","jwlibrary://finder");
-    // awaryjnie (gdy aplikacja się nie otworzyła) — zwykły link po 1,5 s
-    setTimeout(()=>{ if(!document.hidden) window.open(url,"_blank"); }, 1500);
-  } else {
-    window.open(url,"_blank");
-  }
-}
+function openInJWL(n){ openUrlJWL(finderUrl(n)); }
 function hilite(html){
   if(!query) return html;
   const tmp = document.createElement("div"); tmp.innerHTML = html;
@@ -1032,7 +1080,15 @@ function renderNotes(){
   } else {
     arr = sortNotes(filteredNotes());
   }
-  $("counts").textContent = sortMode==="recent" ? (arr.length ? "Ostatnio otwierane ("+arr.length+")" : "Nie otwierałeś jeszcze żadnej notatki") : arr.length + (arr.length===1?" notatka":(arr.length%10>=2&&arr.length%10<=4&&(arr.length%100<12||arr.length%100>14))?" notatki":" notatek");
+  let countsTxt = sortMode==="recent" ? (arr.length ? "Ostatnio otwierane ("+arr.length+")" : "Nie otwierałeś jeszcze żadnej notatki") : arr.length + (arr.length===1?" notatka":(arr.length%10>=2&&arr.length%10<=4&&(arr.length%100<12||arr.length%100>14))?" notatki":" notatek");
+  const cEl = $("counts");
+  if(pubMarks && pubMarks.length){
+    cEl.innerHTML = esc(countsTxt) + ` · <span class="marksToggle" role="button" title="Kliknij, aby pokazać podkreślenia">🖍 ${pubMarks.length} podkreśleń ${showMarks?"▲":"▼"}</span>`;
+    const tg = cEl.querySelector(".marksToggle");
+    if(tg) tg.onclick = ()=>{ showMarks = !showMarks; renderNotes(); };
+  } else {
+    cEl.textContent = countsTxt;
+  }
   $("hCount").textContent = "· " + notes.filter(n=>!n.del).length + " notatek";
   const el = $("noteList");
   el.innerHTML = "";
@@ -1048,6 +1104,66 @@ function renderNotes(){
     const io = new IntersectionObserver(es=>{ if(es[0].isIntersecting){ io.disconnect(); visibleCount+=120; renderNotes(); } });
     io.observe(more);
   }
+  renderMarksSection(el);
+}
+function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function markGroupKey(m){
+  if(m.book) return "b:"+m.book+":"+(m.ch||0)+":"+(m.ident||0);   // werset = osobne miejsce
+  if(m.doc)  return "d:"+m.doc;                                    // publikacja/artykuł = jedno miejsce
+  return "k:"+(m.ks||"")+":"+(m.itn||0);
+}
+function groupMarks(list){
+  const map=new Map();
+  for(const m of list){
+    const k=markGroupKey(m);
+    let g=map.get(k);
+    if(!g){ g={sample:m, count:0, cols:new Set()}; map.set(k,g); }
+    g.count++; g.cols.add(m.col);
+    if((m.ident||1e9) < (g.sample.ident||1e9)) g.sample=m;        // reprezentant o najniższym akapicie → lepszy link
+  }
+  return [...map.values()];
+}
+function groupLabel(g){
+  const m=g.sample;
+  if(m.book) return (BOOKS[m.book]||("Ks."+m.book))+(m.ch?(" "+m.ch+(m.ident?":"+m.ident:"")):"");
+  return (m.lbl||m.ks||"Publikacja").replace(/\s*·\s*akapit\s+\d+\s*$/i,"");   // sam tytuł artykułu
+}
+function markGroupRowEl(g, nrk){
+  const m=g.sample;
+  const cols=[...g.cols];
+  const [hex,cn]=markColor(cols[0]);
+  const colTxt = cols.length>1 ? (cols.length+" kolory") : cn;
+  const cntTxt = g.count>1 ? (g.count+" podkreśleń") : (colTxt?(colTxt+" podkreślenie"):"podkreślenie");
+  const also = m.book && nrk.has(m.book+"-"+(m.ch||0)+"-"+(m.ident||0)) ? " · masz tu też notatkę" : "";
+  const row=document.createElement("div"); row.className="markRow";
+  row.innerHTML = `<span class="markDot" style="background:${hex}"></span>
+    <div class="markInfo"><div class="markRef">${esc(groupLabel(g))}</div>
+    <div class="markSub">${esc((m.ks||"")+" · "+cntTxt+also)}</div></div>
+    <button class="markOpen">Otwórz ↗</button>`;
+  row.querySelector(".markOpen").onclick=()=>{ const u=markFinderUrl(m); if(u) openUrlJWL(u); else toast("Brak linku do tego miejsca"); };
+  return row;
+}
+function renderMarksSection(container){
+  if(!pubMarks || !pubMarks.length) return;
+  const q = (query||"").trim();
+  let base=null;
+  if(q.length >= 2){ const qn = norm(q); base = pubMarks.filter(m=> (m.h||norm(markLabel(m)+" "+(m.ks||""))).includes(qn)); }
+  else if(showMarks){ base = pubMarks; }
+  else return;
+  const groups = groupMarks(base);
+  const sec = document.createElement("div"); sec.className="marksSec";
+  const hdr = document.createElement("div"); hdr.className="marksHdr";
+  hdr.textContent = q.length>=2
+    ? ("🖍 Podkreślenia (publikacje) — "+groups.length+" różnych miejsc (z "+base.length+" podkreśleń)")
+    : ("🖍 Podkreślenia (publikacje) — "+groups.length+" różnych miejsc (z "+pubMarks.length+") · wpisz w wyszukiwarce, aby zawęzić");
+  sec.appendChild(hdr);
+  if(!groups.length){ const none=document.createElement("div"); none.className="marksMore"; none.textContent="Brak podkreśleń pasujących do „"+q+"”"; sec.appendChild(none); container.appendChild(sec); return; }
+  const nrk = new Set(); notes.forEach(n=>{ if(!n.del&&n.b) nrk.add(n.b+"-"+(n.ch||0)+"-"+(n.v||0)); });
+  const box = document.createElement("div"); box.className="marksBox";
+  groups.slice(0,80).forEach(g=> box.appendChild(markGroupRowEl(g,nrk)));
+  if(groups.length>80){ const more=document.createElement("div"); more.className="marksMore"; more.textContent="…i "+(groups.length-80)+" więcej miejsc — zawęź wyszukiwaniem"; box.appendChild(more); }
+  sec.appendChild(box);
+  container.appendChild(sec);
 }
 const _svg = p => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const ICO = {
@@ -1061,6 +1177,7 @@ const ICO = {
   save:_svg('<path d="M5 3h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7"/><path d="M8 21v-6h8v6"/>'),
   trash:_svg('<path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/><path d="M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/>'),
   image:_svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5L5 20"/>'),
+  pin:_svg('<path d="M9 3h6l-1 6 3 3v2H7v-2l3-3-1-6z"/><path d="M12 14v7"/>'),
   ul:_svg('<circle cx="4" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="17" r="1.4" fill="currentColor" stroke="none"/><path d="M9 7h11M9 12h11M9 17h11"/>'),
   ol:_svg('<path d="M11 7h9M11 12h9M11 17h9"/><text x="2.5" y="8.6" font-size="6.5" fill="currentColor" stroke="none">1</text><text x="2.5" y="13.6" font-size="6.5" fill="currentColor" stroke="none">2</text><text x="2.5" y="18.6" font-size="6.5" fill="currentColor" stroke="none">3</text>'),
   outdent:_svg('<path d="M21 6H3M21 18H3M21 10h-9M21 14h-9"/><path d="M7 9l-3 3l3 3z" fill="currentColor" stroke="none"/>'),
@@ -1071,7 +1188,7 @@ const ICO = {
 };
 function noteCard(n){
   const d = document.createElement("div");
-  d.className = "ncard";
+  d.className = "ncard" + (n.pin?" pinned":"");
   d.dataset.g = n.g;
   const ref = refLabel(n);
   const date = (n.mo||"").substring(0,10);
@@ -1082,7 +1199,7 @@ function noteCard(n){
   d.innerHTML =
     `<div class="nhead">
        <span class="drag" draggable="true" title="Przeciągnij na zakładkę">⠿</span>
-       <div class="ntitle">${hilite(esc(n.t||""))}</div>
+       <div class="ntitle">${n.pin?'<span class="pinmark" title="Przypięta">📌</span> ':""}${hilite(esc(n.t||""))}</div>
      </div>
      <div class="nmeta2">
        ${ref?`<span class="pill ref">📖 ${esc(ref)}</span>`:""}
@@ -1094,6 +1211,7 @@ function noteCard(n){
      <div class="ntools">
        <div class="btnrow">
          ${openA}
+         <button class="sbtn ico ${n.pin?"pinon":""}" data-act="pin" title="${n.pin?"Odepnij":"Przypnij na górze"}">${ICO.pin}</button>
          <button class="sbtn ico" data-act="fs" title="Otwórz na pełnym ekranie">${ICO.fs}</button>
          <button class="sbtn ico" data-act="copy" title="Kopiuj treść">${ICO.copy}</button>
          ${link?`<button class="sbtn ico" data-act="link" title="Kopiuj odnośnik">${ICO.link}</button>`:""}
@@ -1134,6 +1252,7 @@ function noteCard(n){
     if(act==="copy") copyNote(n);
     else if(act==="link"){ navigator.clipboard.writeText(finderUrl(n)).then(()=>toast("Skopiowano odnośnik")); }
     else if(act==="md") downloadMd(n);
+    else if(act==="pin") togglePin(n);
     else if(act==="edit") toggleEdit(d, n);
     else if(act==="del") delNote(n);
     else if(act==="tagtoggle"){
@@ -1220,16 +1339,30 @@ applyColors();
 
 /* ================= ROZMIAR CZCIONKI ================= */
 let noteFs = 14;
-function applyFs(){ document.documentElement.style.setProperty("--noteFs", noteFs+"px"); }
+function applyFs(){ const r=document.documentElement.style; r.setProperty("--noteFs", noteFs+"px"); r.setProperty("--colFs", (noteFs-0.5)+"px"); }
 try{ noteFs = Math.min(24, Math.max(11, +(localStorage.getItem(KP+"Font")||14) )); }catch(e){}
 applyFs();
 $("fMinus").onclick = ()=>{ noteFs = Math.max(11, noteFs-1); localStorage.setItem(KP+"Font", noteFs); applyFs(); toast("Czcionka: "+noteFs+" px"); };
 $("fPlus").onclick = ()=>{ noteFs = Math.min(24, noteFs+1); localStorage.setItem(KP+"Font", noteFs); applyFs(); toast("Czcionka: "+noteFs+" px"); };
+$("btnBackup").onclick = ()=>{ exportJson(); };
+updateBackupBadge();
 function persistFilt(){ localStorage.setItem(KP+"Filt", JSON.stringify(filt)); }
 
 /* ================= AKCJE ================= */
-function bumpDirty(){ try{ localStorage.setItem(KP+"Dirty", String((+(localStorage.getItem(KP+"Dirty")||0))+1)); }catch(e){} }
-function clearDirty(){ try{ localStorage.setItem(KP+"Dirty","0"); localStorage.setItem(KP+"LastBk", new Date().toISOString().substring(0,10)); }catch(e){} }
+function bumpDirty(){ try{ localStorage.setItem(KP+"Dirty", String((+(localStorage.getItem(KP+"Dirty")||0))+1)); }catch(e){} updateBackupBadge(); }
+function clearDirty(){ try{ localStorage.setItem(KP+"Dirty","0"); localStorage.setItem(KP+"LastBk", new Date().toISOString().substring(0,10)); }catch(e){} updateBackupBadge(); }
+function backupDaysAgo(){ const lb=localStorage.getItem(KP+"LastBk"); if(!lb) return null; const d=Math.floor((Date.now()-Date.parse(lb))/86400000); return isFinite(d)?d:null; }
+function backupStale(){ const dirty=+(localStorage.getItem(KP+"Dirty")||0); const days=backupDaysAgo(); return dirty>0 && (days===null || days>=7 || dirty>=50); }
+function updateBackupBadge(){
+  const b=document.getElementById("btnBackup"); if(!b) return;
+  const dirty=+(localStorage.getItem(KP+"Dirty")||0);
+  const lb=localStorage.getItem(KP+"LastBk"); const days=backupDaysAgo();
+  b.textContent = dirty>0 ? ("💾 "+dirty) : "💾";
+  b.classList.toggle("badge-warn", backupStale());
+  b.title = (lb ? ("Ostatnia kopia: "+lb+(days!=null?" ("+days+" dni temu)":"")) : "Nie zrobiono jeszcze kopii")
+    + (dirty>0 ? (" · zmian od kopii: "+dirty) : " · brak nowych zmian")
+    + " — kliknij, aby zapisać kopię danych";
+}
 // przypomnienie przy zamykaniu, gdy są zmiany bez kopii zapasowej (na komputerze)
 window.addEventListener("beforeunload", e=>{
   if(+(localStorage.getItem(KP+"Dirty")||0) > 0){
@@ -1799,7 +1932,8 @@ $("btnMenu").onclick = e=>{
     <div data-m="loadjson">📂 Wczytaj kopię danych (JSON)…</div>
     <div class="dd-note">${lastBk ? "Ostatnia kopia: "+lastBk : "Nie zrobiono jeszcze kopii"}${dirty>0 ? " · zmian od kopii: "+dirty : ""}</div>
     <div class="dd-sep"></div>
-    <div data-m="info">ℹ️ Gdzie zapisują się moje dane?</div>`;
+    <div data-m="info">ℹ️ Gdzie zapisują się moje dane?</div>
+    <div data-m="help">❓ Jak to działa (samouczek)</div>`;
   dd.style.display="block";
   const r=e.target.getBoundingClientRect();
   dd.style.left=Math.min(r.left,innerWidth-290)+"px";
@@ -1813,6 +1947,7 @@ $("btnMenu").onclick = e=>{
     else if(m==="cloud")shareBackup();
     else if(m==="loadjson")openFilePicker("json");
     else if(m==="info")openModal("modalInfo");
+    else if(m==="help")openModal("modalHelp");
   };
 };
 document.addEventListener("click", e=>{
@@ -1869,7 +2004,7 @@ async function handleImportFile(e){
     db.close();
     if(idb){ await idbPut("files",buf,"lastBackup"); await idbPut("meta",file.name,"lastBackupName"); }
     renderAll();
-    toast(`Import: ${res.added} nowych, ${res.updated} zaktualizowanych, ${res.skipped} bez zmian`);
+    toast(`Import: ${res.added} notatek nowych, ${res.updated} zaktualizowanych · podkreśleń: ${res.marks||0}`);
   }catch(err){ console.error(err); alert("Błąd importu: "+err.message); }
 }
 function importFromDb(db){
@@ -1909,7 +2044,45 @@ function importFromDb(db){
     else skipped++;
   });
   if(idb&&changed.length) idbBulk("notes",changed).catch(()=>{});
-  return {added,updated,skipped};
+  // ===== podkreślenia (UserMark + BlockRange + Location) =====
+  try{
+    const mq = db.exec(`SELECT u.ColorIndex, l.KeySymbol, l.IssueTagNumber, l.BookNumber, l.ChapterNumber, l.DocumentId, l.Title, br.Identifier
+      FROM UserMark u JOIN Location l ON u.LocationId=l.LocationId
+      LEFT JOIN BlockRange br ON br.UserMarkId=u.UserMarkId
+      ORDER BY l.BookNumber, l.ChapterNumber, br.Identifier`);
+    if(mq.length){
+      const seen={}; const out=[];
+      mq[0].values.forEach(([col,ks,itn,book,ch,doc,title,ident])=>{
+        const m={ col:col||0, ks:ks||"", itn:itn||0, book:book||0, ch:ch||0, doc:doc||0, ident:ident||0 };
+        const key=[m.col,m.ks,m.itn,m.book,m.ch,m.doc,m.ident].join("|");
+        if(seen[key]) return; seen[key]=1;
+        // policz etykietę i „hasło" raz — dla szybkiego wyszukiwania nawet przy dziesiątkach tys. podkreśleń
+        m.lbl = m.book ? ((BOOKS[m.book]||("Księga "+m.book)) + (m.ch?(" "+m.ch+(m.ident?":"+m.ident:"")):""))
+                       : (((title||"").trim()||m.ks||"Publikacja") + (m.ident?(" · akapit "+m.ident):""));
+        m.h = norm(m.lbl+" "+m.ks+" "+markColor(m.col)[1]);
+        out.push(m);
+      });
+      marks = out;
+      pubMarks = out.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
+      if(idb) idbPut("meta", marks, "marks").catch(()=>{});
+    }
+  }catch(e){ console.warn("Import podkreśleń:", e); }
+  return {added,updated,skipped,marks:pubMarks.length};
+}
+/* ===== podkreślenia: kolory, etykieta, link ===== */
+function markColor(col){ const M={1:["#ffd54a","żółte"],2:["#8ed08a","zielone"],3:["#7fb3e0","niebieskie"],4:["#e79ec4","różowe"],5:["#f0a868","pomarańczowe"],6:["#b79bd6","fioletowe"]}; return M[col]||["#c9c4b7",""]; }
+function markLabel(m){ if(m.lbl) return m.lbl; if(m.book){ let s=BOOKS[m.book]||("Księga "+m.book); if(m.ch)s+=" "+m.ch+(m.ident?":"+m.ident:""); return s; } return (m.title||m.ks||"Publikacja")+(m.ident?(" · akapit "+m.ident):""); }
+function markFinderUrl(m){
+  const base="https://www.jw.org/finder?srcid=jwlshare&wtlocale=P&prefer=lang";
+  if(m.book){ const bible=String(m.book).padStart(2,"0")+String(m.ch||1).padStart(3,"0")+String(m.ident||0).padStart(3,"0"); return base+"&bible="+bible+"&pub="+(m.ks||"nwtsty"); }
+  if(m.doc){ let u=base+"&docid="+m.doc; if(m.ident) u+="&par="+m.ident; return u; }        // par = akapit
+  if(m.ks){ let u=base+"&pub="+encodeURIComponent(m.ks); if(m.itn)u+="&issue="+m.itn; if(m.ident)u+="&par="+m.ident; return u; }
+  return null;
+}
+function openUrlJWL(url){
+  if(!url) return;
+  if(isIOS()){ location.href=url.replace("https://www.jw.org/finder","jwlibrary://finder"); setTimeout(()=>{ if(!document.hidden) window.open(url,"_blank"); },1500); }
+  else window.open(url,"_blank");
 }
 
 /* ================= EKSPORT .JWLIBRARY ================= */
@@ -2359,6 +2532,22 @@ document.querySelectorAll(".colResizer").forEach(rz=>{
 });
 $("search").addEventListener("input",e=>{parseQuery(e.target.value);renderAll();});
 $("sortSel").addEventListener("change",e=>{sortMode=e.target.value;renderNotes();});
+/* ===== skróty klawiszowe (komputer) ===== */
+document.addEventListener("keydown", e=>{
+  const t=e.target, typing = t && (t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.isContentEditable);
+  if(e.key==="Escape"){
+    if(fsGuid){ closeFs(); return; }
+    const ov=[...document.querySelectorAll(".overlay.show")]; if(ov.length){ ov.forEach(o=>o.classList.remove("show")); return; }
+    const cm=$("colorMenu"); if(cm && cm.style.display==="block"){ cm.style.display="none"; return; }
+    if($("dropdown").style.display==="block"){ $("dropdown").style.display="none"; return; }
+    if(document.activeElement===$("search")){ $("search").blur(); }
+    return;
+  }
+  if(typing) return;
+  if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="f"){ e.preventDefault(); $("search").focus(); $("search").select(); return; }
+  if(e.key==="/"){ e.preventDefault(); $("search").focus(); }
+  else if(e.key.toLowerCase()==="n"){ e.preventDefault(); $("btnNew").click(); }
+});
 document.querySelectorAll(".overlay").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("show");}));
 
 boot().catch(err=>{

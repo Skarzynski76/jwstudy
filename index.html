@@ -243,6 +243,9 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s}
 .refbtn:hover{filter:brightness(.97)}
 .refbtn:active{transform:translateY(1px)}
+.refbtn.assign{border-style:dashed;background:transparent;color:var(--muted);font-weight:500}
+.refbtn.assign:hover{color:var(--accent);border-color:var(--accent2)}
+.refbtn.edref{padding:5px 9px;border-radius:12px;background:transparent}
 /* zwijane zarządzanie zakładkami (domyślnie ukryte; przycisk 🏷 pokazuje) */
 .ncard .tagrow{display:none}
 .ncard.showtags .tagrow{display:flex}
@@ -513,7 +516,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v51</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v52</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1331,7 +1334,8 @@ function noteCard(n){
        <div class="ntitle">${n.pin?'<span class="pinmark" title="Przypięta">📌</span> ':""}${hilite(esc(n.t||""))}</div>
      </div>
      <div class="nmeta2">
-       ${link ? `<button class="refbtn" data-act="openref" title="Otwórz w JW Library">📖 ${esc(ref||"Otwórz w JW Library")} ↗</button>` : (ref?`<span class="pill ref">📖 ${esc(ref)}</span>`:"")}
+       ${link ? `<button class="refbtn" data-act="openref" title="Otwórz w JW Library">📖 ${esc(ref||"Otwórz w JW Library")} ↗</button>` : (ref?`<span class="pill ref">📖 ${esc(ref)}</span>`:`<button class="refbtn assign" data-act="assignref" title="Przypisz werset — utworzy link do JW Library">📌 Przypisz werset</button>`)}
+       ${link ? `<button class="refbtn edref" data-act="assignref" title="Zmień przypisany werset">✎</button>` : ""}
        ${n.ks?`<span class="pill ks">${esc(n.ks)}</span>`:""}
        <span class="pill date">🕓 ${date}</span>
      </div>
@@ -1388,6 +1392,7 @@ function noteCard(n){
     else if(act==="md") downloadMd(n);
     else if(act==="pin") togglePin(n);
     else if(act==="openref") openInJWL(n);
+    else if(act==="assignref") assignVerse(n);
     else if(act==="tagpanel"){ d.classList.toggle("showtags"); const b=e.target.closest('[data-act="tagpanel"]'); if(b) b.classList.toggle("tagon", d.classList.contains("showtags")); }
     else if(act==="read") toggleReading(d);
     else if(act==="edit") toggleEdit(d, n);

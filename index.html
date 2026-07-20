@@ -232,6 +232,12 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #askModal .askBtns button{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
 #askModal .askCancel{background:var(--sel);color:var(--text)}
 #askModal .askOk{background:var(--accent);color:#fff}
+#msgModal{align-items:center;justify-content:center;z-index:150}
+#msgModal .askbox{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:22px;width:min(440px,92vw)}
+#msgModal .askTitle{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px}
+#msgModal .msgBody{font-size:14px;color:var(--text);line-height:1.55}
+#msgModal .askBtns{display:flex;justify-content:flex-end;margin-top:18px}
+#msgModal .msgOk{border:none;border-radius:11px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s}
@@ -277,6 +283,8 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .ncontent a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer;word-break:break-word}
 .ncontent a.jwl-ref{font-weight:600;text-decoration:none;background:var(--sel);padding:1px 7px;border-radius:8px;border:1px solid var(--border);white-space:nowrap}
 .ncontent a.jwl-ref::before{content:"📖 "}
+.ncontent a.jwl-ref.auto{background:none;border:none;padding:0;white-space:normal;font-weight:600;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+.ncontent a.jwl-ref.auto::before{content:""}
 /* indeks górny/dolny */
 .ncontent sup{font-size:.7em;vertical-align:super} .ncontent sub{font-size:.7em;vertical-align:sub}
 /* linia pozioma */
@@ -376,6 +384,8 @@ mark{padding:0 1px;border-radius:3px}
 #dropdown{position:fixed;background:var(--panel);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.26);z-index:70;max-height:76vh;overflow-y:auto;display:none;min-width:250px;padding:8px}
 #dropdown div{padding:10px 12px;cursor:pointer;font-size:13.5px;border-radius:11px;display:flex;align-items:center;gap:10px;margin:1px 0;background:none;border:none;box-shadow:none;color:var(--text)}
 #dropdown div:hover{background:var(--sel);transform:none;box-shadow:none}
+#dropdown .dd-sep{height:1px;background:var(--border);margin:5px 8px;padding:0;pointer-events:none}
+#dropdown .dd-sep:hover{background:var(--border)}
 #dropdown div .ic{width:18px;height:18px;flex-shrink:0;color:var(--muted)}
 #dropdown .dd-danger{color:#c0392b}
 #dropdown .dd-danger .ic{color:#c0392b}
@@ -503,7 +513,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v50</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v51</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -575,6 +585,13 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <input class="askInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false">
     <div class="askHint"></div>
     <div class="askBtns"><button class="askCancel" type="button">Anuluj</button><button class="askOk" type="button">Wstaw</button></div>
+  </div>
+</div>
+<div class="overlay" id="msgModal">
+  <div class="askbox">
+    <div class="askTitle"></div>
+    <div class="msgBody"></div>
+    <div class="askBtns"><button class="msgOk" type="button">OK</button></div>
   </div>
 </div>
 <button id="readExit">✎ Pokaż narzędzia</button>
@@ -1341,6 +1358,7 @@ function noteCard(n){
          <button class="sbtn mini" data-act="tagcreate" title="Utwórz zakładkę i dodaj notatkę">＋ Utwórz</button>
        </div>
      </div>`;
+  autolinkRefs(d.querySelector(".ncontent"));
   d.addEventListener("click", e=>{
     if(e.target.dataset.untag){ untag(n, +e.target.dataset.untag); return; }
     if(e.target.closest(".ntitle") && !e.target.isContentEditable){ touchAccess(n); if(!fsGuid) openFs(n); return; }
@@ -1351,15 +1369,17 @@ function noteCard(n){
     if(act==="fs"){ openFs(n); return; }
     if(act==="exp"){
       const dd=$("dropdown");
-      dd.innerHTML = `<div data-x="doc">📄 Word (.doc)</div><div data-x="pdf">🖨 PDF / Drukuj</div>`;
+      dd.innerHTML = `<div data-x="doc">📄 Word (.doc)</div><div data-x="pdf">🖨 PDF / Drukuj</div><div data-x="jwl">📚 JW Library (.jwlibrary)</div><div class="dd-sep"></div><div data-x="verse">📌 ${n.b?"Zmień":"Przypisz"} werset…</div>`;
       dd.style.display="block";
       const r=e.target.getBoundingClientRect();
       dd.style.left=Math.min(r.left, innerWidth-220)+"px";
-      dd.style.top=Math.min(r.bottom+4, innerHeight-120)+"px";
+      dd.style.top=Math.min(r.bottom+4, innerHeight-160)+"px";
       dd.onclick = ev=>{
-        const x=ev.target.dataset.x; dd.style.display="none";
+        const x=ev.target.dataset.x; if(!x) return; dd.style.display="none";
         if(x==="doc") exportNoteWord(n);
         else if(x==="pdf") exportNotePdf(n);
+        else if(x==="jwl") exportOneNoteJwl(n);
+        else if(x==="verse") assignVerse(n);
       };
       return;
     }
@@ -1841,6 +1861,14 @@ function askText(o){
     inp.onkeydown=e=>{ e.stopPropagation(); if(e.key==="Enter"){ e.preventDefault(); done(inp.value.trim()); } else if(e.key==="Escape"){ e.preventDefault(); done(null); } };
   });
 }
+function showInfo(title, html){
+  return new Promise(res=>{
+    const m=$("msgModal"); m.querySelector(".askTitle").textContent=title; m.querySelector(".msgBody").innerHTML=html;
+    m.classList.add("show");
+    const ok=m.querySelector(".msgOk");
+    ok.onclick=()=>{ m.classList.remove("show"); ok.onclick=null; res(); };
+  });
+}
 function insertNodeAtSel(node, ce){
   ce.focus();
   const sel=getSelection();
@@ -1872,6 +1900,41 @@ function parseRef(s){
 function refText(r){
   let s=BOOKS[r.b]; if(r.ch){ s+=" "+r.ch; if(r.v){ s+=":"+r.v; if(r.v2) s+="-"+r.v2; } }
   return s;
+}
+/* ===== automatyczne wykrywanie odniesień do wersetów w tekście notatki ===== */
+const REF_RX = (function(){
+  const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const names = BOOKS.slice(1).slice().sort((a,b)=>b.length-a.length).map(esc);
+  try{ return new RegExp("(?<![\\p{L}\\p{N}])("+names.join("|")+")\\s+(\\d+)\\s*[:.,]\\s*(\\d+)(?:\\s*[-–]\\s*\\d+)?","gu"); }
+  catch(e){ return new RegExp("("+names.join("|")+")\\s+(\\d+)\\s*[:.,]\\s*(\\d+)(?:\\s*[-–]\\s*\\d+)?","g"); }
+})();
+function autolinkRefs(container){
+  if(!container) return;
+  let walker;
+  try{ walker=document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){
+      if(!n.nodeValue || !/\d/.test(n.nodeValue)) return NodeFilter.FILTER_REJECT;
+      let p=n.parentNode;
+      while(p && p!==container){ const tg=p.tagName; if(tg==="A"||tg==="MARK"||(p.classList&&p.classList.contains("qhl"))) return NodeFilter.FILTER_REJECT; p=p.parentNode; }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  }); }catch(e){ return; }
+  const targets=[]; let t; while(t=walker.nextNode()) targets.push(t);
+  targets.forEach(node=>{
+    const text=node.nodeValue; REF_RX.lastIndex=0;
+    if(!REF_RX.test(text)) return; REF_RX.lastIndex=0;
+    const frag=document.createDocumentFragment(); let last=0, m;
+    while((m=REF_RX.exec(text))){
+      const start=m.index, end=start+m[0].length;
+      if(start>last) frag.appendChild(document.createTextNode(text.slice(last,start)));
+      const ref=parseRef(m[0]); const url=ref?finderUrl({b:ref.b,ch:ref.ch||1,v:ref.v||0}):null;
+      if(url){ const a=document.createElement("a"); a.className="jwl-ref auto"; a.href=url; a.setAttribute("data-url",url); a.textContent=m[0]; frag.appendChild(a); }
+      else frag.appendChild(document.createTextNode(m[0]));
+      last=end;
+    }
+    if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
 }
 async function insertVerseRef(ce){
   const savedR = edSavedRange ? edSavedRange.cloneRange() : null;
@@ -2170,6 +2233,7 @@ function toggleEdit(card,n){
   if(!editing){
     card.classList.add("editing");
     contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
+    contEl.querySelectorAll("a.jwl-ref.auto").forEach(a=>{ a.replaceWith(document.createTextNode(a.textContent)); });
     titleEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
     titleEl.contentEditable="true"; contEl.contentEditable="true";
     try{ document.execCommand("styleWithCSS", false, false); }catch(e){}
@@ -2509,7 +2573,11 @@ async function handleImportFile(e){
     db.close();
     if(idb){ await idbPut("files",buf,"lastBackup"); await idbPut("meta",file.name,"lastBackupName"); }
     renderAll();
-    toast(`Import: ${res.added} notatek nowych, ${res.updated} zaktualizowanych · podkreśleń: ${res.marks||0}`);
+    showInfo("Import zakończony", `Kopia z JW Library została <b>dołączona</b> (bez kasowania Twoich danych).<br><br>`+
+      `• Nowych notatek: <b>${res.added}</b><br>`+
+      `• Zaktualizowanych: <b>${res.updated}</b><br>`+
+      `• Nowych podkreśleń: <b>${res.marksAdded||0}</b> (łącznie z publikacji: ${res.marks||0})<br>`+
+      `• Pominięto (bez zmian lub Twoje edycje): ${res.skipped}`);
   }catch(err){ console.error(err); alert("Błąd importu: "+err.message); }
 }
 function importFromDb(db){
@@ -2550,13 +2618,16 @@ function importFromDb(db){
   });
   if(idb&&changed.length) idbBulk("notes",changed).catch(()=>{});
   // ===== podkreślenia (UserMark + BlockRange + Location) =====
+  let marksAdded=0;
   try{
     const mq = db.exec(`SELECT u.ColorIndex, l.KeySymbol, l.IssueTagNumber, l.BookNumber, l.ChapterNumber, l.DocumentId, l.Title, br.Identifier
       FROM UserMark u JOIN Location l ON u.LocationId=l.LocationId
       LEFT JOIN BlockRange br ON br.UserMarkId=u.UserMarkId
       ORDER BY l.BookNumber, l.ChapterNumber, br.Identifier`);
     if(mq.length){
-      const seen={}; const out=[];
+      // SCALANIE: zachowaj dotychczasowe podkreślenia, dołącz tylko nowe
+      const merged = Array.isArray(marks) ? marks.slice() : [];
+      const seen={}; merged.forEach(m=>{ seen[[m.col,m.ks,m.itn,m.book,m.ch,m.doc,m.ident].join("|")]=1; });
       mq[0].values.forEach(([col,ks,itn,book,ch,doc,title,ident])=>{
         const m={ col:col||0, ks:ks||"", itn:itn||0, book:book||0, ch:ch||0, doc:doc||0, ident:ident||0 };
         const key=[m.col,m.ks,m.itn,m.book,m.ch,m.doc,m.ident].join("|");
@@ -2565,14 +2636,14 @@ function importFromDb(db){
         m.lbl = m.book ? ((BOOKS[m.book]||("Księga "+m.book)) + (m.ch?(" "+m.ch+(m.ident?":"+m.ident:"")):""))
                        : (((title||"").trim()||m.ks||"Publikacja") + (m.ident?(" · akapit "+m.ident):""));
         m.h = norm(m.lbl+" "+m.ks+" "+markColor(m.col)[1]);
-        out.push(m);
+        merged.push(m); marksAdded++;
       });
-      marks = out;
-      pubMarks = out.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
+      marks = merged;
+      pubMarks = marks.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
       if(idb) idbPut("meta", marks, "marks").catch(()=>{});
     }
   }catch(e){ console.warn("Import podkreśleń:", e); }
-  return {added,updated,skipped,marks:pubMarks.length};
+  return {added,updated,skipped,marks:pubMarks.length,marksAdded};
 }
 /* ===== podkreślenia: kolory, etykieta, link ===== */
 function markColor(col){ const M={1:["#ffd54a","żółte"],2:["#8ed08a","zielone"],3:["#7fb3e0","niebieskie"],4:["#e79ec4","różowe"],5:["#f0a868","pomarańczowe"],6:["#b79bd6","fioletowe"]}; return M[col]||["#c9c4b7",""]; }
@@ -2734,6 +2805,61 @@ function applyChangesToDb(db){
     }
   });
   try{ db.run("UPDATE LastModified SET LastModified=?",[nowIso]); }catch(e){}
+}
+/* ===== EKSPORT POJEDYNCZEJ NOTATKI DO .JWLIBRARY (z przypięciem do wersetu) ===== */
+async function buildJwlibraryBlob(transform, label){
+  const buf=await idbGet("files","lastBackup");
+  if(!buf) throw new Error("Najpierw zaimportuj swój backup .jwlibrary (⚙️ Plik → Importuj backup).");
+  const zip=await JSZip.loadAsync(buf);
+  const db=new SQL.Database(await zip.file("userData.db").async("uint8array"));
+  transform(db);
+  const outDb=db.export(); db.close();
+  zip.file("userData.db",outDb);
+  const hashBuf=await crypto.subtle.digest("SHA-256",outDb);
+  const hash=[...new Uint8Array(hashBuf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+  const manifest=JSON.parse(await zip.file("manifest.json").async("string"));
+  const now=new Date(), iso=now.toISOString().substring(0,19)+"+00:00", dateStr=now.toISOString().substring(0,10);
+  manifest.name=`UserdataBackup_${dateStr}_${label}.jwlibrary`;
+  manifest.creationDate=iso; manifest.userDataBackup.hash=hash; manifest.userDataBackup.lastModifiedDate=iso; manifest.userDataBackup.deviceName=label;
+  zip.file("manifest.json",JSON.stringify(manifest));
+  const zblob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
+  return {blob:new Blob([zblob],{type:"application/octet-stream"}), name:manifest.name};
+}
+async function exportOneNoteJwl(n){
+  toast("Tworzenie pliku .jwlibrary…");
+  try{
+    await getLibs();
+    const {blob,name}=await buildJwlibraryBlob(db=>{
+      // zostaw tylko tę jedną notatkę (czyścimy treści użytkownika, schemat i lokalizacje zostają)
+      ["TagMap","BlockRange","UserMark","Bookmark","InputField","Note"].forEach(tb=>{ try{db.run("DELETE FROM "+tb);}catch(e){} });
+      const one=sql=>{const r=db.exec(sql);return r.length?r[0].values[0][0]:null;};
+      let maxLocId=one("SELECT MAX(LocationId) FROM Location")||0;
+      const nowIso=new Date().toISOString().substring(0,19)+"+00:00";
+      let locId=null, blockType=0, blockId=null;
+      if(n.b && n.ch){
+        let meps=0,key="nwtsty";
+        try{ const mr=db.exec("SELECT MepsLanguage, KeySymbol FROM Location WHERE KeySymbol IN ('nwtsty','nwt') AND BookNumber IS NOT NULL LIMIT 1"); if(mr.length){ meps=mr[0].values[0][0]; key=mr[0].values[0][1]||"nwtsty"; } }catch(e){}
+        try{ const ex=db.exec(`SELECT LocationId FROM Location WHERE KeySymbol='${key}' AND BookNumber=${n.b} AND ChapterNumber=${n.ch} AND DocumentId IS NULL AND (IssueTagNumber=0 OR IssueTagNumber IS NULL) LIMIT 1`); if(ex.length) locId=ex[0].values[0][0]; }catch(e){}
+        if(locId==null){ maxLocId++; db.run("INSERT INTO Location (LocationId, BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, IssueTagNumber) VALUES (?,?,?,?,?,0,0)",[maxLocId,n.b,n.ch,key,meps]); locId=maxLocId; }
+        if(n.v){ blockType=2; blockId=n.v; } else { blockType=1; blockId=n.ch; }
+      }
+      db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, LocationId, NoteId) VALUES (?,?,?,?,?,?,?,?,1)",
+        [n.g, n.t||null, n.c||null, n.mo||nowIso, n.cr||nowIso, blockType, blockId, locId]);
+      try{ db.run("UPDATE LastModified SET LastModified=?",[nowIso]); }catch(e){}
+    }, "Notatka");
+    chooseSaveOrShare(blob, name, "Notatka → JW Library");
+    toast("Plik .jwlibrary gotowy");
+  }catch(err){ console.error(err); alert("Błąd eksportu: "+err.message); }
+}
+async function assignVerse(n){
+  const cur = n.b ? refText({b:n.b,ch:n.ch,v:n.v}) : "";
+  const txt = await askText({title:"Przypisz werset do notatki", value:cur, placeholder:"np. Jan 3:16  (puste = usuń)", okLabel:"Przypisz", hint:"Notatka pojawi się w JW Library przy tym wersecie."});
+  if(txt===null) return;
+  pushUndo({type:"note", label:"przypisanie wersetu", before:cloneNote(n)});
+  if(txt===""){ n.b=0; n.ch=null; n.v=null; }
+  else { const ref=parseRef(txt); if(!ref){ toast("Nie rozpoznano — np. Jan 3:16"); return; } n.b=ref.b; n.ch=ref.ch||1; n.v=ref.v||null; n.doc=0; }
+  n.ed=true; markDirty(n); renderAll();
+  toast(n.b ? ("Przypisano: "+refText({b:n.b,ch:n.ch,v:n.v})) : "Usunięto przypisanie wersetu");
 }
 
 /* ================= EKSPORT NOTATKI (WORD / PDF) ================= */

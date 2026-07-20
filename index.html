@@ -181,6 +181,10 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .fsCloseInline{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:none;background:#fff;color:#1e5b46;font-size:19px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:4;display:flex;align-items:center;justify-content:center}
 .fsCloseInline:hover{background:#eef2ef}
 .fsCloseInline:active{transform:translateY(-50%) scale(.93)}
+.fsFont{display:inline-flex;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-left:4px;flex-shrink:0}
+.fsFont button{border:none;background:var(--panel);color:var(--text);cursor:pointer;padding:6px 11px;font-size:12.5px;font-weight:600;line-height:1}
+.fsFont button:hover{background:var(--sel)}
+.fsFont button+button{border-left:1px solid var(--border)}
 #fsWrap .drag{display:none}
 #fsWrap .ncard{border:none}
 #fsWrap .nhead{padding-right:56px;border-radius:0}
@@ -448,7 +452,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v45</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v46</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1347,6 +1351,20 @@ function renderFs(){
     x.className = "fsCloseInline"; x.type="button"; x.setAttribute("aria-label","Zamknij"); x.textContent = "✕"; x.title = "Zamknij";
     x.onclick = closeFs;
     nh.appendChild(x);
+  }
+  // regulacja rozmiaru czcionki dostępna w otwartej notatce (dolny pasek)
+  const br = card.querySelector(".btnrow");
+  if(br){
+    const fc = document.createElement("span");
+    fc.className = "fsFont";
+    fc.innerHTML = `<button type="button" data-fs="-" title="Mniejsza czcionka">A−</button><button type="button" data-fs="+" title="Większa czcionka">A+</button>`;
+    fc.addEventListener("pointerdown", e=>{
+      const b = e.target.closest("[data-fs]"); if(!b) return;
+      e.preventDefault();
+      if(b.dataset.fs==="-") noteFs = Math.max(11, noteFs-1); else noteFs = Math.min(24, noteFs+1);
+      localStorage.setItem(KP+"Font", noteFs); applyFs();
+    });
+    br.appendChild(fc);
   }
   w.appendChild(card);
 }

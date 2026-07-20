@@ -21,6 +21,12 @@
   --c2bg:#4c4c52; --c2item:#f0f0f2; --c2hover:#5d5d64; --c2active:#8c6f52;
   --hl1:#ffe97d; --hl2:#b7e4a7; --hl3:#a8d5f2; --hl4:#d9b8f0; --hl5:#f5b0b0; --hl6:#ffcf8f; --hl7:#9fe3d5;
 }
+/* motyw SEPIA (czytnik) */
+html[data-theme="sepia"]{
+  --bg:#efe4cb; --panel:#faf2df; --border:#e2d4b4; --text:#493d2a; --muted:#8b7a56;
+  --accent:#8a6a39; --accent2:#a98757; --sel:#efe2c4;
+}
+html[data-theme="sepia"] main{background:radial-gradient(900px 520px at 12% -5%,rgba(180,150,90,.28),transparent 60%),linear-gradient(180deg,#e9dcbf,#e2d4b2)}
 *{box-sizing:border-box}
 button,.item,.sbtn,.chip-ch,.pal,.eb-sw,a,label,select,summary,#imgBar button,#hlBar .sw,#hlBar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
@@ -195,6 +201,37 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
 /* pełny ekran: wygodna szerokość czytania + przyklejona belka tytułu */
 #fsWrap .ncontent,#fsWrap .nmeta2,#fsWrap .chips{max-width:var(--fsMax,760px);margin-left:auto;margin-right:auto}
+#fsWrap .ncontent{line-height:var(--noteLh,1.7);font-family:var(--readFont,inherit)}
+#fsWrap .ntitle{font-family:var(--readFont,inherit)}
+/* pasek postępu czytania */
+#fsProg{position:sticky;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20;border-radius:0 2px 2px 0;transition:width .1s linear}
+/* strzałki poprzednia/następna */
+.fsNav{position:fixed;top:50%;transform:translateY(-50%);z-index:11;width:44px;height:64px;border:none;border-radius:12px;background:rgba(0,0,0,.16);color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.fsNav:hover{background:rgba(0,0,0,.3)}
+.fsNav.prev{left:8px} .fsNav.next{right:8px}
+.fsNav[disabled]{opacity:.25;pointer-events:none}
+@media (max-width:700px){ .fsNav{width:38px;height:54px;font-size:22px;background:rgba(0,0,0,.12)} }
+/* panel typografii (Aa) */
+#readPop{position:fixed;display:none;z-index:135;background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.28);padding:14px;min-width:270px;max-width:320px}
+#readPop .rp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 2px;border-top:1px solid var(--border)}
+#readPop .rp-row:first-child{border-top:none}
+#readPop .rp-lbl{font-size:12.5px;color:var(--muted);font-weight:600}
+#readPop .rp-grp{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+#readPop .rp-grp button{border:none;background:var(--panel);color:var(--text);cursor:pointer;padding:7px 12px;font-size:13px;line-height:1}
+#readPop .rp-grp button+button{border-left:1px solid var(--border)}
+#readPop .rp-grp button.on{background:var(--sel);color:var(--accent);font-weight:600}
+#readPop .rp-grp button:hover{background:var(--sel)}
+/* okienko wpisywania (zamiast prompt) */
+#askModal{align-items:center;justify-content:center;z-index:150}
+#askModal .askbox{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:20px;width:min(440px,92vw)}
+#askModal .askTitle{font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px}
+#askModal .askInput{width:100%;font-size:16px;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);outline:none}
+#askModal .askInput:focus{border-color:var(--accent2)}
+#askModal .askHint{font-size:12.5px;color:var(--muted);margin-top:8px}
+#askModal .askBtns{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+#askModal .askBtns button{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
+#askModal .askCancel{background:var(--sel);color:var(--text)}
+#askModal .askOk{background:var(--accent);color:#fff}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s}
@@ -225,8 +262,8 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .editbar .eb-color{font-size:17px}
 .editbar .eb-more{font-size:19px;font-weight:700}
 #ebPop{position:fixed;display:none;z-index:135;background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 44px rgba(0,0,0,.28);padding:6px;min-width:216px}
-#ebPop div[data-cmd],#ebPop div[data-clear]{padding:10px 11px;border-radius:10px;font-size:13.5px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px}
-#ebPop div[data-cmd]:hover,#ebPop div[data-clear]:hover{background:var(--sel)}
+#ebPop div[data-cmd],#ebPop div[data-clear],#ebPop div[data-ins]{padding:10px 11px;border-radius:10px;font-size:13.5px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px}
+#ebPop div[data-cmd]:hover,#ebPop div[data-clear]:hover,#ebPop div[data-ins]:hover{background:var(--sel)}
 #ebPop div .ic{width:18px;height:18px;color:var(--muted);flex-shrink:0}
 #ebPop .dd-sep{height:1px;background:var(--border);margin:5px 8px}
 #ebPop .ebpal{display:flex;gap:10px;flex-wrap:wrap;padding:8px 6px;max-width:230px}
@@ -234,8 +271,22 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .editbar .eb-block{border:1px solid var(--border);background:var(--bg);border-radius:10px;height:36px;font-size:12.5px;color:var(--text);padding:0 10px;flex-shrink:0;cursor:pointer;font-weight:600}
 .ncontent h2{font-size:calc(var(--noteFs,14px) + 6px);font-weight:700;margin:10px 0 4px;color:var(--accent)}
 .ncontent h3{font-size:calc(var(--noteFs,14px) + 3px);font-weight:700;margin:8px 0 3px}
-.ncontent blockquote{margin:4px 0 4px 22px;padding-left:10px;border-left:3px solid var(--border)}
+.ncontent blockquote{margin:8px 0;padding:6px 14px;border-left:4px solid var(--accent2);background:var(--sel);border-radius:0 8px 8px 0;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:var(--accent)}
 .ncontent s{opacity:.75}
+/* odnośniki */
+.ncontent a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer;word-break:break-word}
+.ncontent a.jwl-ref{font-weight:600;text-decoration:none;background:var(--sel);padding:1px 7px;border-radius:8px;border:1px solid var(--border);white-space:nowrap}
+.ncontent a.jwl-ref::before{content:"📖 "}
+/* indeks górny/dolny */
+.ncontent sup{font-size:.7em;vertical-align:super} .ncontent sub{font-size:.7em;vertical-align:sub}
+/* linia pozioma */
+.ncontent hr{border:none;border-top:1.5px solid var(--border);margin:12px 0}
+/* listy zadań (checkboxy) */
+.ncontent ul.tasklist{list-style:none;margin:6px 0;padding-left:2px}
+.ncontent ul.tasklist li{position:relative;padding-left:30px;margin:5px 0;white-space:pre-wrap}
+.ncontent ul.tasklist li::before{content:"☐";position:absolute;left:2px;top:-1px;font-size:1.15em;color:var(--accent2);cursor:pointer}
+.ncontent ul.tasklist li.done::before{content:"☑";color:#2e9e5b}
+.ncontent ul.tasklist li.done{text-decoration:line-through;opacity:.6}
 .ncontent img{max-width:100%;height:auto;border-radius:10px;float:right;margin:4px 0 8px 16px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .ncontent[contenteditable="true"] img{cursor:pointer}
 body.img-placing{cursor:copy}
@@ -452,7 +503,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v47</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v50</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -517,13 +568,25 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="dropdown"></div>
 <div id="colorMenu"></div>
 <div id="ebPop"></div>
+<div id="readPop"></div>
+<div class="overlay" id="askModal">
+  <div class="askbox">
+    <div class="askTitle">Wpisz</div>
+    <input class="askInput" type="text" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <div class="askHint"></div>
+    <div class="askBtns"><button class="askCancel" type="button">Anuluj</button><button class="askOk" type="button">Wstaw</button></div>
+  </div>
+</div>
 <button id="readExit">✎ Pokaż narzędzia</button>
 
 <div class="overlay" id="modalFs">
   <div class="fsmodal">
+    <div id="fsProg"></div>
     <button id="fsClose" title="Zamknij">✕</button>
     <div id="fsWrap"></div>
   </div>
+  <button id="fsPrev" class="fsNav prev" title="Poprzednia notatka" aria-label="Poprzednia">‹</button>
+  <button id="fsNext" class="fsNav next" title="Następna notatka" aria-label="Następna">›</button>
 </div>
 
 <div class="overlay" id="modalFile">
@@ -957,8 +1020,8 @@ function createTag(name){
   saveTags();
   return t;
 }
-$("btnNewTag").onclick = ()=>{
-  const name = prompt("Nazwa nowej zakładki:");
+$("btnNewTag").onclick = async ()=>{
+  const name = await askText({title:"Nowa zakładka", placeholder:"Nazwa zakładki", okLabel:"Utwórz"});
   if(name && name.trim()){
     const t = createTag(name);
     renderTags(); toast("Utworzono zakładkę „"+t.name+"”");
@@ -980,11 +1043,11 @@ function deleteTag(t){
   if(filt.tag===t.id){ filt.tag="all"; persistFilt(); }
   renderAll(); toast("Usunięto zakładkę „"+t.name+"”");
 }
-function renameTag(id){
+async function renameTag(id){
   const t = tags.find(x=>x.id===id); if(!t) return;
-  const name = prompt("Nowa nazwa zakładki:", t.name);
+  const name = await askText({title:"Zmień nazwę zakładki", value:t.name, okLabel:"Zapisz"});
   if(!name || !name.trim() || name.trim()===t.name) return;
-  if(tags.find(x=>x.name===name.trim())){ alert("Zakładka o tej nazwie już istnieje."); return; }
+  if(tags.find(x=>x.name===name.trim())){ toast("Zakładka o tej nazwie już istnieje."); return; }
   pushUndo({type:"tags", label:"zmianę nazwy zakładki", tags:cloneTags()});
   if(!t.orig) t.orig = t.name;   // zapamiętaj oryginalną nazwę do eksportu
   t.name = name.trim();
@@ -1136,6 +1199,7 @@ function renderNotes(){
   const frag = document.createDocumentFragment();
   arr.slice(0,visibleCount).forEach(n=>frag.appendChild(noteCard(n)));
   el.appendChild(frag);
+  fsNavList = arr.map(n=>n.g);
   if(arr.length > visibleCount){
     const more = document.createElement("div");
     more.style.cssText = "text-align:center;padding:14px";
@@ -1222,6 +1286,10 @@ const ICO = {
   tag:_svg('<path d="M3 12l9-9 8 8-9 9-8-8z"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/>'),
   book:_svg('<path d="M4 5a2 2 0 0 1 2-2h5v16H6a2 2 0 0 0-2 2z"/><path d="M20 5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2z"/>'),
   width:_svg('<path d="M4 12h16"/><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><path d="M8 4v16M16 4v16" stroke-opacity=".45"/>'),
+  undo:_svg('<path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-3"/>'),
+  redo:_svg('<path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 0 0 0 10h3"/>'),
+  plus:_svg('<path d="M12 5v14M5 12h14"/>'),
+  link:_svg('<path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 0 1 6 6l-2 2"/><path d="M13 18l-1 1a4 4 0 0 1-6-6l2-2"/>'),
   ul:_svg('<circle cx="4" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="4" cy="17" r="1.4" fill="currentColor" stroke="none"/><path d="M9 7h11M9 12h11M9 17h11"/>'),
   ol:_svg('<path d="M11 7h9M11 12h9M11 17h9"/><text x="2.5" y="8.6" font-size="6.5" fill="currentColor" stroke="none">1</text><text x="2.5" y="13.6" font-size="6.5" fill="currentColor" stroke="none">2</text><text x="2.5" y="18.6" font-size="6.5" fill="currentColor" stroke="none">3</text>'),
   outdent:_svg('<path d="M21 6H3M21 18H3M21 10h-9M21 14h-9"/><path d="M7 9l-3 3l3 3z" fill="currentColor" stroke="none"/>'),
@@ -1332,11 +1400,15 @@ function renderAll(){ visibleCount=60; renderTags(); renderBooks(); renderNotes(
 
 /* ================= NOTATKA NA PEŁNYM EKRANIE ================= */
 let fsGuid = null;
+let fsNavList = [];
 function openFs(n){
   // jeśli notatka jest właśnie edytowana — zapisz treść (ze zdjęciami), zanim przerysujemy pełny ekran
   const ec = document.querySelector('.ncard.editing[data-g="'+n.g+'"] .ncontent');
   if(ec) commitLiveEdit(ec);
   fsGuid = n.g; renderFs(); openModal("modalFs");
+  acquireWake(); updateFsNav();
+  const fm=$("modalFs").querySelector(".fsmodal"); if(fm) fm.scrollTop=0;
+  updateFsProgress();
 }
 function renderFs(){
   const n = notes.find(x=>x.g===fsGuid);
@@ -1353,31 +1425,100 @@ function renderFs(){
     x.onclick = closeFs;
     nh.appendChild(x);
   }
-  // regulacja rozmiaru czcionki dostępna w otwartej notatce (dolny pasek)
+  // jeden przycisk „Aa" — ustawienia czytania (rozmiar, interlinia, szerokość, czcionka, tło)
   const br = card.querySelector(".btnrow");
   if(br){
-    const fc = document.createElement("span");
-    fc.className = "fsFont";
-    fc.innerHTML = `<button type="button" data-fs="-" title="Mniejsza czcionka">A−</button><button type="button" data-fs="+" title="Większa czcionka">A+</button>`;
-    fc.addEventListener("pointerdown", e=>{
-      const b = e.target.closest("[data-fs]"); if(!b) return;
-      e.preventDefault();
-      if(b.dataset.fs==="-") noteFs = Math.max(11, noteFs-1); else noteFs = Math.min(24, noteFs+1);
-      localStorage.setItem(KP+"Font", noteFs); applyFs();
-    });
-    br.appendChild(fc);
-    // regulacja szerokości czytania (marginesy)
-    const wb = document.createElement("button");
-    wb.className = "sbtn ico"; wb.type="button"; wb.title="Szerokość tekstu / marginesy";
-    wb.innerHTML = ICO.width;
-    wb.addEventListener("pointerdown", e=>{ e.preventDefault(); cycleFsWidth(); });
-    br.appendChild(wb);
+    const aa = document.createElement("button");
+    aa.className = "sbtn ico"; aa.type="button"; aa.dataset.readbtn="1";
+    aa.title = "Ustawienia czytania: rozmiar, interlinia, szerokość, czcionka, tło";
+    aa.innerHTML = '<span style="font-weight:800;font-size:15px;letter-spacing:.5px">Aa</span>';
+    aa.addEventListener("pointerdown", e=>{ e.preventDefault(); openReadPop(aa); });
+    br.appendChild(aa);
   }
   w.appendChild(card);
+  updateFsProgress(); updateFsNav();
 }
-function closeFs(){ fsGuid = null; closeModal("modalFs"); }
+function closeFs(){ fsGuid = null; closeModal("modalFs"); releaseWake(); updateFsNav(); const p=$("readPop"); if(p) p.style.display="none"; }
+/* ===== CZYTNIK: nawigacja, panel Aa, pasek postępu, wake lock ===== */
+function fsGo(dir){
+  if(!fsGuid) return;
+  const i = fsNavList.indexOf(fsGuid); if(i<0) return;
+  const j = i+dir; if(j<0 || j>=fsNavList.length) return;
+  fsGuid = fsNavList[j]; renderFs();
+  const fm=$("modalFs").querySelector(".fsmodal"); if(fm) fm.scrollTop=0;
+  updateFsProgress();
+}
+function updateFsNav(){
+  const prev=$("fsPrev"), next=$("fsNext"); if(!prev||!next) return;
+  const on = !!fsGuid && $("modalFs").classList.contains("show");
+  const i = on ? fsNavList.indexOf(fsGuid) : -1;
+  prev.style.display = on ? "flex" : "none";
+  next.style.display = on ? "flex" : "none";
+  prev.disabled = !(i>0);
+  next.disabled = !(i>=0 && i<fsNavList.length-1);
+}
+function updateFsProgress(){
+  const fm=$("modalFs").querySelector(".fsmodal"), p=$("fsProg"); if(!fm||!p) return;
+  const max = fm.scrollHeight - fm.clientHeight;
+  p.style.width = max>4 ? Math.min(100, fm.scrollTop/max*100)+"%" : "0%";
+}
+let wakeLock=null;
+async function acquireWake(){ try{ if("wakeLock" in navigator){ wakeLock = await navigator.wakeLock.request("screen"); } }catch(e){} }
+function releaseWake(){ try{ if(wakeLock){ wakeLock.release(); wakeLock=null; } }catch(e){} }
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible" && $("modalFs").classList.contains("show")) acquireWake(); });
+// panel typografii
+function openReadPop(btn){
+  const pop=$("readPop");
+  const seg=(id,items)=>`<div class="rp-grp" data-grp="${id}">`+items.map(it=>`<button type="button" data-v="${it.v}" class="${it.on?"on":""}">${it.t}</button>`).join("")+`</div>`;
+  pop.innerHTML =
+    `<div class="rp-row"><span class="rp-lbl">Rozmiar</span>${seg("size",[{v:"-",t:"A−"},{v:"+",t:"A+"}])}</div>`+
+    `<div class="rp-row"><span class="rp-lbl">Interlinia</span>${seg("line",[{v:0,t:"zwarta",on:lineH===0},{v:1,t:"komfort",on:lineH===1},{v:2,t:"luźna",on:lineH===2}])}</div>`+
+    `<div class="rp-row"><span class="rp-lbl">Szerokość</span>${seg("width",[{v:0,t:"wąski",on:fsWidth===0},{v:1,t:"komfort",on:fsWidth===1},{v:2,t:"pełny",on:fsWidth===2}])}</div>`+
+    `<div class="rp-row"><span class="rp-lbl">Czcionka</span>${seg("font",[{v:"sans",t:"Bezszeryf.",on:readFont==="sans"},{v:"serif",t:"Szeryfowa",on:readFont==="serif"}])}</div>`+
+    `<div class="rp-row"><span class="rp-lbl">Tło</span>${seg("theme",[{v:"light",t:"Dzień",on:themeMode==="light"},{v:"sepia",t:"Sepia",on:themeMode==="sepia"},{v:"dark",t:"Noc",on:themeMode==="dark"}])}</div>`;
+  pop.style.display="block";
+  const r=btn.getBoundingClientRect(), w=pop.offsetWidth||280, h=pop.offsetHeight||300;
+  pop.style.left = Math.max(8, Math.min(r.left, innerWidth-w-8))+"px";
+  pop.style.top  = Math.max(8, Math.min(r.top-h-10, innerHeight-h-8))+"px";
+}
+$("readPop").addEventListener("pointerdown", e=>{
+  const b=e.target.closest("button[data-v]"); if(!b) return;
+  e.preventDefault();
+  const grp=b.closest("[data-grp]").dataset.grp, v=b.dataset.v;
+  if(grp==="size"){ if(v==="-") noteFs=Math.max(11,noteFs-1); else noteFs=Math.min(24,noteFs+1); try{localStorage.setItem(KP+"Font",noteFs);}catch(e){} applyFs(); toast("Czcionka: "+noteFs+" px"); return; }
+  if(grp==="line"){ lineH=+v; try{localStorage.setItem(KP+"LineH",lineH);}catch(e){} applyReading(); }
+  else if(grp==="width"){ fsWidth=+v; try{localStorage.setItem(KP+"FsW",fsWidth);}catch(e){} applyFsWidth(); }
+  else if(grp==="font"){ readFont=v; try{localStorage.setItem(KP+"ReadFont",readFont);}catch(e){} applyReading(); }
+  else if(grp==="theme"){ setTheme(v); }
+  const g=b.closest("[data-grp]"); g.querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+});
+document.addEventListener("pointerdown", e=>{
+  const p=$("readPop");
+  if(p && p.style.display==="block" && !e.target.closest("#readPop") && !e.target.closest("[data-readbtn]")) p.style.display="none";
+}, true);
 $("fsClose").onclick = closeFs;
 $("modalFs").addEventListener("click", e=>{ if(e.target.id==="modalFs") closeFs(); });
+// nawigacja poprzednia/następna
+$("fsPrev").onclick = ()=>fsGo(-1);
+$("fsNext").onclick = ()=>fsGo(1);
+// pasek postępu czytania
+(function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(fm) fm.addEventListener("scroll", updateFsProgress, {passive:true}); })();
+// przesunięcie palcem (swipe) — zmiana notatki
+(function(){
+  const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
+  let sx=0, sy=0, act=false;
+  fm.addEventListener("touchstart", e=>{
+    if(e.touches.length!==1){ act=false; return; }
+    const t=e.target;
+    if(t.closest("img, a, button, input, textarea, select, .ncard.editing, #readPop")){ act=false; return; }
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY; act=true;
+  }, {passive:true});
+  fm.addEventListener("touchend", e=>{
+    if(!act) return; act=false;
+    const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)>75 && Math.abs(dy)<45){ fsGo(dx<0 ? 1 : -1); }
+  }, {passive:true});
+})();
 
 /* ================= MOTYW: DZIEŃ / NOC / SYSTEM ================= */
 let themeMode = localStorage.getItem(KP+"Theme") || "auto";
@@ -1385,18 +1526,28 @@ const mqDark = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme(){
   const resolved = themeMode==="auto" ? (mqDark.matches ? "dark" : "light") : themeMode;
   document.documentElement.dataset.theme = resolved;
-  const ic = {light:"☀️", dark:"🌙", auto:"🖥️"};
-  $("btnTheme").textContent = ic[themeMode];
-  $("btnTheme").title = "Motyw: " + (themeMode==="light"?"dzień":themeMode==="dark"?"noc":"jak w systemie") + " (kliknij, aby zmienić)";
+  const ic = {light:"☀️", sepia:"📜", dark:"🌙", auto:"🖥️"};
+  $("btnTheme").textContent = ic[themeMode]||"🖥️";
+  const nm = {light:"dzień", sepia:"sepia", dark:"noc", auto:"jak w systemie"};
+  $("btnTheme").title = "Motyw: " + (nm[themeMode]||"system") + " (kliknij, aby zmienić)";
 }
+function setTheme(mode){ themeMode=mode; try{ localStorage.setItem(KP+"Theme", themeMode); }catch(e){} applyTheme(); }
 try{ mqDark.addEventListener("change", ()=>{ if(themeMode==="auto") applyTheme(); }); }catch(e){}
 $("btnTheme").onclick = ()=>{
-  themeMode = themeMode==="auto" ? "light" : themeMode==="light" ? "dark" : "auto";
-  localStorage.setItem(KP+"Theme", themeMode);
-  applyTheme();
-  toast("Motyw: " + (themeMode==="light"?"dzień ☀️":themeMode==="dark"?"noc 🌙":"jak w systemie 🖥️"));
+  themeMode = themeMode==="auto" ? "light" : themeMode==="light" ? "sepia" : themeMode==="sepia" ? "dark" : "auto";
+  setTheme(themeMode);
+  const nm={light:"dzień ☀️",sepia:"sepia 📜",dark:"noc 🌙",auto:"jak w systemie 🖥️"};
+  toast("Motyw: " + nm[themeMode]);
 };
 applyTheme();
+/* ustawienia czytania: interlinia + czcionka */
+const LHS=[1.45,1.72,2.05], LHN=["zwarta","komfort","luźna"];
+const RFONTS={sans:"inherit", serif:"Georgia, 'Times New Roman', 'Noto Serif', serif"};
+let lineH=1, readFont="sans";
+try{ lineH=Math.min(2,Math.max(0,+(localStorage.getItem(KP+"LineH")))); if(isNaN(lineH))lineH=1; }catch(e){ lineH=1; }
+try{ readFont = (localStorage.getItem(KP+"ReadFont")==="serif")?"serif":"sans"; }catch(e){}
+function applyReading(){ const r=document.documentElement.style; r.setProperty("--noteLh", LHS[lineH]); r.setProperty("--readFont", RFONTS[readFont]); }
+applyReading();
 $("btnColors").onclick = openColorMenu;
 $("colorMenu").addEventListener("click", e=>{
   const swEl=e.target.closest(".cm-sw"); const row=e.target.closest("[data-target]");
@@ -1530,6 +1681,9 @@ function buildEditbar(){
   const bar = document.createElement("div");
   bar.className = "editbar";
   bar.innerHTML = `
+    <button data-cmd="undo" title="Cofnij">${ICO.undo}</button>
+    <button data-cmd="redo" title="Ponów">${ICO.redo}</button>
+    <span class="eb-sep"></span>
     <select class="eb-block" title="Styl akapitu">
       <option value="DIV">Treść</option>
       <option value="H2">Tytuł</option>
@@ -1545,15 +1699,16 @@ function buildEditbar(){
     <button data-cmd="insertOrderedList" data-st="insertOrderedList" title="Lista numerowana">${ICO.ol}</button>
     <span class="eb-sep"></span>
     <button class="eb-color" data-pop="color" title="Kolor / podświetlenie">🎨</button>
+    <button class="eb-ins" data-pop="ins" title="Wstaw: odnośnik do wersetu, cytat, listę zadań, link, linię">${ICO.plus}</button>
     <label class="eb-img" title="Wstaw zdjęcie / ilustrację">${ICO.image}<input type="file" accept="image/*" style="display:none"></label>
-    <button class="eb-more" data-pop="more" title="Więcej: wcięcia, wyrównanie, cytat, wyczyść">⋯</button>`;
+    <button class="eb-more" data-pop="more" title="Więcej: wcięcia, wyrównanie, indeks, wyczyść">⋯</button>`;
   bar.addEventListener("pointerdown", ev=>{
     if(ev.target.closest("select, label.eb-img")){ edSavedRange = captureRange(); return; }
     const pop = ev.target.closest("[data-pop]");
     if(pop){ ev.preventDefault(); edSavedRange = captureRange(); openEbPop(pop.dataset.pop, pop, bar); return; }
     ev.preventDefault();                          // nie gub zaznaczenia
     const b = ev.target.closest("[data-cmd]");
-    if(b){ document.execCommand(b.dataset.cmd, false, null); updateEditbarState(bar); }
+    if(b){ document.execCommand(b.dataset.cmd, false, null); updateEditbarState(bar); const ce=bar.parentElement.querySelector(".ncontent"); if(ce) commitLiveEdit(ce); }
   });
   bar.querySelector(".eb-block").addEventListener("change", ev=>{
     document.execCommand("formatBlock", false, "<"+ev.target.value.toLowerCase()+">");
@@ -1585,6 +1740,14 @@ function openEbPop(kind, btn, bar){
     pop.innerHTML = `<div class="ebpal">`+
       [1,2,3,4,5,6,7].map(i=>`<span class="pal" data-hl="${i}" style="background:var(--hl${i})" title="Kolor"></span>`).join("")+
       `<span class="pal pal-none" data-hl="0" title="Usuń kolor">✕</span></div>`;
+  } else if(kind==="ins"){
+    pop.innerHTML =
+      `<div data-ins="verse">${ICO.book}Odnośnik do wersetu (JW Library)</div>
+       <div data-ins="url">${ICO.link}Link (adres internetowy)</div>
+       <div class="dd-sep"></div>
+       <div data-ins="quote">❝ Blok cytatu wersetu</div>
+       <div data-ins="task">☑ Lista zadań (checkbox)</div>
+       <div data-ins="hr">— Linia pozioma</div>`;
   } else {
     pop.innerHTML =
       `<div data-cmd="outdent">${ICO.outdent}Zmniejsz wcięcie</div>
@@ -1594,7 +1757,9 @@ function openEbPop(kind, btn, bar){
        <div data-cmd="justifyCenter">${ICO.alignCenter}Wyśrodkuj</div>
        <div data-cmd="justifyFull">${ICO.alignJustify}Wyjustuj</div>
        <div class="dd-sep"></div>
-       <div data-cmd="formatBlock:blockquote">❝ Cytat</div>
+       <div data-cmd="superscript">x² Indeks górny</div>
+       <div data-cmd="subscript">x₂ Indeks dolny</div>
+       <div class="dd-sep"></div>
        <div data-clear="1">🧹 Wyczyść formatowanie</div>`;
   }
   pop.dataset.ce = ""; pop._ce = ce;
@@ -1615,11 +1780,25 @@ $("ebPop").addEventListener("pointerdown", ev=>{
     } else toast("Najpierw zaznacz tekst, potem 🎨 Kolor");
     pop.style.display="none"; return;
   }
+  const ins=ev.target.closest("[data-ins]");
+  if(ins){
+    const k=ins.dataset.ins;
+    pop.style.display="none";
+    if(k==="verse"){ insertVerseRef(ce); return; }   // własne okienko + commit w środku
+    if(k==="url"){ insertUrlLink(ce); return; }
+    restoreSel(ce);
+    if(k==="quote") document.execCommand("formatBlock",false,"<blockquote>");
+    else if(k==="task") insertTaskList(ce);
+    else if(k==="hr") document.execCommand("insertHorizontalRule");
+    if(ce) commitLiveEdit(ce);
+    return;
+  }
   const cmd=ev.target.closest("[data-cmd]");
   if(cmd){
     const c=cmd.dataset.cmd;
     if(c.indexOf("formatBlock:")===0) document.execCommand("formatBlock",false,"<"+c.split(":")[1]+">");
     else document.execCommand(c,false,null);
+    if(ce) commitLiveEdit(ce);
     pop.style.display="none"; return;
   }
   if(ev.target.closest("[data-clear]")){
@@ -1631,6 +1810,139 @@ $("ebPop").addEventListener("pointerdown", ev=>{
 });
 document.addEventListener("pointerdown", e=>{ const p=$("ebPop"); if(p && p.style.display==="block" && !e.target.closest("#ebPop") && !e.target.closest("[data-pop]")) p.style.display="none"; }, true);
 let edSavedRange = null;
+/* ===== WSTAWIANIE: odnośnik do wersetu, link, lista zadań ===== */
+function restoreSel(ce){
+  if(!ce) return; ce.focus();
+  const sel=getSelection();
+  if(edSavedRange && ce.contains(edSavedRange.commonAncestorContainer)){ sel.removeAllRanges(); sel.addRange(edSavedRange); }
+}
+function insertNodeAtRange(node, ce, range){
+  if(range && ce.contains(range.commonAncestorContainer)){
+    const r=range.cloneRange(); r.collapse(false); r.insertNode(node);
+    node.parentNode.insertBefore(document.createTextNode(" "), node.nextSibling);
+  } else { ce.appendChild(node); ce.appendChild(document.createTextNode(" ")); }
+}
+/* własne okienko tekstowe — działa też w aplikacji na iOS (gdzie prompt() bywa zablokowany) */
+function askText(o){
+  o=o||{};
+  return new Promise(res=>{
+    const m=$("askModal");
+    const t=m.querySelector(".askTitle"), inp=m.querySelector(".askInput"), hint=m.querySelector(".askHint");
+    const ok=m.querySelector(".askOk"), cancel=m.querySelector(".askCancel");
+    t.textContent=o.title||"Wpisz"; inp.value=o.value||""; inp.placeholder=o.placeholder||"";
+    ok.textContent=o.okLabel||"Wstaw";
+    hint.textContent=o.hint||""; hint.style.display=o.hint?"block":"none";
+    m.classList.add("show");
+    try{ inp.focus(); inp.select(); }catch(e){}
+    setTimeout(()=>{ try{ inp.focus(); inp.select(); }catch(e){} }, 60);
+    function done(val){ m.classList.remove("show"); ok.onclick=null; cancel.onclick=null; inp.onkeydown=null; res(val); }
+    ok.onclick=()=>done(inp.value.trim());
+    cancel.onclick=()=>done(null);
+    inp.onkeydown=e=>{ e.stopPropagation(); if(e.key==="Enter"){ e.preventDefault(); done(inp.value.trim()); } else if(e.key==="Escape"){ e.preventDefault(); done(null); } };
+  });
+}
+function insertNodeAtSel(node, ce){
+  ce.focus();
+  const sel=getSelection();
+  let range = (edSavedRange && ce.contains(edSavedRange.commonAncestorContainer)) ? edSavedRange.cloneRange() : (sel.rangeCount?sel.getRangeAt(0):null);
+  if(!range){ ce.appendChild(node); return; }
+  range.collapse(false); range.insertNode(node);
+  const space=document.createTextNode(" "); node.parentNode.insertBefore(space, node.nextSibling);
+  const nr=document.createRange(); nr.setStartAfter(space); nr.collapse(true);
+  sel.removeAllRanges(); sel.addRange(nr);
+}
+function parseRef(s){
+  s=(s||"").trim(); if(!s) return null;
+  // wydziel rozdział:werset(-werset) z końca
+  const mNum = s.match(/\s(\d+)(?:\s*[:.,]\s*(\d+)(?:\s*[-–]\s*(\d+))?)?\s*$/);
+  let bookPart=s, ch=0, v=0, v2=0;
+  if(mNum){ bookPart=s.slice(0,mNum.index).trim(); ch=+mNum[1]; v=mNum[2]?+mNum[2]:0; v2=mNum[3]?+mNum[3]:0; }
+  const np=norm(bookPart); if(!np) return null;
+  let best=-1, bestScore=-1;
+  for(let i=1;i<BOOKS.length;i++){
+    const nb=norm(BOOKS[i]); let sc=-1;
+    if(nb===np) sc=100;
+    else if(nb.startsWith(np)) sc=np.length;      // wpisany prefiks (np. „Jan" → „Jana")
+    else if(np.startsWith(nb)) sc=nb.length;
+    if(sc>bestScore){ bestScore=sc; best=i; }
+  }
+  if(best<0 || bestScore<2) return null;
+  return {b:best, ch:ch||0, v:v||0, v2:v2||0};
+}
+function refText(r){
+  let s=BOOKS[r.b]; if(r.ch){ s+=" "+r.ch; if(r.v){ s+=":"+r.v; if(r.v2) s+="-"+r.v2; } }
+  return s;
+}
+async function insertVerseRef(ce){
+  const savedR = edSavedRange ? edSavedRange.cloneRange() : null;
+  const txt = await askText({title:"Odnośnik do wersetu", placeholder:"np. Jan 3:16  albo  Mateusza 5:3-5", hint:"Rozpoznaje skróty: Ps, 1 Kor, oraz formy 12,2"});
+  if(txt===null || txt==="") return;
+  const ref=parseRef(txt);
+  if(!ref){ toast("Nie rozpoznano — wpisz np. Jan 3:16"); return; }
+  const url=finderUrl({b:ref.b,ch:ref.ch||1,v:ref.v||0});
+  if(!url){ toast("Brak linku do tego miejsca"); return; }
+  const a=document.createElement("a");
+  a.className="jwl-ref"; a.href=url; a.setAttribute("data-url",url); a.textContent=refText(ref);
+  insertNodeAtRange(a, ce, savedR);
+  commitLiveEdit(ce);
+  toast("Wstawiono odnośnik");
+}
+async function insertUrlLink(ce){
+  const savedR = edSavedRange ? edSavedRange.cloneRange() : null;
+  const hasText = savedR && !savedR.collapsed && ce.contains(savedR.commonAncestorContainer);
+  let url = await askText({title:"Link (adres internetowy)", placeholder:"https://…", value:"https://"});
+  if(url===null || url==="") return; url=url.trim();
+  if(!/^(https?:\/\/|mailto:)/i.test(url)) url="https://"+url.replace(/^\/+/,"");
+  if(hasText){
+    const sel=getSelection(); ce.focus(); sel.removeAllRanges(); sel.addRange(savedR);
+    document.execCommand("createLink", false, url);
+  } else {
+    const label = (await askText({title:"Tekst linku", placeholder:"Opis linku", value:url})) || url;
+    const a=document.createElement("a"); a.href=url; a.target="_blank"; a.rel="noopener noreferrer"; a.textContent=label;
+    insertNodeAtRange(a, ce, savedR);
+  }
+  commitLiveEdit(ce);
+  toast("Wstawiono link");
+}
+function insertTaskList(ce){
+  restoreSel(ce);
+  document.execCommand("insertHTML", false, '<ul class="tasklist"><li>Zadanie…</li></ul>');
+}
+function blockOf(node, ce){
+  let el = node && node.nodeType===3 ? node.parentNode : node;
+  while(el && el!==ce && el.parentNode){
+    if(el.parentNode===ce || /^(DIV|P|LI|H1|H2|H3|H4|BLOCKQUOTE)$/.test(el.tagName||"")) return el;
+    el=el.parentNode;
+  }
+  return ce;
+}
+function autoformat(ce){
+  const sel=getSelection(); if(!sel.rangeCount) return;
+  const r=sel.getRangeAt(0); if(!r.collapsed) return;
+  const block=blockOf(r.startContainer, ce); if(!block) return;
+  let txt;
+  try{ const pre=document.createRange(); pre.setStart(block,0); pre.setEnd(r.startContainer, r.startOffset); txt=pre.toString(); }catch(e){ return; }
+  const m=txt.match(/^(#{1,2}|[-*]|>|1\.|\[ ?\])\s$/);
+  if(!m) return;
+  const trig=m[1];
+  try{ const del=document.createRange(); del.setStart(block,0); del.setEnd(r.startContainer, r.startOffset); del.deleteContents();
+    const cr=document.createRange(); cr.setStart(block,0); cr.collapse(true); sel.removeAllRanges(); sel.addRange(cr); }catch(e){ return; }
+  if(trig==="#") document.execCommand("formatBlock",false,"<h2>");
+  else if(trig==="##") document.execCommand("formatBlock",false,"<h3>");
+  else if(trig==="-"||trig==="*") document.execCommand("insertUnorderedList");
+  else if(trig==="1.") document.execCommand("insertOrderedList");
+  else if(trig===">") document.execCommand("formatBlock",false,"<blockquote>");
+  else if(trig[0]==="["){ document.execCommand("insertUnorderedList"); const a2=getSelection().anchorNode; const ul=(a2&&a2.nodeType===3?a2.parentNode:a2)?.closest?.("ul"); if(ul) ul.classList.add("tasklist"); }
+  commitLiveEdit(ce);
+}
+document.addEventListener("input", e=>{ const ce=e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]'); if(ce) autoformat(ce); });
+// odhaczanie list zadań + otwieranie odnośników
+document.addEventListener("click", e=>{
+  const li=e.target.closest(".ncontent ul.tasklist li");
+  if(li){ const r=li.getBoundingClientRect(); if(e.clientX-r.left<=30){ li.classList.toggle("done"); const ce=li.closest(".ncontent"); if(ce) commitLiveEdit(ce); e.preventDefault(); return; } }
+  const a=e.target.closest(".ncontent a");
+  if(a && !a.closest('[contenteditable="true"]') && a.classList.contains("jwl-ref")){ e.preventDefault(); openUrlJWL(a.getAttribute("data-url")||a.href); }
+});
 /* ===== pasek narzędzi obrazu (rozmiar / oblewanie tekstem — jak w Wordzie) ===== */
 let selImg = null;
 function showImgBar(img){
@@ -1900,6 +2212,18 @@ function sanitize(html){
         else if(tag==="I"||tag==="EM"){ const i=document.createElement("i"); walk(node,i); dst.appendChild(i); }
         else if(tag==="U"){ const u=document.createElement("u"); walk(node,u); dst.appendChild(u); }
         else if(tag==="S"||tag==="STRIKE"||tag==="DEL"){ const s=document.createElement("s"); walk(node,s); dst.appendChild(s); }
+        else if(tag==="SUP"||tag==="SUB"){ const e2=document.createElement(tag.toLowerCase()); walk(node,e2); dst.appendChild(e2); }
+        else if(tag==="HR"){ dst.appendChild(document.createElement("hr")); }
+        else if(tag==="A"){
+          const href=node.getAttribute("href")||"";
+          if(/^(https?:\/\/|mailto:|jwlibrary:)/i.test(href)){
+            const a=document.createElement("a"); a.setAttribute("href",href);
+            const jwl=(node.className||"").indexOf("jwl-ref")>=0;
+            if(jwl){ a.className="jwl-ref"; a.setAttribute("data-url", node.getAttribute("data-url")||href); }
+            else { a.setAttribute("target","_blank"); a.setAttribute("rel","noopener noreferrer"); }
+            walk(node,a); if(!a.textContent) a.textContent=href; dst.appendChild(a);
+          } else { walk(node,dst); }
+        }
         else if(tag==="H2"||tag==="H3"){ const h=document.createElement(tag.toLowerCase()); walk(node,h); dst.appendChild(h); }
         else if(tag==="BLOCKQUOTE"){ const q=document.createElement("blockquote"); walk(node,q); dst.appendChild(q); }
         else if(tag==="IMG"){
@@ -1916,8 +2240,8 @@ function sanitize(html){
             dst.appendChild(im);
           }
         }
-        else if(tag==="UL"||tag==="OL"){ const l=document.createElement(tag.toLowerCase()); walk(node,l); dst.appendChild(l); }
-        else if(tag==="LI"){ const li=document.createElement("li"); walk(node,li); dst.appendChild(li); }
+        else if(tag==="UL"||tag==="OL"){ const l=document.createElement(tag.toLowerCase()); if(tag==="UL" && /(^|\s)tasklist(\s|$)/.test(node.className||"")) l.className="tasklist"; walk(node,l); dst.appendChild(l); }
+        else if(tag==="LI"){ const li=document.createElement("li"); if(/(^|\s)done(\s|$)/.test(node.className||"")) li.className="done"; walk(node,li); dst.appendChild(li); }
         else if(tag==="DIV"||tag==="P"){
           const d2=document.createElement("div");
           const ta=(node.style&&node.style.textAlign)||node.getAttribute&&node.getAttribute("align");
@@ -1941,6 +2265,7 @@ function htmlToPlain(html){
       else if(ch.nodeType===1){
         const t=ch.tagName;
         if(t==="BR"){ out+="\n"; return; }
+        if(t==="HR"){ out+="\n———\n"; return; }
         if(t==="IMG"){ out+="[ilustracja]"; return; }
         if(t==="LI") out+= (ch.parentElement&&ch.parentElement.tagName==="OL")
           ? ([...ch.parentElement.children].indexOf(ch)+1)+". " : "• ";
@@ -2722,6 +3047,10 @@ document.addEventListener("keydown", e=>{
     if($("dropdown").style.display==="block"){ $("dropdown").style.display="none"; return; }
     if(document.activeElement===$("search")){ $("search").blur(); }
     return;
+  }
+  if(fsGuid && !typing){
+    if(e.key==="ArrowRight"||e.key==="PageDown"){ e.preventDefault(); fsGo(1); return; }
+    if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); fsGo(-1); return; }
   }
   if(typing) return;
   if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="f"){ e.preventDefault(); $("search").focus(); $("search").select(); return; }

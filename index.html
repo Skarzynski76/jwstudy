@@ -238,8 +238,10 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #msgModal .askbox{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:22px;width:min(440px,92vw)}
 #msgModal .askTitle{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px}
 #msgModal .msgBody{font-size:14px;color:var(--text);line-height:1.55}
-#msgModal .askBtns{display:flex;justify-content:flex-end;margin-top:18px}
+#msgModal .askBtns{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
 #msgModal .msgOk{border:none;border-radius:11px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
+#msgModal .msgCancel{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;background:var(--sel);color:var(--text)}
+#msgModal .msgOk.danger{background:#c0392b}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s}
@@ -518,7 +520,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v55</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v56</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -596,7 +598,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="askbox">
     <div class="askTitle"></div>
     <div class="msgBody"></div>
-    <div class="askBtns"><button class="msgOk" type="button">OK</button></div>
+    <div class="askBtns"><button class="msgCancel" type="button">Anuluj</button><button class="msgOk" type="button">OK</button></div>
   </div>
 </div>
 <button id="readExit">✎ Pokaż narzędzia</button>
@@ -1051,9 +1053,9 @@ $("btnNewTag").onclick = async ()=>{
 };
 let deletedTagNames = [];
 function saveDeletedTags(){ if(idb) idbPut("meta", deletedTagNames, "deletedTags").catch(()=>{}); }
-function deleteTag(t){
+async function deleteTag(t){
   const cnt = notes.filter(n=>!n.del && n.tg.includes(t.id)).length;
-  if(!confirm("Usunąć zakładkę „"+t.name+"”?"+(cnt?"\n\nNotatki ("+cnt+") NIE zostaną usunięte — stracą tylko tę zakładkę.":""))) return;
+  if(!(await askConfirm("Usunąć zakładkę?", "Zakładka „"+esc(t.name)+"”."+(cnt?"<br><br>Notatki ("+cnt+") NIE zostaną usunięte — stracą tylko tę zakładkę.":""), {okLabel:"Usuń", danger:true}))) return;
   pushUndo({type:"delTag", label:"usunięcie zakładki „"+t.name+"”", name:(t.orig||t.name), tags:cloneTags(), notes:notes.filter(n=>n.tg.includes(t.id)).map(cloneNote)});
   deletedTagNames.push(t.orig || t.name);
   saveDeletedTags();
@@ -1692,8 +1694,8 @@ function downloadMd(n){
   download(new Blob([md],{type:"text/markdown"}), name);
   toast("Pobrano plik Markdown");
 }
-function delNote(n){
-  if(!confirm("Usunąć tę notatkę?")) return;
+async function delNote(n){
+  if(!(await askConfirm("Usunąć notatkę?", "Notatkę można przywrócić przyciskiem cofnij (↶) zaraz po usunięciu.", {okLabel:"Usuń", danger:true}))) return;
   pushUndo({type:"note", label:"usunięcie notatki", before:cloneNote(n)});
   n.del=true; markDirty(n); renderAll(); toast("Notatka usunięta");
 }
@@ -1758,7 +1760,7 @@ function buildEditbar(){
       const url = await compressImage(f);
       const ceIns = bar.parentElement.querySelector(".ncontent");
       insertImageUrl(ceIns, url, edSavedRange);
-    }catch(err){ alert("Nie udało się wczytać zdjęcia: "+err.message); }
+    }catch(err){ toast("Nie udało się wczytać zdjęcia"); }
   });
   return bar;
 }
@@ -1882,9 +1884,23 @@ function askText(o){
 function showInfo(title, html){
   return new Promise(res=>{
     const m=$("msgModal"); m.querySelector(".askTitle").textContent=title; m.querySelector(".msgBody").innerHTML=html;
+    const ok=m.querySelector(".msgOk"), cancel=m.querySelector(".msgCancel");
+    cancel.style.display="none"; ok.textContent="OK"; ok.classList.remove("danger");
     m.classList.add("show");
-    const ok=m.querySelector(".msgOk");
     ok.onclick=()=>{ m.classList.remove("show"); ok.onclick=null; res(); };
+  });
+}
+/* własne okno potwierdzenia — działa w aplikacji na iOS (gdzie confirm() jest zablokowany) */
+function askConfirm(title, html, opts){
+  opts=opts||{};
+  return new Promise(res=>{
+    const m=$("msgModal"); m.querySelector(".askTitle").textContent=title; m.querySelector(".msgBody").innerHTML=html;
+    const ok=m.querySelector(".msgOk"), cancel=m.querySelector(".msgCancel");
+    cancel.style.display=""; cancel.textContent=opts.cancelLabel||"Anuluj";
+    ok.textContent=opts.okLabel||"OK"; ok.classList.toggle("danger", !!opts.danger);
+    m.classList.add("show");
+    const done=v=>{ m.classList.remove("show"); ok.onclick=null; cancel.onclick=null; ok.classList.remove("danger"); res(v); };
+    ok.onclick=()=>done(true); cancel.onclick=()=>done(false);
   });
 }
 function insertNodeAtSel(node, ce){
@@ -2598,7 +2614,7 @@ async function handleImportFile(e){
       `• Zaktualizowanych: <b>${res.updated}</b><br>`+
       `• Nowych podkreśleń: <b>${res.marksAdded||0}</b> (łącznie z publikacji: ${res.marks||0})<br>`+
       `• Pominięto (bez zmian lub Twoje edycje): ${res.skipped}`);
-  }catch(err){ console.error(err); alert("Błąd importu: "+err.message); }
+  }catch(err){ console.error(err); toast("Błąd importu: "+err.message); }
 }
 function importFromDb(db){
   const tagRows=db.exec("SELECT TagId, Name FROM Tag WHERE Type=1");
@@ -2724,7 +2740,7 @@ $("expGo").onclick = async ()=>{
     const blob=new Blob([zblob],{type:"application/octet-stream"});
     chooseSaveOrShare(blob, manifest.name, "Kopia JW Library");
     toast("Plik .jwlibrary gotowy");
-  }catch(err){ console.error(err); alert("Błąd eksportu: "+err.message); }
+  }catch(err){ console.error(err); toast("Błąd eksportu: "+err.message); }
 };
 function applyChangesToDb(db){
   const one=sql=>{const r=db.exec(sql);return r.length?r[0].values[0][0]:null;};
@@ -2874,7 +2890,7 @@ async function exportOneNoteJwl(n){
     }, "Notatka");
     chooseSaveOrShare(blob, name, "Notatka → JW Library");
     toast("Plik .jwlibrary gotowy");
-  }catch(err){ console.error(err); alert("Błąd eksportu: "+err.message); }
+  }catch(err){ console.error(err); toast("Błąd eksportu: "+err.message); }
 }
 async function assignVerse(n){
   const cur = n.b ? refText({b:n.b,ch:n.ch,v:n.v}) : "";
@@ -2967,7 +2983,7 @@ function exportNotePdf(n){
   ifr.onload = ()=>{
     setTimeout(()=>{
       try{ ifr.contentWindow.focus(); ifr.contentWindow.print(); }
-      catch(e){ alert("Nie udało się otworzyć okna drukowania."); }
+      catch(e){ toast("Nie udało się otworzyć okna drukowania."); }
       setTimeout(()=>ifr.remove(), 3000);
     }, 300);
   };
@@ -3031,7 +3047,7 @@ function exportTagPdf(t){
   ifr.onload = ()=>{
     setTimeout(()=>{
       try{ ifr.contentWindow.focus(); ifr.contentWindow.print(); }
-      catch(e){ alert("Nie udało się otworzyć okna drukowania."); }
+      catch(e){ toast("Nie udało się otworzyć okna drukowania."); }
       setTimeout(()=>ifr.remove(), 4000);
     }, 350);
   };
@@ -3064,7 +3080,7 @@ async function shareBackup(){
   }
   // 3. awaryjnie: zwykłe pobranie
   download(blob, name);
-  alert("Kopia została pobrana.\n\nAby mieć ją w chmurze, przenieś pobrany plik do folderu OneDrive, iCloud Drive lub Dysku Google na tym urządzeniu.");
+  showInfo("Kopia pobrana", "Aby mieć ją w chmurze, przenieś pobrany plik do folderu OneDrive, iCloud Drive lub Dysku Google na tym urządzeniu.");
 }
 
 /* ================= KOPIA JSON ================= */
@@ -3078,7 +3094,7 @@ function exportJson(){
 async function handleJsonFile(e){
   const f=e.target.files[0]; e.target.value="";
   if(!f) return;
-  if(!confirm("Wczytanie kopii ZASTĄPI wszystkie obecne dane w aplikacji. Kontynuować?")) return;
+  if(!(await askConfirm("Wczytać kopię danych?", "Wczytanie kopii <b>ZASTĄPI</b> wszystkie obecne dane w aplikacji (notatki i zakładki). Tej operacji nie można cofnąć.", {okLabel:"Wczytaj i zastąp", danger:true}))) return;
   try{
     const data=JSON.parse(await f.text());
     if(!data.notes||!data.tags) throw new Error("Nieprawidłowy plik kopii");
@@ -3088,7 +3104,7 @@ async function handleJsonFile(e){
       await idbBulk("tags",tags); await idbBulk("notes",notes);
     }
     renderAll(); toast("Wczytano kopię danych");
-  }catch(err){ alert("Błąd: "+err.message); }
+  }catch(err){ toast("Błąd: "+err.message); }
 }
 
 /* ================= POMOCNICZE ================= */

@@ -520,7 +520,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v58</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v59</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -821,7 +821,15 @@ async function boot(){
   if(!localStorage.getItem(KP+"Onboarded")){ setTimeout(()=>openModal("modalHelp"),400); try{ localStorage.setItem(KP+"Onboarded","1"); }catch(e){} }
   // tryb offline: zapamiętaj aplikację w pamięci podręcznej urządzenia
   if(location.protocol.indexOf("http")===0 && "serviceWorker" in navigator){
-    navigator.serviceWorker.register("sw.js").catch(()=>{});
+    navigator.serviceWorker.register("sw.js").then(()=>{
+      // po pierwszym zapisaniu do pamięci podręcznej — jednorazowe potwierdzenie
+      navigator.serviceWorker.ready.then(()=>{
+        if(!localStorage.getItem(KP+"OfflineOK")){
+          try{ localStorage.setItem(KP+"OfflineOK","1"); }catch(e){}
+          setTimeout(()=>toast("✓ Aplikacja gotowa do pracy offline"), 2500);
+        }
+      });
+    }).catch(()=>{});
   }
 }
 

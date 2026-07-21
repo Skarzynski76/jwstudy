@@ -518,7 +518,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v53</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v55</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1161,10 +1161,12 @@ function refLabel(n){
   if(n.b){ let s=BOOKS[n.b]; if(n.ch)s+=" "+n.ch+(n.v?":"+n.v:""); return s; }
   return n.pub||"";
 }
+let bibleKs = "";
+try{ bibleKs = localStorage.getItem(KP+"BibleKs") || ""; }catch(e){}
 function finderUrl(n){
   if(n.b){
     const bible = String(n.b).padStart(2,"0")+String(n.ch||1).padStart(3,"0")+String(n.v||0).padStart(3,"0");
-    return "https://www.jw.org/finder?srcid=jwlshare&wtlocale=P&prefer=lang&bible="+bible+"&pub=nwtsty";
+    return "https://www.jw.org/finder?srcid=jwlshare&wtlocale=P&prefer=lang&bible="+bible+"&pub="+(bibleKs||"nwt");
   }
   if(n.doc) return "https://www.jw.org/finder?srcid=jwlshare&wtlocale=P&prefer=lang&docid="+n.doc;
   if(n.ks){
@@ -2426,8 +2428,10 @@ function saveContentEl(contEl, n){
   contEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
   const clean=sanitize(contEl.innerHTML);
   contEl.innerHTML=hilite(clean);
+  autolinkRefs(contEl);
   n.h=clean; n.c=htmlToPlain(clean);
   markDirty(n);
+  renderNotes();   // odśwież małe karty na liście, żeby pokazały podkreślenie zrobione w trybie czytania
 }
 hlBar.addEventListener("pointerdown", e=>{
   e.preventDefault();
@@ -2633,6 +2637,11 @@ function importFromDb(db){
     else skipped++;
   });
   if(idb&&changed.length) idbBulk("notes",changed).catch(()=>{});
+  // wykryj symbol Biblii używany na tym urządzeniu (nwt / nwtsty / inne), do budowania linków do wersetów
+  try{
+    const bk=db.exec("SELECT KeySymbol, COUNT(*) c FROM Location WHERE BookNumber IS NOT NULL AND KeySymbol IS NOT NULL GROUP BY KeySymbol ORDER BY c DESC LIMIT 1");
+    if(bk.length && bk[0].values[0][0]){ bibleKs = bk[0].values[0][0]; try{ localStorage.setItem(KP+"BibleKs", bibleKs); }catch(e){} }
+  }catch(e){}
   // ===== podkreślenia (UserMark + BlockRange + Location) =====
   let marksAdded=0;
   try{
@@ -2666,7 +2675,7 @@ function markColor(col){ const M={1:["#ffd54a","żółte"],2:["#8ed08a","zielone
 function markLabel(m){ if(m.lbl) return m.lbl; if(m.book){ let s=BOOKS[m.book]||("Księga "+m.book); if(m.ch)s+=" "+m.ch+(m.ident?":"+m.ident:""); return s; } return (m.title||m.ks||"Publikacja")+(m.ident?(" · akapit "+m.ident):""); }
 function markFinderUrl(m){
   const base="https://www.jw.org/finder?srcid=jwlshare&wtlocale=P&prefer=lang";
-  if(m.book){ const bible=String(m.book).padStart(2,"0")+String(m.ch||1).padStart(3,"0")+String(m.ident||0).padStart(3,"0"); return base+"&bible="+bible+"&pub="+(m.ks||"nwtsty"); }
+  if(m.book){ const bible=String(m.book).padStart(2,"0")+String(m.ch||1).padStart(3,"0")+String(m.ident||0).padStart(3,"0"); return base+"&bible="+bible+"&pub="+(m.ks||bibleKs||"nwt"); }
   if(m.doc){ let u=base+"&docid="+m.doc; if(m.ident) u+="&par="+m.ident; return u; }        // par = akapit
   if(m.ks){ let u=base+"&pub="+encodeURIComponent(m.ks); if(m.itn)u+="&issue="+m.itn; if(m.ident)u+="&par="+m.ident; return u; }
   return null;
@@ -2873,7 +2882,7 @@ async function assignVerse(n){
   if(txt===null) return;
   pushUndo({type:"note", label:"przypisanie wersetu", before:cloneNote(n)});
   if(txt===""){ n.b=0; n.ch=null; n.v=null; }
-  else { const ref=parseRef(txt); if(!ref){ toast("Nie rozpoznano — np. Jan 3:16"); return; } n.b=ref.b; n.ch=ref.ch||1; n.v=ref.v||null; n.doc=0; }
+  else { const ref=parseRef(txt); if(!ref){ toast("Nie rozpoznano — np. Jan 3:16"); return; } n.b=ref.b; n.ch=ref.ch||1; n.v=ref.v||null; n.doc=0; n.ks=""; n.pub=""; n.itn=0; }
   n.ed=true; markDirty(n); renderAll();
   toast(n.b ? ("Przypisano: "+refText({b:n.b,ch:n.ch,v:n.v})) : "Usunięto przypisanie wersetu");
 }

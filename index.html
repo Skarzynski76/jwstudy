@@ -520,7 +520,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v57</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v58</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1432,6 +1432,7 @@ function renderAll(){ visibleCount=60; renderTags(); renderBooks(); renderNotes(
 /* ================= NOTATKA NA PEŁNYM EKRANIE ================= */
 let fsGuid = null;
 let fsNavList = [];
+let fsListDirty = false;
 function openFs(n){
   // jeśli notatka jest właśnie edytowana — zapisz treść (ze zdjęciami), zanim przerysujemy pełny ekran
   const ec = document.querySelector('.ncard.editing[data-g="'+n.g+'"] .ncontent');
@@ -1469,7 +1470,7 @@ function renderFs(){
   w.appendChild(card);
   updateFsProgress(); updateFsNav();
 }
-function closeFs(){ fsGuid = null; closeModal("modalFs"); releaseWake(); updateFsNav(); const p=$("readPop"); if(p) p.style.display="none"; }
+function closeFs(){ fsGuid = null; closeModal("modalFs"); releaseWake(); updateFsNav(); const p=$("readPop"); if(p) p.style.display="none"; if(fsListDirty){ fsListDirty=false; renderNotes(); } }
 /* ===== CZYTNIK: nawigacja, panel Aa, pasek postępu, wake lock ===== */
 function fsGo(dir){
   if(!fsGuid) return;
@@ -2425,10 +2426,11 @@ document.addEventListener("mouseup", e=>{
 let selTimer=null;
 document.addEventListener("selectionchange", ()=>{
   clearTimeout(selTimer);
-  selTimer=setTimeout(showHlBar, 50);
+  selTimer=setTimeout(showHlBar, 30);
 });
-document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 60); }, {passive:true});
-document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen") setTimeout(showHlBar, 60); }, {passive:true});
+// po puszczeniu palca/rysika pokaż pasek od razu (bez wyczuwalnego opóźnienia)
+document.addEventListener("touchend", ()=>{ setTimeout(showHlBar, 12); }, {passive:true});
+document.addEventListener("pointerup", e=>{ if(e.pointerType==="pen"||e.pointerType==="touch") setTimeout(showHlBar, 12); }, {passive:true});
 // kliknięcie w pokolorowany fragment (poza edycją) → zaznacz go i pokaż paletę do zmiany koloru
 document.addEventListener("click", e=>{
   const m = e.target.closest(".ncard .ncontent mark");
@@ -2445,7 +2447,8 @@ function saveContentEl(contEl, n){
   autolinkRefs(contEl);
   n.h=clean; n.c=htmlToPlain(clean);
   markDirty(n);
-  renderNotes();   // odśwież małe karty na liście, żeby pokazały podkreślenie zrobione w trybie czytania
+  // NIE przebudowuj całej listy tu (blokowałoby dotyk/rysik) — odłóż do zamknięcia pełnego ekranu
+  if(fsGuid){ fsListDirty=true; } else { renderNotes(); }
 }
 hlBar.addEventListener("pointerdown", e=>{
   e.preventDefault();

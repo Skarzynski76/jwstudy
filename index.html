@@ -196,9 +196,11 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #fsWrap .nhead{padding-right:56px;border-radius:0}
 #fsWrap{min-height:0}
 #fsWrap .ncard{margin:0;min-height:calc(100dvh - 84px);overflow:visible;border-radius:0;display:flex;flex-direction:column}
-#fsWrap .ncontent{font-size:calc(var(--noteFs,14px) + 3px);line-height:1.7;flex:1 0 auto}
+#fsWrap .ncontent{font-size:var(--fsNoteFs, calc(var(--noteFs,14px) + 3px));line-height:1.7;flex:1 0 auto}
 #fsWrap .ntools{margin-top:auto}
-#fsWrap .ntitle{font-size:calc(var(--noteFs,14px) + 6px)}
+#fsWrap .ntitle{font-size:calc(var(--fsNoteFs, calc(var(--noteFs,14px) + 3px)) + 3px)}
+#fsWrap .ncontent h2{font-size:calc(var(--fsNoteFs, calc(var(--noteFs,14px) + 3px)) + 5px)}
+#fsWrap .ncontent h3{font-size:calc(var(--fsNoteFs, calc(var(--noteFs,14px) + 3px)) + 2px)}
 /* pełny ekran: wygodna szerokość czytania + przyklejona belka tytułu */
 #fsWrap .ncontent,#fsWrap .nmeta2,#fsWrap .chips{max-width:var(--fsMax,760px);margin-left:auto;margin-right:auto}
 #fsWrap .ncontent{line-height:var(--noteLh,1.7);font-family:var(--readFont,inherit)}
@@ -516,7 +518,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v52</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v53</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -1510,7 +1512,7 @@ $("readPop").addEventListener("pointerdown", e=>{
   const b=e.target.closest("button[data-v]"); if(!b) return;
   e.preventDefault();
   const grp=b.closest("[data-grp]").dataset.grp, v=b.dataset.v;
-  if(grp==="size"){ if(v==="-") noteFs=Math.max(11,noteFs-1); else noteFs=Math.min(24,noteFs+1); try{localStorage.setItem(KP+"Font",noteFs);}catch(e){} applyFs(); toast("Czcionka: "+noteFs+" px"); return; }
+  if(grp==="size"){ if(!fsNoteFs) fsNoteFs=noteFs+3; if(v==="-") fsNoteFs=Math.max(12,fsNoteFs-1); else fsNoteFs=Math.min(34,fsNoteFs+1); try{localStorage.setItem(KP+"FsFont",fsNoteFs);}catch(e){} applyFsFont(); toast("Wielkość tekstu w notatce: "+fsNoteFs+" px"); return; }
   if(grp==="line"){ lineH=+v; try{localStorage.setItem(KP+"LineH",lineH);}catch(e){} applyReading(); }
   else if(grp==="width"){ fsWidth=+v; try{localStorage.setItem(KP+"FsW",fsWidth);}catch(e){} applyFsWidth(); }
   else if(grp==="font"){ readFont=v; try{localStorage.setItem(KP+"ReadFont",readFont);}catch(e){} applyReading(); }
@@ -1528,20 +1530,24 @@ $("fsPrev").onclick = ()=>fsGo(-1);
 $("fsNext").onclick = ()=>fsGo(1);
 // pasek postępu czytania
 (function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(fm) fm.addEventListener("scroll", updateFsProgress, {passive:true}); })();
-// przesunięcie palcem (swipe) — zmiana notatki
+// przesunięcie palcem (swipe) — zmiana notatki (tylko wyraźny poziomy gest, nigdy przy zaznaczaniu tekstu)
 (function(){
   const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
-  let sx=0, sy=0, act=false;
+  let sx=0, sy=0, act=false, selAtStart="";
   fm.addEventListener("touchstart", e=>{
     if(e.touches.length!==1){ act=false; return; }
     const t=e.target;
-    if(t.closest("img, a, button, input, textarea, select, .ncard.editing, #readPop")){ act=false; return; }
+    if(t.closest("img, a, button, input, textarea, select, .ncontent, .ncard.editing, #readPop")){ act=false; return; }
+    selAtStart = String(window.getSelection ? getSelection() : "");
     sx=e.touches[0].clientX; sy=e.touches[0].clientY; act=true;
   }, {passive:true});
   fm.addEventListener("touchend", e=>{
     if(!act) return; act=false;
+    // jeśli w trakcie gestu powstało/istnieje zaznaczenie tekstu — to nie jest swipe
+    const selNow = String(window.getSelection ? getSelection() : "");
+    if(selNow.trim() || selNow!==selAtStart) return;
     const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
-    if(Math.abs(dx)>75 && Math.abs(dy)<45){ fsGo(dx<0 ? 1 : -1); }
+    if(Math.abs(dx)>90 && Math.abs(dy)<35 && Math.abs(dx)>Math.abs(dy)*2){ fsGo(dx<0 ? 1 : -1); }
   }, {passive:true});
 })();
 
@@ -1573,6 +1579,11 @@ try{ lineH=Math.min(2,Math.max(0,+(localStorage.getItem(KP+"LineH")))); if(isNaN
 try{ readFont = (localStorage.getItem(KP+"ReadFont")==="serif")?"serif":"sans"; }catch(e){}
 function applyReading(){ const r=document.documentElement.style; r.setProperty("--noteLh", LHS[lineH]); r.setProperty("--readFont", RFONTS[readFont]); }
 applyReading();
+/* rozmiar czcionki TYLKO w otwartej notatce (niezależny od reszty aplikacji) */
+let fsNoteFs = 0; // 0 = domyślny (jak w kolumnie); >0 = własny rozmiar czytania
+try{ const v=+(localStorage.getItem(KP+"FsFont")); if(v>=12 && v<=34) fsNoteFs=v; }catch(e){}
+function applyFsFont(){ const r=document.documentElement.style; if(fsNoteFs) r.setProperty("--fsNoteFs", fsNoteFs+"px"); else r.removeProperty("--fsNoteFs"); }
+applyFsFont();
 $("btnColors").onclick = openColorMenu;
 $("colorMenu").addEventListener("click", e=>{
   const swEl=e.target.closest(".cm-sw"); const row=e.target.closest("[data-target]");

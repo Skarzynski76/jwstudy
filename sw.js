@@ -1,17 +1,22 @@
-const CACHE = 'jwstudy-v61';
-const ASSETS = [
-  './',
-  './index.html',
+const CACHE = 'jwstudy-v62';
+// Najważniejszy jest index.html — reszta to dodatki. Każdy plik zapisujemy OSOBNO,
+// żeby brak jednego (np. ikony) nie przerwał całego zapisu offline.
+const CORE = ['./', './index.html'];
+const EXTRA = [
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png',
-  './favicon-32.png',
-  './icon.svg'
+  './favicon-32.png'
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE).then((c) =>
+      // index.html musi się zapisać; dodatki najlepiej jak się da, ale ich brak nie blokuje offline
+      c.addAll(CORE).then(() => Promise.allSettled(EXTRA.map((a) => c.add(a))))
+    ).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (e) => {

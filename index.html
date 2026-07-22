@@ -42,6 +42,19 @@ select,button,input{font-family:inherit}
 .btn:active{transform:translateY(1px)}
 .btn.primary{background:linear-gradient(180deg,var(--accent),var(--accent2));color:#fff;border-color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.2)}
 .btn.primary:hover{filter:brightness(1.05)}
+.btn.danger{background:#c0392b;color:#fff;border-color:#a5321f}
+.btn.danger:hover{filter:brightness(1.06)}
+/* kosz */
+.trashHint{color:var(--muted)}
+#trashList{margin-top:6px;display:flex;flex-direction:column;gap:8px}
+.trash-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--bg)}
+.trash-main{flex:1;min-width:0}
+.trash-title{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trash-meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+.trash-row .tb{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:9px;padding:7px 11px;font-size:12.5px;font-weight:600;cursor:pointer;flex-shrink:0}
+.trash-row .tb.restore{color:var(--accent);border-color:var(--accent2)}
+.trash-row .tb.del{color:#c0392b}
+.trash-empty{text-align:center;color:var(--muted);font-size:13.5px;padding:24px 0}
 #btnBackup.badge-warn{background:#f6d98a;border-color:#e0b24a;color:#6b4e10;font-weight:600;animation:bkpulse 2s ease-in-out infinite}
 @keyframes bkpulse{50%{box-shadow:0 0 0 3px rgba(224,178,74,.3)}}
 html[data-theme="dark"] #btnBackup.badge-warn{background:#5a4a1e;border-color:#8a6f2a;color:#f2dfa4}
@@ -520,7 +533,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v59</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v61</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -657,6 +670,18 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <div class="actions">
       <button class="btn" onclick="closeModal('modalExport')">Anuluj</button>
       <button class="btn primary" id="expGo">Utwórz plik .jwlibrary</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalTrash">
+  <div class="modal trashmodal">
+    <h3>🗑 Kosz</h3>
+    <p class="trashHint">Usunięte notatki są przechowywane <b>30 dni</b>, potem znikają na stałe. Możesz je przywrócić lub usunąć od razu.</p>
+    <div id="trashList"></div>
+    <div class="actions">
+      <button class="btn" onclick="closeModal('modalTrash')">Zamknij</button>
+      <button class="btn danger" id="trashEmpty">Opróżnij kosz</button>
     </div>
   </div>
 </div>
@@ -808,6 +833,7 @@ async function boot(){
   if(idb){ try{ deletedTagNames = (await idbGet("meta","deletedTags")) || []; }catch(e){} }
   if(idb){ try{ marks = (await idbGet("meta","marks")) || []; }catch(e){} }
   pubMarks = marks.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
+  purgeOldTrash();   // usuń trwale notatki, które są w koszu ponad 30 dni
   buildStatic();
   renderAll();
   // iPad/iPhone uruchomione z ikony ekranu początkowego: na iPadzie env(safe-area-inset-top)
@@ -834,6 +860,7 @@ async function boot(){
 }
 
 /* ================= FILTRY ================= */
+function offlineReady(){ return !!(navigator.serviceWorker && navigator.serviceWorker.controller); }
 function noteMatchesTag(n,t){ if(t==="all")return true; if(t==="none")return n.tg.length===0; return n.tg.includes(t); }
 function noteMatchesBook(n,b){ if(b==="all")return true; if(b===0)return !n.b; return n.b===b; }
 function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
@@ -1704,10 +1731,56 @@ function downloadMd(n){
   toast("Pobrano plik Markdown");
 }
 async function delNote(n){
-  if(!(await askConfirm("Usunąć notatkę?", "Notatkę można przywrócić przyciskiem cofnij (↶) zaraz po usunięciu.", {okLabel:"Usuń", danger:true}))) return;
+  if(!(await askConfirm("Usunąć notatkę?", "Trafi do <b>Kosza</b> — możesz ją przywrócić przez 30 dni (⚙️ menu → Kosz).", {okLabel:"Usuń", danger:true}))) return;
   pushUndo({type:"note", label:"usunięcie notatki", before:cloneNote(n)});
-  n.del=true; markDirty(n); renderAll(); toast("Notatka usunięta");
+  n.del=true; n.delAt=new Date().toISOString(); markDirty(n); renderAll(); toast("Notatka w koszu");
 }
+const TRASH_DAYS = 30;
+function trashList(){ return notes.filter(n=>n.del); }
+function daysLeft(n){ if(!n.delAt) return TRASH_DAYS; const passed=(Date.now()-new Date(n.delAt).getTime())/86400000; return Math.max(0, Math.ceil(TRASH_DAYS-passed)); }
+function purgeOldTrash(){
+  const now=Date.now(); let removed=0; const keep=[];
+  notes.forEach(n=>{
+    if(n.del){
+      if(!n.delAt){ n.delAt=new Date().toISOString(); saveNote(n); }   // stare usunięcia — daj im pełne 30 dni od teraz
+      const passed=(now-new Date(n.delAt).getTime())/86400000;
+      if(passed>=TRASH_DAYS){ if(idb) idbDelKey("notes", n.g).catch(()=>{}); removed++; return; }
+    }
+    keep.push(n);
+  });
+  if(removed){ notes=keep; }
+}
+function restoreNote(n){
+  n.del=false; delete n.delAt; markDirty(n); renderAll(); renderTrash(); toast("Notatka przywrócona");
+}
+function purgeNote(n){
+  const i=notes.indexOf(n);
+  if(i>=0){ notes.splice(i,1); if(idb) idbDelKey("notes", n.g).catch(()=>{}); }
+  bumpDirty(); renderTrash(); toast("Usunięto na stałe");
+}
+async function emptyTrash(){
+  const list=trashList(); if(!list.length){ toast("Kosz jest pusty"); return; }
+  if(!(await askConfirm("Opróżnić kosz?", "Wszystkie notatki z kosza ("+list.length+") zostaną usunięte <b>na stałe</b>. Tej operacji nie można cofnąć.", {okLabel:"Usuń na stałe", danger:true}))) return;
+  list.forEach(n=>{ const i=notes.indexOf(n); if(i>=0) notes.splice(i,1); if(idb) idbDelKey("notes", n.g).catch(()=>{}); });
+  bumpDirty(); renderTrash(); renderAll(); toast("Kosz opróżniony");
+}
+function renderTrash(){
+  const el=$("trashList"); if(!el) return;
+  const list=trashList().sort((a,b)=>(b.delAt||"").localeCompare(a.delAt||""));
+  if(!list.length){ el.innerHTML=`<div class="trash-empty">Kosz jest pusty</div>`; return; }
+  el.innerHTML="";
+  list.forEach(n=>{
+    const row=document.createElement("div"); row.className="trash-row";
+    const title=(n.t||"").trim() || (n.c||"").trim().slice(0,60) || "(bez tytułu)";
+    row.innerHTML=`<div class="trash-main"><div class="trash-title">${esc(title)}</div><div class="trash-meta">usunięto ${ (n.delAt||"").substring(0,10) } · zostało ${daysLeft(n)} dni</div></div>
+      <button class="tb restore" type="button">Przywróć</button>
+      <button class="tb del" type="button">Usuń trwale</button>`;
+    row.querySelector(".restore").onclick=()=>restoreNote(n);
+    row.querySelector(".del").onclick=async ()=>{ if(await askConfirm("Usunąć na stałe?", "Notatki „"+esc(title)+"” nie da się odzyskać.", {okLabel:"Usuń", danger:true})) purgeNote(n); };
+    el.appendChild(row);
+  });
+}
+function openTrash(){ renderTrash(); openModal("modalTrash"); }
 function untag(n,tid){ pushUndo({type:"note", label:"zmianę zakładek notatki", before:cloneNote(n)}); n.tg=n.tg.filter(t=>t!==tid); n.tgd=true; markDirty(n); renderAll(); }
 function addTag(n,tid){
   if(!n.tg.includes(tid)){ pushUndo({type:"note", label:"dodanie do zakładki", before:cloneNote(n)}); n.tg.push(tid); n.tgd=true; markDirty(n); renderAll(); toast("Dodano do zakładki „"+(tags.find(t=>t.id===tid)||{}).name+"”"); }
@@ -2546,8 +2619,11 @@ $("btnMenu").onclick = e=>{
     <div data-m="loadjson">📂 Wczytaj kopię danych (JSON)…</div>
     <div class="dd-note">${lastBk ? "Ostatnia kopia: "+lastBk : "Nie zrobiono jeszcze kopii"}${dirty>0 ? " · zmian od kopii: "+dirty : ""}</div>
     <div class="dd-sep"></div>
+    <div data-m="trash">🗑 Kosz${trashList().length ? " ("+trashList().length+")" : ""}</div>
     <div data-m="info">ℹ️ Gdzie zapisują się moje dane?</div>
-    <div data-m="help">❓ Jak to działa (samouczek)</div>`;
+    <div data-m="help">❓ Jak to działa (samouczek)</div>
+    <div class="dd-sep"></div>
+    <div class="dd-note" style="font-size:12px">${offlineReady() ? "🟢 Tryb offline: GOTOWY — możesz odłączyć internet" : "🔴 Tryb offline: jeszcze niegotowy — patrz „Jak to działa"}</div>`;
   dd.style.display="block";
   const r=e.target.getBoundingClientRect();
   dd.style.left=Math.min(r.left,innerWidth-290)+"px";
@@ -2560,10 +2636,12 @@ $("btnMenu").onclick = e=>{
     else if(m==="json")exportJson();
     else if(m==="cloud")shareBackup();
     else if(m==="loadjson")openFilePicker("json");
+    else if(m==="trash")openTrash();
     else if(m==="info")openModal("modalInfo");
     else if(m==="help")openModal("modalHelp");
   };
 };
+$("trashEmpty").onclick = emptyTrash;
 document.addEventListener("click", e=>{
   if(!e.target.closest("#dropdown") && e.target.id!=="btnMenu") $("dropdown").style.display="none";
 }, true);

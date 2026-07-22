@@ -1,4 +1,4 @@
-const CACHE = 'jwstudy-v59';
+const CACHE = 'jwstudy-v61';
 const ASSETS = [
   './',
   './index.html',

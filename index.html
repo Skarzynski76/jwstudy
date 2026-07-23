@@ -132,9 +132,9 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .marksMore{padding:8px 12px;font-size:12px;color:var(--muted);text-align:center}
 .marksToggle{color:var(--accent);cursor:pointer;font-weight:600;white-space:nowrap;border-bottom:1px dotted var(--accent)}
 .marksToggle:hover{color:var(--accent2)}
-.ncard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px 18px;margin-bottom:13px;position:relative;box-shadow:0 1px 3px rgba(60,50,30,.07);transition:box-shadow .15s ease;overflow:hidden}
-.ncard:hover{box-shadow:0 5px 16px rgba(60,50,30,.13)}
-.ncard.pinned{box-shadow:0 0 0 1.5px var(--accent2),0 3px 10px rgba(60,50,30,.12)}
+.ncard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px 18px;margin-bottom:14px;position:relative;box-shadow:inset 4px 0 0 0 var(--cardAccent,transparent),0 2px 8px rgba(60,50,30,.06);transition:box-shadow .18s ease,transform .12s ease;overflow:hidden}
+.ncard:hover{box-shadow:inset 4px 0 0 0 var(--cardAccent,transparent),0 8px 22px rgba(60,50,30,.13)}
+.ncard.pinned{box-shadow:inset 4px 0 0 0 var(--cardAccent,transparent),0 0 0 1.5px var(--accent2),0 4px 12px rgba(60,50,30,.12)}
 /* wirtualizacja: karty poza ekranem nie są renderowane (płynniej, mniej pamięci) */
 #noteList .ncard{content-visibility:auto;contain-intrinsic-size:auto 240px}
 #noteList .ncard.editing{content-visibility:visible}
@@ -151,7 +151,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .nhead::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.14) 46%,rgba(255,255,255,.04) 54%,transparent 66%)}
 .ntitle{font-weight:700;font-size:15.5px;margin:0;word-wrap:break-word;line-height:1.35;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);position:relative;z-index:1}
 .nmeta2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;align-items:center}
-.pill{display:inline-flex;align-items:center;gap:4px;border-radius:12px;padding:3px 10px;font-size:11.5px;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:500}
 .pill.ref{background:var(--sel);color:var(--accent)}
 .pill.ks{background:#eef1f5;color:#5a6472;font-weight:normal}
 .pill.date{background:#f2f2f0;color:#84807a;font-weight:normal}
@@ -537,7 +537,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v64</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v67</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -985,7 +985,7 @@ function openColorMenu(e){
     sw(target,null)+TAGCOLORS.map(c=>sw(target,c)).join("")+`</div></div>`;
   cm.innerHTML = `<div class="cm-title">🎨 Kolory kolumn i belek</div>`+
     sec("colBooks","Kolumna „Księgi”")+
-    sec("colTags","Kolumna „Zakładki”")+
+    sec("colTags","Kolumna „Etykiety”")+
     sec("colNotes","Tło kolumny „Notatki”")+
     sec("nhead","Belka każdej notatki");
   cm.style.display="block";
@@ -999,7 +999,7 @@ function tagItem(key,name,cnt,user,color){
   const tinted = !active && color;
   const st = tinted ? ` style="${metalStyle(color)}"` : "";
   return `<div class="item ${active?"active":""} ${tinted?"tinted":""} ${cnt?"":"zero"}" data-k="${key}" ${user?'data-droppable="1"':""}${st}>
-    <span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje zakładki">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
+    <span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
 }
 function cmpTags(a,b){
   const ao=a.ord!==undefined, bo=b.ord!==undefined;
@@ -1367,6 +1367,9 @@ function noteCard(n){
   const d = document.createElement("div");
   d.className = "ncard" + (n.pin?" pinned":"");
   d.dataset.g = n.g;
+  // kolor paska z lewej = kolor pierwszej etykiety notatki (jeśli ma kolor)
+  const firstColorTag = n.tg.map(id=>tags.find(t=>t.id===id)).find(t=>t&&t.color);
+  if(firstColorTag) d.style.setProperty("--cardAccent", firstColorTag.color);
   const ref = refLabel(n);
   const date = (n.mo||"").substring(0,10);
   const link = finderUrl(n);

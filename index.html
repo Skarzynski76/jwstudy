@@ -186,7 +186,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 @keyframes pulse{50%{opacity:.6}}
 .tagrow select{padding:5px 6px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;max-width:150px;background:#fff}
 .tagrow input{padding:5px 8px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;width:120px}
-.ncontent{font-size:var(--noteFs,14px);line-height:1.6;white-space:pre-wrap;word-wrap:break-word;min-height:8px;margin-top:4px}
+.ncontent{font-size:var(--noteFs,14px);line-height:1.6;white-space:pre-wrap;word-wrap:break-word;min-height:8px;margin-top:4px;font-family:var(--noteFont,inherit)}
 /* regulacja czcionki */
 .fontctl{display:flex;border:1px solid var(--border);border-radius:11px;overflow:hidden}
 .fontctl button{border:none;background:var(--panel);cursor:pointer;padding:8px 11px;font-size:12px;color:var(--text)}
@@ -216,7 +216,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #fsWrap .ncontent h3{font-size:calc(var(--fsNoteFs, calc(var(--noteFs,14px) + 3px)) + 2px)}
 /* pełny ekran: wygodna szerokość czytania + przyklejona belka tytułu */
 #fsWrap .ncontent,#fsWrap .nmeta2,#fsWrap .chips{max-width:var(--fsMax,760px);margin-left:auto;margin-right:auto}
-#fsWrap .ncontent{line-height:var(--noteLh,1.7);font-family:var(--readFont,inherit)}
+#fsWrap .ncontent{line-height:var(--noteLh,1.7);font-family:var(--noteFont,var(--readFont,inherit))}
 #fsWrap .ntitle{font-family:var(--readFont,inherit)}
 /* pasek postępu czytania */
 #fsProg{position:sticky;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20;border-radius:0 2px 2px 0;transition:width .1s linear}
@@ -298,7 +298,8 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #ebPop .dd-sep{height:1px;background:var(--border);margin:5px 8px}
 #ebPop .ebpal{display:flex;gap:10px;flex-wrap:wrap;padding:8px 6px;max-width:230px}
 .editbar .eb-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 3px}
-.editbar .eb-block{border:1px solid var(--border);background:var(--bg);border-radius:10px;height:36px;font-size:12.5px;color:var(--text);padding:0 10px;flex-shrink:0;cursor:pointer;font-weight:600}
+.editbar .eb-block,.editbar .eb-font{border:1px solid var(--border);background:var(--bg);border-radius:10px;height:36px;font-size:12.5px;color:var(--text);padding:0 10px;flex-shrink:0;cursor:pointer;font-weight:600}
+.editbar .eb-font{max-width:130px;font-weight:500}
 .ncontent h2{font-size:calc(var(--noteFs,14px) + 6px);font-weight:700;margin:10px 0 4px;color:var(--accent)}
 .ncontent h3{font-size:calc(var(--noteFs,14px) + 3px);font-weight:700;margin:8px 0 3px}
 .ncontent blockquote{margin:8px 0;padding:6px 14px;border-left:4px solid var(--accent2);background:var(--sel);border-radius:0 8px 8px 0;font-style:italic;font-family:Georgia,'Times New Roman',serif;color:var(--accent)}
@@ -379,6 +380,9 @@ mark{padding:0 1px;border-radius:3px}
 .modal input[type=text],.modal textarea,.modal select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:11px;font-size:14.5px;background:var(--bg);color:var(--text);transition:border-color .15s ease, box-shadow .15s ease}
 .modal input[type=text]:focus,.modal textarea:focus,.modal select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.18)}
 .modal textarea{min-height:130px;resize:vertical;line-height:1.5}
+/* okno nowej notatki — szersze, wygodne pole pisania (jak komfortowa szerokość czytania) */
+.nn-modal{width:min(760px,94vw)}
+#nnContent{min-height:220px;font-size:15px;line-height:1.6}
 .modal .row{display:flex;gap:10px}
 .modal .row>div{flex:1}
 .modal .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
@@ -428,6 +432,10 @@ html[data-theme="dark"] #dropdown .dd-danger .ic{color:#e39a9a}
 #colorMenu .cm-sec:first-of-type{border-top:none;padding-top:8px}
 #colorMenu .cm-lbl{font-size:12px;color:var(--muted);margin-bottom:9px}
 #colorMenu .cm-row{display:flex;flex-wrap:wrap;gap:9px}
+#colorMenu .cm-presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
+#colorMenu .cm-preset{border:1px solid var(--border);border-radius:11px;padding:9px 8px;font-size:12.5px;font-weight:600;cursor:pointer}
+#colorMenu .cm-preset:hover{filter:brightness(1.06)}
+#colorMenu .cm-preset:active{transform:translateY(1px)}
 #colorMenu .cm-sw{width:27px;height:27px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer;position:relative;box-shadow:inset 0 1px 0 rgba(255,255,255,.45);transition:transform .12s ease}
 #colorMenu .cm-sw:hover{transform:scale(1.14)}
 #colorMenu .cm-sw:active{transform:scale(.96)}
@@ -537,7 +545,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v67</small> <small id="hCount"></small></h1>
+  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v68</small> <small id="hCount"></small></h1>
   <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -941,6 +949,15 @@ function renderTags(){
   });
 }
 const TAGCOLORS = ["#c9a227","#b08d57","#a86b3c","#9aa3ad","#5f6b7a","#4a6f8f","#3f8f6b","#a5788a","#6d7178"];
+/* pastelowe kompozycje: jeden zgrany odcień na całą kompozycję kolumn i belek */
+const PASTELS = [["Lawenda","#8b79b0"],["Mięta","#5fa88c"],["Brzoskwinia","#c08663"],["Błękit","#6f93bd"],["Róż","#bd7f9c"],["Grafit","#6d7178"]];
+function applyPreset(c){
+  let cfg;
+  if(c==="reset") cfg={};
+  else cfg={colBooks:c, colTags:c, colNotes:c, nhead:c};
+  try{ localStorage.setItem(KP+"Colors", JSON.stringify(cfg)); }catch(e){}
+  applyColors();
+}
 function shade(hex,f){
   const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255;
   const t=f<0?0:255, p=Math.abs(f);
@@ -983,7 +1000,12 @@ function openColorMenu(e){
   };
   const sec=(target,label)=>`<div class="cm-sec"><div class="cm-lbl">${label}</div><div class="cm-row" data-target="${target}">`+
     sw(target,null)+TAGCOLORS.map(c=>sw(target,c)).join("")+`</div></div>`;
-  cm.innerHTML = `<div class="cm-title">🎨 Kolory kolumn i belek</div>`+
+  const presets = `<div class="cm-lbl">Gotowe kompozycje pastelowe (cały interfejs)</div><div class="cm-presets">`+
+    PASTELS.map(([nm,c])=>`<button class="cm-preset" data-preset="${c}" style="background:${glassGrad(c,.12,-.18,1)};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)">${nm}</button>`).join("")+
+    `<button class="cm-preset" data-preset="reset" style="background:var(--sel);color:var(--text)">Domyślny</button></div>`;
+  cm.innerHTML = `<div class="cm-title">🎨 Wygląd aplikacji</div>`+
+    presets+
+    `<div class="cm-sec"><div class="cm-lbl">Albo ustaw każdą część osobno:</div></div>`+
     sec("colBooks","Kolumna „Księgi”")+
     sec("colTags","Kolumna „Etykiety”")+
     sec("colNotes","Tło kolumny „Notatki”")+
@@ -1370,6 +1392,7 @@ function noteCard(n){
   // kolor paska z lewej = kolor pierwszej etykiety notatki (jeśli ma kolor)
   const firstColorTag = n.tg.map(id=>tags.find(t=>t.id===id)).find(t=>t&&t.color);
   if(firstColorTag) d.style.setProperty("--cardAccent", firstColorTag.color);
+  if(n.ff) d.style.setProperty("--noteFont", n.ff);   // własna czcionka notatki
   const ref = refLabel(n);
   const date = (n.mo||"").substring(0,10);
   const link = finderUrl(n);
@@ -1633,6 +1656,8 @@ function applyFsFont(){ const r=document.documentElement.style; if(fsNoteFs) r.s
 applyFsFont();
 $("btnColors").onclick = openColorMenu;
 $("colorMenu").addEventListener("click", e=>{
+  const preset=e.target.closest(".cm-preset");
+  if(preset){ applyPreset(preset.dataset.preset); openColorMenu({target:$("btnColors")}); return; }
   const swEl=e.target.closest(".cm-sw"); const row=e.target.closest("[data-target]");
   if(!swEl||!row) return;
   const cfg=loadColorCfg();
@@ -1806,9 +1831,24 @@ function dropOnTag(e,tid){
 }
 
 /* ================= EDYCJA ================= */
-function buildEditbar(){
+const EDIT_FONTS = [
+  ["","Domyślna"],
+  ["Georgia, serif","Georgia"],
+  ["'Times New Roman', Times, serif","Times New Roman"],
+  ["'Palatino Linotype','Book Antiqua',Palatino, serif","Palatino"],
+  ["Garamond,'Times New Roman', serif","Garamond"],
+  ["Arial, Helvetica, sans-serif","Arial"],
+  ["'Helvetica Neue', Helvetica, Arial, sans-serif","Helvetica"],
+  ["Verdana, Geneva, sans-serif","Verdana"],
+  ["Tahoma, Geneva, sans-serif","Tahoma"],
+  ["'Trebuchet MS', sans-serif","Trebuchet MS"],
+  ["'Courier New', Courier, monospace","Courier New"],
+  ["system-ui,-apple-system,'Segoe UI', sans-serif","Systemowa"]
+];
+function buildEditbar(n){
   const bar = document.createElement("div");
   bar.className = "editbar";
+  const fontOpts = EDIT_FONTS.map(([v,nm])=>`<option value="${esc(v)}" style="font-family:${v||"inherit"}" ${n&&(n.ff||"")===v?"selected":""}>${nm}</option>`).join("");
   bar.innerHTML = `
     <button data-cmd="undo" title="Cofnij">${ICO.undo}</button>
     <button data-cmd="redo" title="Ponów">${ICO.redo}</button>
@@ -1818,6 +1858,7 @@ function buildEditbar(){
       <option value="H2">Tytuł</option>
       <option value="H3">Nagłówek</option>
     </select>
+    <select class="eb-font" title="Czcionka tekstu notatki">${fontOpts}</select>
     <span class="eb-sep"></span>
     <button data-cmd="bold" data-st="bold" title="Pogrubienie"><b>B</b></button>
     <button data-cmd="italic" data-st="italic" title="Kursywa"><i>I</i></button>
@@ -1841,6 +1882,14 @@ function buildEditbar(){
   });
   bar.querySelector(".eb-block").addEventListener("change", ev=>{
     document.execCommand("formatBlock", false, "<"+ev.target.value.toLowerCase()+">");
+  });
+  bar.querySelector(".eb-font").addEventListener("change", ev=>{
+    const card = bar.parentElement; const nn = card && notes.find(x=>x.g===card.dataset.g);
+    if(!nn) return;
+    nn.ff = ev.target.value || "";
+    if(nn.ff) card.style.setProperty("--noteFont", nn.ff); else card.style.removeProperty("--noteFont");
+    markDirty(nn);
+    toast("Czcionka notatki: " + (EDIT_FONTS.find(f=>f[0]===nn.ff)||["","Domyślna"])[1]);
   });
   bar.querySelector(".eb-img input").addEventListener("change", async ev=>{
     const f = ev.target.files[0]; ev.target.value="";
@@ -2283,14 +2332,23 @@ document.addEventListener("dragstart", e=>{ if(e.target.closest('.ncontent[conte
 document.addEventListener("paste", async e=>{
   const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
   if(!ce) return;
-  const items = e.clipboardData && e.clipboardData.items; if(!items) return;
-  for(const it of items){
+  const cd = e.clipboardData; if(!cd) return;
+  // 1) obraz w schowku
+  const items = cd.items;
+  if(items){ for(const it of items){
     if(it.type && it.type.indexOf("image")===0){
       e.preventDefault();
       const f=it.getAsFile();
       if(f){ try{ const url=await compressImage(f); insertImageUrl(ce, url, null); }catch(err){ toast("Nie udało się wkleić obrazu"); } }
       return;
     }
+  } }
+  // 2) tekst — wklej jako CZYSTY tekst (bez obcej czcionki/kolorów), żeby pasował do notatki
+  const txt = cd.getData("text/plain");
+  if(txt!==""){
+    e.preventDefault();
+    document.execCommand("insertText", false, txt);
+    commitLiveEdit(ce);
   }
 });
 /* PRZECIĄGNIJ plik obrazu z pulpitu na edytowaną notatkę (komputer) */
@@ -2358,7 +2416,7 @@ function toggleEdit(card,n){
     titleEl.querySelectorAll(".qhl").forEach(s=>{ s.replaceWith(...s.childNodes); });
     titleEl.contentEditable="true"; contEl.contentEditable="true";
     try{ document.execCommand("styleWithCSS", false, false); }catch(e){}
-    card.insertBefore(buildEditbar(), contEl);
+    card.insertBefore(buildEditbar(n), contEl);
     btn.innerHTML=ICO.save; btn.title="Zapisz zmiany";
     contEl.style.display="block";
     contEl.focus();

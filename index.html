@@ -31,13 +31,38 @@ html[data-theme="sepia"] main{background:radial-gradient(900px 520px at 12% -5%,
 button,.item,.sbtn,.chip-ch,.pal,.eb-sw,a,label,select,summary,#imgBar button,#hlBar .sw,#hlBar button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:9px;padding:9px 16px;padding-top:calc(9px + env(safe-area-inset-top, 0px));background:linear-gradient(180deg,var(--panel),var(--bg));border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06);flex-wrap:wrap;position:relative;z-index:20}
-header h1{font-size:17px;margin:0;color:var(--accent);white-space:nowrap;display:flex;align-items:center;font-weight:700}
-header h1 small{font-weight:normal;color:var(--muted);font-size:12px}
-#search{flex:1;min-width:160px;padding:9px 15px;border:1px solid var(--border);border-radius:22px;font-size:14px;outline:none;background:var(--bg);transition:border-color .15s ease, box-shadow .15s ease}
-#search:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.16)}
+header{display:flex;align-items:center;gap:9px;padding:9px 16px;padding-top:calc(9px + env(safe-area-inset-top, 0px));background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 100%);border-bottom:1px solid #0c2f24;box-shadow:0 3px 12px rgba(20,40,30,.2),inset 0 1px 0 rgba(255,255,255,.2);flex-wrap:wrap;position:relative;z-index:20}
+.brand-name{color:#fff!important}
+.brand-name .ver{color:rgba(255,255,255,.6)!important}
+.brand-sub{color:rgba(255,255,255,.72)!important}
+.brand-logo{box-shadow:0 1px 4px rgba(0,0,0,.3),0 0 0 1px rgba(255,255,255,.2)}
+header .btn{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.24);color:#fff}
+header .btn:hover{background:rgba(255,255,255,.24)}
+header .btn.primary{background:#fff;border-color:#fff;color:#1e5b46}
+header .btn.primary:hover{background:#f0f5f2}
+header .btn.badge-warn{border-color:#f4c96a}
+header .fontctl{border-color:rgba(255,255,255,.24)}
+header .fontctl button{background:rgba(255,255,255,.13);color:#fff}
+header .fontctl button:hover{background:rgba(255,255,255,.24)}
+header #sortSel{background:rgba(255,255,255,.13);color:#fff;border-color:rgba(255,255,255,.24)}
+header #sortSel option{color:#2b2a27}
+.bk-count{background:#fff;color:#1e5b46}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-logo{border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.22)}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-size:16px;font-weight:700;color:var(--accent);white-space:nowrap;letter-spacing:-.01em}
+.brand-name .ver{font-size:10.5px;font-weight:400;color:var(--muted);opacity:.7;letter-spacing:0}
+.brand-sub{font-size:11px;color:var(--muted);white-space:nowrap}
+.searchwrap{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 13px;transition:border-color .15s ease, box-shadow .15s ease}
+.searchwrap:focus-within{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.15)}
+.search-ic{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+#search{flex:1;min-width:60px;padding:10px 0;border:none;background:transparent;font-size:14px;outline:none;color:var(--text)}
 select,button,input{font-family:inherit}
-.btn{padding:8px 13px;border:1px solid var(--border);border-radius:11px;background:var(--panel);cursor:pointer;font-size:13px;white-space:nowrap;color:var(--text);transition:background .12s ease, border-color .12s ease, transform .08s ease}
+.btn{padding:8px 13px;border:1px solid var(--border);border-radius:11px;background:var(--panel);cursor:pointer;font-size:13px;white-space:nowrap;color:var(--text);display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:background .12s ease, border-color .12s ease, transform .08s ease}
+.btn .ic{width:18px;height:18px}
+.btn.ico-btn{padding:8px 10px}
+.btn.ico-btn .ic{width:19px;height:19px}
+.bk-count{font-size:11px;font-weight:700;background:var(--accent);color:#fff;border-radius:999px;padding:0 6px;min-width:16px;text-align:center}
 .btn:hover{background:var(--sel)}
 .btn:active{transform:translateY(1px)}
 .btn.primary{background:linear-gradient(180deg,var(--accent),var(--accent2));color:#fff;border-color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.2)}
@@ -55,6 +80,13 @@ select,button,input{font-family:inherit}
 .trash-row .tb.restore{color:var(--accent);border-color:var(--accent2)}
 .trash-row .tb.del{color:#c0392b}
 .trash-empty{text-align:center;color:var(--muted);font-size:13.5px;padding:24px 0}
+/* pusty stan listy notatek */
+.emptyState{text-align:center;padding:44px 22px;color:var(--muted)}
+.emptyState .es-ic{width:58px;height:58px;border-radius:50%;background:var(--sel);color:var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.emptyState .es-ic .ic{width:28px;height:28px}
+.emptyState .es-title{font-size:15.5px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.emptyState .es-sub{font-size:13px;margin-top:6px;line-height:1.55;max-width:330px;margin-left:auto;margin-right:auto}
+.emptyState .es-btn{margin-top:18px}
 #btnBackup.badge-warn{background:#f6d98a;border-color:#e0b24a;color:#6b4e10;font-weight:600;animation:bkpulse 2s ease-in-out infinite}
 @keyframes bkpulse{50%{box-shadow:0 0 0 3px rgba(224,178,74,.3)}}
 html[data-theme="dark"] #btnBackup.badge-warn{background:#5a4a1e;border-color:#8a6f2a;color:#f2dfa4}
@@ -62,51 +94,48 @@ html[data-theme="dark"] #btnBackup.badge-warn{background:#5a4a1e;border-color:#8
 main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gradient(900px 520px at 12% -5%,rgba(150,140,185,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(120,170,180,.36),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(190,160,130,.32),transparent 60%),linear-gradient(180deg,#d8d2c5,#cfc8ba)}
 .col{display:flex;flex-direction:column;min-height:0;position:relative;border-radius:14px;overflow:hidden}
 /* kolumny jako oddzielne sztaby z frezem */
-.col::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.07) 47%,rgba(255,255,255,.02) 53%,transparent 62%)}
+.col::before{display:none}
 .col h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin:0;padding:12px 14px 6px}
 .col .list{overflow-y:auto;flex:1;padding:0 8px 20px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;transform:translateZ(0)}
 #bookList .item,#bookList .chip-ch{contain:layout paint}
 
-/* Kolumna 1 — ciemny grafit */
-#colBooks{width:240px;min-width:190px;background:linear-gradient(180deg,rgba(62,57,80,.52) 0%,rgba(46,42,58,.48) 45%,rgba(37,33,48,.46) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(20,15,35,.26),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.22)}
-#colBooks h2{color:#eee9f7;text-shadow:0 1px 2px rgba(20,15,35,.5);font-weight:700}
-#colBooks .item{color:#edeaf4;background:linear-gradient(180deg,#615a7a 0%,#4d4763 48%,#3e3950 100%);border:1px solid #262133;border-top-color:#847da0;box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks .item:hover{background:linear-gradient(180deg,#6f6889 0%,#595270 48%,#48425c 100%);border-top-color:#968fb2;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(0,0,0,.35)}
-#colBooks .item.active{background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 48%,#144335 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#0c2f24;border-top-color:#55a385;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colBooks .item.active .cnt{color:#d9ead6}
-#colBooks .cnt{color:#d7d0e6;text-shadow:0 1px 1px rgba(20,15,35,.4)}
-#colBooks .divider{color:#ccc4e0;border-top:1px solid rgba(255,255,255,.16);text-shadow:0 1px 2px rgba(20,15,35,.45);font-weight:600}
+/* Kolumny — spokojne, matowe (bez metalicznego połysku i ciężkiego szkła) */
+#colBooks{width:240px;min-width:190px;background:var(--bg);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
+#colBooks h2{color:var(--muted);font-weight:600}
+#colBooks .cnt{color:var(--muted)}
+#colBooks .divider{color:var(--muted);border-top:1px solid var(--border);font-weight:600}
 #colBooks .list::-webkit-scrollbar{width:8px}
-#colBooks .list::-webkit-scrollbar-thumb{background:#57506e;border-radius:4px}
-#btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed #9a9aa2;color:#f0f0f2;border-radius:8px;cursor:pointer;font-size:12.5px}
-#btnNewTag:hover{background:#6e6e76;color:#fff}
+#colBooks .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+#btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed var(--muted);color:var(--muted);border-radius:8px;cursor:pointer;font-size:12.5px}
+#btnNewTag:hover{background:var(--sel);color:var(--accent);border-color:var(--accent2)}
 
-/* Kolumna 2 — szary */
-#colTags{width:220px;min-width:180px;background:linear-gradient(180deg,rgba(80,80,88,.5) 0%,rgba(58,58,66,.47) 45%,rgba(46,46,52,.45) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-top-color:rgba(255,255,255,.34);box-shadow:0 10px 30px rgba(30,25,15,.22),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.2)}
-#colTags h2{color:#f0f0f5;text-shadow:0 1px 2px rgba(15,15,20,.5);font-weight:700}
-#colTags .item{color:var(--c2item);background:linear-gradient(180deg,#5a5a63 0%,#48484f 48%,#3b3b42 100%);border:1px solid #26262b;border-top-color:#75757f;box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.2),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item:hover{background:linear-gradient(180deg,#686871 0%,#54545c 48%,#46464d 100%);border-top-color:#8a8a95;transform:translateY(-1px);box-shadow:0 4px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active{background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 48%,#144335 100%);color:#fff;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,.35);border-color:#0c2f24;border-top-color:#55a385;box-shadow:0 2px 6px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.3)}
-#colTags .item.active .cnt{color:#d9ead6}
-#colTags .cnt{color:#dcdce2;text-shadow:0 1px 1px rgba(15,15,20,.4)}
-#colTags .divider{color:#d6d6de;border-top:1px solid rgba(255,255,255,.16);text-shadow:0 1px 2px rgba(15,15,20,.45);font-weight:600}
+#colTags{width:220px;min-width:180px;background:var(--bg);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
+#colTags h2{color:var(--muted);font-weight:600}
+#colTags .cnt{color:var(--muted)}
+#colTags .divider{color:var(--muted);border-top:1px solid var(--border);font-weight:600}
 #colTags .list::-webkit-scrollbar{width:8px}
-#colTags .list::-webkit-scrollbar-thumb{background:#565660;border-radius:4px}
-.chwrap{display:flex;flex-wrap:wrap;gap:4px;padding:4px 10px 8px 22px}
-.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:linear-gradient(180deg,#5a5374,#463f5c);color:#fff;font-size:calc(var(--colFs,13.5px) - 1.5px);cursor:pointer;border:1px solid #29233a;border-top-color:#746c92;box-shadow:0 1px 2px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.14)}
-.chip-ch:hover{background:linear-gradient(180deg,#6a638a,#544c6e)}
-.chip-ch{position:relative;overflow:hidden}
-.chip-ch.active{font-weight:700;border-top-color:#8d85ab}
-.chip-ch.active::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:46%;height:3.5px;border-radius:0 0 4px 4px;background:linear-gradient(180deg,#c8ffab,#6ef23f);box-shadow:0 0 7px 1.5px rgba(110,242,63,.85),0 1px 2px rgba(0,0,0,.3)}
-.item .arr{width:14px;text-align:center;color:inherit;opacity:.6;font-size:10px}
+#colTags .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
-#colNotes{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(248,245,238,.45) 55%,rgba(240,236,226,.42) 100%);-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(255,255,255,.6);border-top-color:#ffffff;box-shadow:0 10px 30px rgba(60,50,30,.14),inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(0,0,0,.05)}
-.item{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:var(--colFs,13.5px);margin:6px 3px;position:relative;overflow:hidden;transition:transform .1s ease, box-shadow .1s ease}
-/* metaliczny błysk na kafelkach */
-#colBooks .item::after,#colTags .item::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.11) 44%,rgba(255,255,255,.04) 52%,transparent 64%)}
-#colBooks .item:hover::after,#colTags .item:hover::after{background:linear-gradient(115deg,transparent 26%,rgba(255,255,255,.17) 42%,rgba(255,255,255,.06) 54%,transparent 68%)}
-#colTags .item.tinted{border-color:rgba(0,0,0,.25);border-top-color:rgba(255,255,255,.55);box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,0,0,.15)}
-#colTags .item.tinted:hover{transform:translateY(-1px)}
+/* wspólny wygląd kafelków (Księgi + Etykiety) */
+#colBooks .item,#colTags .item{color:var(--text);background:var(--panel);border:0.5px solid var(--border);box-shadow:none;font-weight:500}
+#colBooks .item:hover,#colTags .item:hover{background:var(--sel);border-color:var(--accent2)}
+#colBooks .item.active,#colTags .item.active{background:linear-gradient(180deg,#2e7a5f 0%,#1e5b46 100%);color:#fff;font-weight:600;border-color:#0c2f24;box-shadow:0 2px 6px rgba(20,50,35,.22)}
+#colBooks .item.active .cnt,#colTags .item.active .cnt{color:#d9ead6}
+/* kolorowe kropki etykiet */
+.tgdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.tgdot.all{background:#d0a24a}
+.tgdot.none{background:transparent;border:1.5px solid var(--muted);box-shadow:none}
+#colTags .item.active .tgdot{box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+
+/* chipy rozdziałów w kolumnie Księgi */
+.chwrap{display:flex;flex-wrap:wrap;gap:4px;padding:4px 10px 8px 22px}
+.chip-ch{min-width:34px;text-align:center;padding:4px 6px;border-radius:8px;background:var(--panel);color:var(--text);font-size:calc(var(--colFs,13.5px) - 1.5px);cursor:pointer;border:0.5px solid var(--border);position:relative}
+.chip-ch:hover{background:var(--sel);border-color:var(--accent2)}
+.chip-ch.active{font-weight:700;background:linear-gradient(180deg,#2e7a5f,#1e5b46);color:#fff;border-color:#0c2f24}
+.item .arr{width:14px;text-align:center;color:inherit;opacity:.55;font-size:10px}
+
+#colNotes{flex:1;background:var(--panel);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
+.item{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:var(--colFs,13.5px);margin:5px 3px;position:relative;transition:background .12s ease,border-color .12s ease}
 .item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item .cnt{font-size:11.5px}
 .item.zero{opacity:.45}
@@ -129,6 +158,14 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .markSub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .markOpen{flex-shrink:0;border:1px solid var(--border);background:var(--bg);color:var(--accent);border-radius:14px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
 .markOpen:hover{background:var(--sel)}
+.markRow.hasSub .markSub{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.markExpand{color:var(--accent);font-weight:600;cursor:pointer}
+.markSubList{padding:2px 8px 8px 32px}
+.markParaRow{display:flex;align-items:center;gap:9px;padding:5px 7px;border-radius:8px}
+.markParaRow:hover{background:var(--sel)}
+.markDot.sm{width:9px;height:9px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.markPara{flex:1;font-size:12.5px;color:var(--text)}
+.markOpen.sm{padding:3px 9px;font-size:11.5px;border-radius:10px}
 .marksMore{padding:8px 12px;font-size:12px;color:var(--muted);text-align:center}
 .marksToggle{color:var(--accent);cursor:pointer;font-weight:600;white-space:nowrap;border-bottom:1px dotted var(--accent)}
 .marksToggle:hover{color:var(--accent2)}
@@ -149,7 +186,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
   border-bottom:1px solid #0c2f24;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.22)}
 .nhead::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.14) 46%,rgba(255,255,255,.04) 54%,transparent 66%)}
-.ntitle{font-weight:700;font-size:15.5px;margin:0;word-wrap:break-word;line-height:1.35;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);position:relative;z-index:1}
+.ntitle{font-weight:700;font-size:16px;margin:0;word-wrap:break-word;line-height:1.3;letter-spacing:-.01em;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);position:relative;z-index:1}
 .nmeta2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;align-items:center}
 .pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:500}
 .pill.ref{background:var(--sel);color:var(--accent)}
@@ -482,7 +519,8 @@ html[data-theme="dark"] .colResizer::before{background:rgba(255,255,255,.12)}
   main .col{display:none;width:100%!important;min-width:0!important}
   main .col.mshow{display:flex}
   .colResizer{display:none}
-  header h1 small{display:none}
+  header h1 small,.brand-sub{display:none}
+  .brand-logo{width:30px;height:30px}
   header{padding:8px 10px;gap:6px}
   .sbtn{padding:8px 12px}
   .item{padding:9px 10px}
@@ -497,9 +535,7 @@ html[data-theme="dark"]{
   --accent:#b3966f; --accent2:#c9ad85; --sel:#3a3a45;
 }
 html[data-theme="dark"] main{background:radial-gradient(900px 520px at 12% -5%,rgba(90,80,140,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(40,90,110,.4),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(110,80,60,.32),transparent 60%),linear-gradient(180deg,#141416,#0e0e10)}
-html[data-theme="dark"] #colBooks{background:linear-gradient(180deg,rgba(72,67,92,.46) 0%,rgba(44,40,58,.44) 45%,rgba(34,31,46,.42) 100%);border-color:rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.3)}
-html[data-theme="dark"] #colTags{background:linear-gradient(180deg,rgba(66,66,74,.46) 0%,rgba(46,46,54,.44) 45%,rgba(36,36,42,.42) 100%);border-color:rgba(255,255,255,.1);border-top-color:rgba(255,255,255,.2);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.3)}
-html[data-theme="dark"] #colNotes{background:linear-gradient(180deg,rgba(46,46,54,.5) 0%,rgba(32,32,38,.46) 55%,rgba(25,25,30,.44) 100%);border-color:rgba(255,255,255,.08);border-top-color:rgba(255,255,255,.16);box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+html[data-theme="dark"] #colBooks,html[data-theme="dark"] #colTags,html[data-theme="dark"] #colNotes{box-shadow:0 6px 18px rgba(0,0,0,.4)}
 html[data-theme="dark"] .ncard{box-shadow:0 1px 3px rgba(0,0,0,.45)}
 html[data-theme="dark"] .ncard:hover{box-shadow:0 5px 16px rgba(0,0,0,.55)}
 html[data-theme="dark"] .ntools{background:linear-gradient(180deg,#25252b,#1f1f25);border-top-color:#35353d}
@@ -520,7 +556,8 @@ html[data-theme="dark"] #dropdown .dd-note{background:none;border:none}
 html[data-theme="dark"] #hlBar{background:rgba(45,45,52,.95);border-color:rgba(255,255,255,.1)}
 html[data-theme="dark"] #hlBar button.tb{color:var(--text)}
 html[data-theme="dark"] .modal input[type=text],html[data-theme="dark"] .modal textarea,html[data-theme="dark"] .modal select{background:#232329;color:var(--text);border-color:var(--border)}
-html[data-theme="dark"] #search{background:#232329;color:var(--text)}
+html[data-theme="dark"] #search{background:transparent;color:var(--text)}
+html[data-theme="dark"] .searchwrap{background:#232329}
 html[data-theme="dark"] #mobileTabs button{background:#232329;color:var(--text)}
 html[data-theme="dark"] mark,html[data-theme="dark"] .qhl{color:#1e1e20}
 html[data-theme="dark"] .ncontent[contenteditable="true"]{background:#26262d}
@@ -545,8 +582,17 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
 <div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
-  <h1><img src="icon-192.png" width="28" height="28" alt="" style="vertical-align:-7px;margin-right:6px;border-radius:7px">JW Study <small style="opacity:.55;font-size:11px;font-weight:normal">v68</small> <small id="hCount"></small></h1>
-  <input id="search" type="search" placeholder='Szukaj…  np. miłos*  "cała fraza"  (kot|pies)' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
+  <div class="brand">
+    <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
+    <div class="brand-txt">
+      <div class="brand-name">JW Study <span class="ver">v75</span></div>
+      <div class="brand-sub" id="hCount"></div>
+    </div>
+  </div>
+  <div class="searchwrap">
+    <svg class="ic search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="search" type="search" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
+  </div>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
     <option value="old">Najstarsze</option>
@@ -554,16 +600,16 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <option value="alpha">Alfabetycznie</option>
     <option value="recent">Ostatnio otwierane</option>
   </select>
-  <button class="btn" id="btnTheme" title="Motyw">🖥️</button>
-  <button class="btn" id="btnColors" title="Kolory kolumn i belek">🎨</button>
-  <button class="btn" id="btnUndo" title="Cofnij ostatnią zmianę">↩️</button>
+  <button class="btn ico-btn" id="btnTheme" title="Motyw"></button>
+  <button class="btn ico-btn" id="btnColors" title="Kolory i gotowe kompozycje"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.3 1-2.2 2.2-2.2H18a3 3 0 0 0 3-3A8 8 0 0 0 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="16.3" cy="11" r="1" fill="currentColor" stroke="none"/></svg></button>
+  <button class="btn ico-btn" id="btnUndo" title="Cofnij ostatnią zmianę"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7L4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-3"/></svg></button>
   <div class="fontctl" title="Rozmiar czcionki (notatki i kolumny)">
     <button id="fMinus">A−</button>
     <button id="fPlus" style="font-size:15px">A+</button>
   </div>
-  <button class="btn" id="btnBackup" title="Kopia zapasowa danych">💾</button>
-  <button class="btn primary" id="btnNew">✚ Nowa notatka</button>
-  <button class="btn" id="btnMenu">⚙️ Plik ▾</button>
+  <button class="btn ico-btn" id="btnBackup" title="Kopia zapasowa danych"></button>
+  <button class="btn primary" id="btnNew"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Nowa notatka</button>
+  <button class="btn" id="btnMenu"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v2.4M12 19v2.4M21.4 12H19M5 12H2.6M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7M18.6 18.6l-1.7-1.7M7.1 7.1L5.4 5.4"/></svg> Plik</button>
 </header>
 
 <div id="mobileTabs">
@@ -713,12 +759,12 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <div class="nn-head"><span class="nn-ic">👋</span><h3>Witaj w JW Study</h3></div>
     <p style="margin-top:2px;color:var(--muted)">W skrócie, gdzie co jest:</p>
     <div class="help-list">
-      <div class="help-row"><span class="help-ic">📚</span><div><b>Trzy kolumny</b> — Księgi Biblii, Zakładki, Notatki. Klikasz pozycję, żeby zawęzić listę notatek.</div></div>
-      <div class="help-row"><span class="help-ic">🔍</span><div><b>Szukaj</b> u góry — notatki po słowach; podkreślenia po odnośniku, publikacji lub kolorze.</div></div>
+      <div class="help-row"><span class="help-ic">📴</span><div><b>Praca offline (iPhone/iPad)</b> — otwórz aplikację w Safari <u>z internetem</u>, potem <b>Udostępnij → Dodaj do ekranu głównego</b>. Uruchom ją raz z ikony (wciąż z internetem) — pojawi się „✓ gotowa do pracy offline". Od tej pory działa bez sieci. Stan sprawdzisz w <b>⚙️ Plik</b> (🟢 na dole).</div></div>
+      <div class="help-row"><span class="help-ic">📚</span><div><b>Trzy kolumny</b> — Księgi Biblii, Etykiety, Notatki. Klikasz pozycję, żeby zawęzić listę notatek.</div></div>
+      <div class="help-row"><span class="help-ic">🔍</span><div><b>Szukaj</b> u góry — notatki po słowach (gwiazdka <code>miłos*</code>, „cudzysłów", alternatywy <code>(a|b)</code>).</div></div>
       <div class="help-row"><span class="help-ic">✚</span><div><b>Nowa notatka</b> — dodaj notatkę i (opcjonalnie) przypnij do konkretnego wersetu.</div></div>
       <div class="help-row"><span class="help-ic">📌</span><div><b>Przypnij</b> ważne notatki — zawsze będą na górze listy.</div></div>
-      <div class="help-row"><span class="help-ic">🖍</span><div><b>Podkreślenia z JW Library</b> — kliknij licznik „🖍 …” na górze kolumny notatek, żeby je przeglądać; „Otwórz ↗” prowadzi do miejsca w JW Library.</div></div>
-      <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje notatki i podkreślenia z JW Library.</div></div>
+      <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
       <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
     </div>
@@ -843,8 +889,6 @@ async function boot(){
   if(sf){ try{ Object.assign(filt, JSON.parse(sf)); }catch(e){} }
   if(typeof filt.book==="number" && filt.book>0) expandedBook = filt.book;
   if(idb){ try{ deletedTagNames = (await idbGet("meta","deletedTags")) || []; }catch(e){} }
-  if(idb){ try{ marks = (await idbGet("meta","marks")) || []; }catch(e){} }
-  pubMarks = marks.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
   purgeOldTrash();   // usuń trwale notatki, które są w koszu ponad 30 dni
   buildStatic();
   renderAll();
@@ -970,21 +1014,22 @@ function metalStyle(c){
 /* ===== kolory kolumn i belki notatki (metaliczna paleta) ===== */
 function colGrad(c,a,b,d){ return `linear-gradient(180deg,${shade(c,a)} 0%,${shade(c,b)} 48%,${shade(c,d)} 100%)`; }
 function hexA(hex,al){ const n=parseInt(shade(hex,0).slice(1),16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${al})`; }
+/* wyciszenie koloru — mieszanie w stronę szarości, żeby barwy nie były ostre/jaskrawe */
+function desat(hex, mix){ const n=parseInt(shade(hex,0).slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const a=(r*0.3+g*0.59+b*0.11); r=Math.round(r+(a-r)*mix); g=Math.round(g+(a-g)*mix); b=Math.round(b+(a-b)*mix); return "#"+[r,g,b].map(x=>Math.max(0,Math.min(255,x)).toString(16).padStart(2,"0")).join(""); }
 function glassGrad(c,a,b,al){ return `linear-gradient(180deg,${hexA(shade(c,a),al)} 0%,${hexA(shade(c,b),al*0.92)} 100%)`; }
 function loadColorCfg(){ try{ return JSON.parse(localStorage.getItem(KP+"Colors")||"{}"); }catch(e){ return {}; } }
 function buildColorCSS(){
   const cfg = loadColorCfg(); let css="";
+  // spokojne, MATOWE i WYCISZONE tło w wybranym odcieniu (bez ostrych barw; kafelki zostają jasne)
   ["colBooks","colTags"].forEach(id=>{
-    const c=cfg[id]; if(!c) return;
-    css+=`#${id}{background:${glassGrad(c,.02,-.2,.52)};-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border-color:${hexA(shade(c,-.5),.5)};border-top-color:rgba(255,255,255,.34)}`;
-    css+=`#${id} h2,#${id} .divider,#${id} .cnt{color:${shade(c,.72)}!important}`;
-    css+=`#${id} .item{background:${colGrad(c,.2,.02,-.12)};border-color:${shade(c,-.5)};border-top-color:${shade(c,.5)};color:#fff}`;
-    css+=`#${id} .item:hover{background:${colGrad(c,.28,.1,-.04)}}`;
-    css+=`#${id} .item.active{background:${colGrad(c,-.12,-.3,-.44)};border-top-color:${shade(c,.2)};color:#fff}`;
-    css+=`#${id} .item.active .cnt{color:#fff!important}`;
+    const raw=cfg[id]; if(!raw) return; const c=desat(raw,.42);
+    css+=`#${id}{background:${hexA(shade(c,.6),.45)};border-color:${hexA(shade(c,-.05),.3)}}`;
+    css+=`#${id} h2,#${id} .divider,#${id} .cnt{color:${shade(desat(raw,.55),-.28)}!important}`;
+    css+=`#${id} .item{border-color:${hexA(shade(c,-.05),.28)}}`;
+    css+=`#${id} .item:hover{border-color:${shade(c,-.12)}}`;
   });
-  if(cfg.colNotes){ const c=cfg.colNotes; css+=`#colNotes{background:${glassGrad(c,.6,.48,.5)};-webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);border-top-color:${hexA(shade(c,.85),.7)};border-color:${hexA(shade(c,.2),.5)}}`; }
-  if(cfg.nhead){ const c=cfg.nhead; css+=`.nhead{background:${colGrad(c,.16,0,-.28)}!important;border-bottom-color:${shade(c,-.55)}!important}`; }
+  if(cfg.colNotes){ const c=desat(cfg.colNotes,.42); css+=`#colNotes{background:${hexA(shade(c,.74),.45)}}`; }
+  if(cfg.nhead){ const c=desat(cfg.nhead,.34); css+=`.nhead{background:linear-gradient(180deg,${shade(c,.05)} 0%,${shade(c,-.14)} 100%)!important;border-bottom-color:${shade(c,-.4)}!important}`; }
   return css;
 }
 function applyColors(){
@@ -996,7 +1041,7 @@ function openColorMenu(e){
   const cm=$("colorMenu"); const cfg=loadColorCfg();
   const sw=(target,c)=>{
     const sel = c===null ? !cfg[target] : cfg[target]===c;
-    return `<span class="cm-sw ${c===null?"cm-none":""} ${sel?"sel":""}" data-pc="${c||""}" style="${c===null?"":metalStyle(c)}" title="${c||"Domyślny"}">${c===null?"✕":""}</span>`;
+    return `<span class="cm-sw ${c===null?"cm-none":""} ${sel?"sel":""}" data-pc="${c||""}" style="${c===null?"":`background:${desat(c,.4)}`}" title="${c||"Domyślny"}">${c===null?"✕":""}</span>`;
   };
   const sec=(target,label)=>`<div class="cm-sec"><div class="cm-lbl">${label}</div><div class="cm-row" data-target="${target}">`+
     sw(target,null)+TAGCOLORS.map(c=>sw(target,c)).join("")+`</div></div>`;
@@ -1018,10 +1063,10 @@ function openColorMenu(e){
 }
 function tagItem(key,name,cnt,user,color){
   const active = String(filt.tag)===String(key);
-  const tinted = !active && color;
-  const st = tinted ? ` style="${metalStyle(color)}"` : "";
-  return `<div class="item ${active?"active":""} ${tinted?"tinted":""} ${cnt?"":"zero"}" data-k="${key}" ${user?'data-droppable="1"':""}${st}>
-    <span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
+  const dot = color ? `<span class="tgdot" style="background:${color}"></span>`
+            : (key==="all" ? `<span class="tgdot all"></span>` : `<span class="tgdot none"></span>`);
+  return `<div class="item ${active?"active":""} ${cnt?"":"zero"}" data-k="${key}" ${user?'data-droppable="1"':""}>
+    ${dot}<span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
 }
 function cmpTags(a,b){
   const ao=a.ord!==undefined, bo=b.ord!==undefined;
@@ -1264,6 +1309,19 @@ function hilite(html){
   return tmp.innerHTML;
 }
 function contentHtml(n){ return hilite(n.h ? n.h : esc(n.c||"")); }
+function emptyStateEl(){
+  const q=(query||"").trim();
+  const wrap=document.createElement("div"); wrap.className="emptyState";
+  let icon=ICO.notes, title="Brak notatek", sub="Dodaj pierwszą notatkę albo zaimportuj backup z JW Library.", btn=true;
+  if(q){ icon=ICO.search; title="Brak wyników"; sub="Nic nie pasuje do „"+esc(q)+"”. Spróbuj innego słowa albo gwiazdki (miłos*)."; btn=false; }
+  else if(sortMode==="recent"){ title="Brak ostatnio otwieranych"; sub="Otwórz notatkę, a pojawi się tutaj."; btn=false; }
+  else if(filt.tag==="none"){ title="Wszystkie notatki mają etykiety"; sub="Notatki bez etykiety pojawią się tutaj."; btn=false; }
+  else if(filt.tag && filt.tag!=="all"){ title="Pusta etykieta"; sub="Dodaj notatkę albo przeciągnij tu istniejącą."; }
+  wrap.innerHTML = `<div class="es-ic">${icon}</div><div class="es-title">${title}</div><div class="es-sub">${sub}</div>`+
+    (btn?`<button class="btn primary es-btn">${ICO.plus} Nowa notatka</button>`:"");
+  const b=wrap.querySelector(".es-btn"); if(b) b.onclick=()=>$("btnNew").click();
+  return wrap;
+}
 function renderNotes(){
   let arr;
   if(sortMode==="recent"){
@@ -1273,16 +1331,11 @@ function renderNotes(){
   }
   let countsTxt = sortMode==="recent" ? (arr.length ? "Ostatnio otwierane ("+arr.length+")" : "Nie otwierałeś jeszcze żadnej notatki") : arr.length + (arr.length===1?" notatka":(arr.length%10>=2&&arr.length%10<=4&&(arr.length%100<12||arr.length%100>14))?" notatki":" notatek");
   const cEl = $("counts");
-  if(pubMarks && pubMarks.length){
-    cEl.innerHTML = esc(countsTxt) + ` · <span class="marksToggle" role="button" title="Kliknij, aby pokazać podkreślenia">🖍 ${pubMarks.length} podkreśleń ${showMarks?"▲":"▼"}</span>`;
-    const tg = cEl.querySelector(".marksToggle");
-    if(tg) tg.onclick = ()=>{ showMarks = !showMarks; renderNotes(); };
-  } else {
-    cEl.textContent = countsTxt;
-  }
-  $("hCount").textContent = "· " + notes.filter(n=>!n.del).length + " notatek";
+  cEl.textContent = countsTxt;
+  $("hCount").textContent = notes.filter(n=>!n.del).length + " notatek · " + tags.length + " etykiet";
   const el = $("noteList");
   el.innerHTML = "";
+  if(arr.length===0){ el.appendChild(emptyStateEl()); fsNavList=[]; return; }
   const frag = document.createDocumentFragment();
   arr.slice(0,visibleCount).forEach(n=>frag.appendChild(noteCard(n)));
   el.appendChild(frag);
@@ -1296,7 +1349,6 @@ function renderNotes(){
     const io = new IntersectionObserver(es=>{ if(es[0].isIntersecting){ io.disconnect(); visibleCount+=120; renderNotes(); } });
     io.observe(more);
   }
-  renderMarksSection(el);
 }
 function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
 function markGroupKey(m){
@@ -1309,8 +1361,8 @@ function groupMarks(list){
   for(const m of list){
     const k=markGroupKey(m);
     let g=map.get(k);
-    if(!g){ g={sample:m, count:0, cols:new Set()}; map.set(k,g); }
-    g.count++; g.cols.add(m.col);
+    if(!g){ g={sample:m, count:0, cols:new Set(), items:[]}; map.set(k,g); }
+    g.count++; g.cols.add(m.col); g.items.push(m);
     if((m.ident||1e9) < (g.sample.ident||1e9)) g.sample=m;        // reprezentant o najniższym akapicie → lepszy link
   }
   return [...map.values()];
@@ -1327,13 +1379,35 @@ function markGroupRowEl(g, nrk){
   const colTxt = cols.length>1 ? (cols.length+" kolory") : cn;
   const cntTxt = g.count>1 ? (g.count+" podkreśleń") : (colTxt?(colTxt+" podkreślenie"):"podkreślenie");
   const also = m.book && nrk.has(m.book+"-"+(m.ch||0)+"-"+(m.ident||0)) ? " · masz tu też notatkę" : "";
-  const row=document.createElement("div"); row.className="markRow";
+  // unikalne akapity w tej publikacji (posortowane) — każdy z własnym, precyzyjnym linkiem
+  const paras = [...new Map(g.items.map(x=>[x.ident, x])).values()].sort((a,b)=>(a.ident||0)-(b.ident||0));
+  const many = paras.length>1;
+  const wrap=document.createElement("div"); wrap.className="markGroup";
+  const row=document.createElement("div"); row.className="markRow"+(many?" hasSub":"");
   row.innerHTML = `<span class="markDot" style="background:${hex}"></span>
     <div class="markInfo"><div class="markRef">${esc(groupLabel(g))}</div>
-    <div class="markSub">${esc((m.ks||"")+" · "+cntTxt+also)}</div></div>
+    <div class="markSub">${esc((m.ks||"")+" · "+cntTxt+also)}${many?` <span class="markExpand">▾ pokaż ${paras.length} akapitów</span>`:""}</div></div>
     <button class="markOpen">Otwórz ↗</button>`;
-  row.querySelector(".markOpen").onclick=()=>{ const u=markFinderUrl(m); if(u) openUrlJWL(u); else toast("Brak linku do tego miejsca"); };
-  return row;
+  row.querySelector(".markOpen").onclick=(e)=>{ e.stopPropagation(); const u=markFinderUrl(m); if(u) openUrlJWL(u); else toast("Brak linku do tego miejsca"); };
+  wrap.appendChild(row);
+  if(many){
+    const sub=document.createElement("div"); sub.className="markSubList"; sub.style.display="none";
+    paras.forEach(p=>{
+      const [ph]=markColor(p.col);
+      const r=document.createElement("div"); r.className="markParaRow";
+      r.innerHTML=`<span class="markDot sm" style="background:${ph}"></span><span class="markPara">akapit ${p.ident||"?"}</span><button class="markOpen sm">Otwórz ↗</button>`;
+      r.querySelector(".markOpen").onclick=(e)=>{ e.stopPropagation(); const u=markFinderUrl(p); if(u) openUrlJWL(u); else toast("Brak linku"); };
+      sub.appendChild(r);
+    });
+    wrap.appendChild(sub);
+    row.style.cursor="pointer";
+    row.addEventListener("click", ()=>{
+      const show = sub.style.display==="none";
+      sub.style.display = show?"block":"none";
+      const ex=row.querySelector(".markExpand"); if(ex) ex.textContent = (show?"▴ ukryj ":"▾ pokaż ")+paras.length+" akapitów";
+    });
+  }
+  return wrap;
 }
 function renderMarksSection(container){
   if(!pubMarks || !pubMarks.length) return;
@@ -1383,7 +1457,15 @@ const ICO = {
   indent:_svg('<path d="M3 6h18M3 18h18M3 10h9M3 14h9"/><path d="M17 9l3 3l-3 3z" fill="currentColor" stroke="none"/>'),
   alignLeft:_svg('<path d="M4 6h16M4 10h10M4 14h16M4 18h10"/>'),
   alignCenter:_svg('<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>'),
-  alignJustify:_svg('<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>')
+  alignJustify:_svg('<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>'),
+  palette:_svg('<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.3 1-2.2 2.2-2.2H18a3 3 0 0 0 3-3A8 8 0 0 0 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="16.3" cy="11" r="1" fill="currentColor" stroke="none"/>'),
+  sun:_svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>'),
+  moon:_svg('<path d="M20 14A8 8 0 0 1 10 4a7 7 0 1 0 10 10z"/>'),
+  monitor:_svg('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),
+  droplet:_svg('<path d="M12 3s6 5.5 6 10a6 6 0 0 1-12 0c0-4.5 6-10 6-10z"/>'),
+  gear:_svg('<circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v2.4M12 19v2.4M21.4 12H19M5 12H2.6M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7M18.6 18.6l-1.7-1.7M7.1 7.1L5.4 5.4"/>'),
+  search:_svg('<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'),
+  notes:_svg('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>')
 };
 function noteCard(n){
   const d = document.createElement("div");
@@ -1599,7 +1681,8 @@ $("modalFs").addEventListener("click", e=>{ if(e.target.id==="modalFs") closeFs(
 $("fsPrev").onclick = ()=>fsGo(-1);
 $("fsNext").onclick = ()=>fsGo(1);
 // pasek postępu czytania
-(function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(fm) fm.addEventListener("scroll", updateFsProgress, {passive:true}); })();
+(function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return; let raf=0;
+  fm.addEventListener("scroll", ()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; updateFsProgress(); }); }, {passive:true}); })();
 // przesunięcie palcem (swipe) — zmiana notatki (tylko wyraźny poziomy gest, nigdy przy zaznaczaniu tekstu)
 (function(){
   const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
@@ -1627,8 +1710,8 @@ const mqDark = matchMedia("(prefers-color-scheme: dark)");
 function applyTheme(){
   const resolved = themeMode==="auto" ? (mqDark.matches ? "dark" : "light") : themeMode;
   document.documentElement.dataset.theme = resolved;
-  const ic = {light:"☀️", sepia:"📜", dark:"🌙", auto:"🖥️"};
-  $("btnTheme").textContent = ic[themeMode]||"🖥️";
+  const ic = {light:ICO.sun, sepia:ICO.droplet, dark:ICO.moon, auto:ICO.monitor};
+  $("btnTheme").innerHTML = ic[themeMode]||ICO.monitor;
   const nm = {light:"dzień", sepia:"sepia", dark:"noc", auto:"jak w systemie"};
   $("btnTheme").title = "Motyw: " + (nm[themeMode]||"system") + " (kliknij, aby zmienić)";
 }
@@ -1699,7 +1782,7 @@ function updateBackupBadge(){
   const b=document.getElementById("btnBackup"); if(!b) return;
   const dirty=+(localStorage.getItem(KP+"Dirty")||0);
   const lb=localStorage.getItem(KP+"LastBk"); const days=backupDaysAgo();
-  b.textContent = dirty>0 ? ("💾 "+dirty) : "💾";
+  b.innerHTML = ICO.save + (dirty>0 ? `<span class="bk-count">${dirty}</span>` : "");
   b.classList.toggle("badge-warn", backupStale());
   b.title = (lb ? ("Ostatnia kopia: "+lb+(days!=null?" ("+days+" dni temu)":"")) : "Nie zrobiono jeszcze kopii")
     + (dirty>0 ? (" · zmian od kopii: "+dirty) : " · brak nowych zmian")
@@ -2388,7 +2471,7 @@ document.addEventListener("focusout", e=>{
   const ce = e.target && e.target.closest && e.target.closest('.ncontent[contenteditable="true"]');
   if(ce) commitLiveEdit(ce);
 }, true);
-addEventListener("scroll", ()=>{ if(selImg && $("imgBar").style.display==="flex") showImgBar(selImg); }, true);
+addEventListener("scroll", ()=>{ if(selImg && $("imgBar").style.display==="flex") showImgBar(selImg); }, {capture:true, passive:true});
 addEventListener("resize", ()=>{ if(selImg) hideImgBar(); });
 addEventListener("orientationchange", ()=>{ if(selImg) hideImgBar(); });
 function captureRange(){
@@ -2764,7 +2847,6 @@ async function handleImportFile(e){
     showInfo("Import zakończony", `Kopia z JW Library została <b>dołączona</b> (bez kasowania Twoich danych).<br><br>`+
       `• Nowych notatek: <b>${res.added}</b><br>`+
       `• Zaktualizowanych: <b>${res.updated}</b><br>`+
-      `• Nowych podkreśleń: <b>${res.marksAdded||0}</b> (łącznie z publikacji: ${res.marks||0})<br>`+
       `• Pominięto (bez zmian lub Twoje edycje): ${res.skipped}`);
   }catch(err){ console.error(err); toast("Błąd importu: "+err.message); }
 }
@@ -2810,33 +2892,7 @@ function importFromDb(db){
     const bk=db.exec("SELECT KeySymbol, COUNT(*) c FROM Location WHERE BookNumber IS NOT NULL AND KeySymbol IS NOT NULL GROUP BY KeySymbol ORDER BY c DESC LIMIT 1");
     if(bk.length && bk[0].values[0][0]){ bibleKs = bk[0].values[0][0]; try{ localStorage.setItem(KP+"BibleKs", bibleKs); }catch(e){} }
   }catch(e){}
-  // ===== podkreślenia (UserMark + BlockRange + Location) =====
-  let marksAdded=0;
-  try{
-    const mq = db.exec(`SELECT u.ColorIndex, l.KeySymbol, l.IssueTagNumber, l.BookNumber, l.ChapterNumber, l.DocumentId, l.Title, br.Identifier
-      FROM UserMark u JOIN Location l ON u.LocationId=l.LocationId
-      LEFT JOIN BlockRange br ON br.UserMarkId=u.UserMarkId
-      ORDER BY l.BookNumber, l.ChapterNumber, br.Identifier`);
-    if(mq.length){
-      // SCALANIE: zachowaj dotychczasowe podkreślenia, dołącz tylko nowe
-      const merged = Array.isArray(marks) ? marks.slice() : [];
-      const seen={}; merged.forEach(m=>{ seen[[m.col,m.ks,m.itn,m.book,m.ch,m.doc,m.ident].join("|")]=1; });
-      mq[0].values.forEach(([col,ks,itn,book,ch,doc,title,ident])=>{
-        const m={ col:col||0, ks:ks||"", itn:itn||0, book:book||0, ch:ch||0, doc:doc||0, ident:ident||0 };
-        const key=[m.col,m.ks,m.itn,m.book,m.ch,m.doc,m.ident].join("|");
-        if(seen[key]) return; seen[key]=1;
-        // policz etykietę i „hasło" raz — dla szybkiego wyszukiwania nawet przy dziesiątkach tys. podkreśleń
-        m.lbl = m.book ? ((BOOKS[m.book]||("Księga "+m.book)) + (m.ch?(" "+m.ch+(m.ident?":"+m.ident:"")):""))
-                       : (((title||"").trim()||m.ks||"Publikacja") + (m.ident?(" · akapit "+m.ident):""));
-        m.h = norm(m.lbl+" "+m.ks+" "+markColor(m.col)[1]);
-        merged.push(m); marksAdded++;
-      });
-      marks = merged;
-      pubMarks = marks.filter(m=>!m.book);   // tylko publikacje (bez Biblii)
-      if(idb) idbPut("meta", marks, "marks").catch(()=>{});
-    }
-  }catch(e){ console.warn("Import podkreśleń:", e); }
-  return {added,updated,skipped,marks:pubMarks.length,marksAdded};
+  return {added,updated,skipped};
 }
 /* ===== podkreślenia: kolory, etykieta, link ===== */
 function markColor(col){ const M={1:["#ffd54a","żółte"],2:["#8ed08a","zielone"],3:["#7fb3e0","niebieskie"],4:["#e79ec4","różowe"],5:["#f0a868","pomarańczowe"],6:["#b79bd6","fioletowe"]}; return M[col]||["#c9c4b7",""]; }
@@ -3357,7 +3413,8 @@ document.querySelectorAll(".colResizer").forEach(rz=>{
     saveColWidths();
   });
 });
-$("search").addEventListener("input",e=>{parseQuery(e.target.value);renderAll();});
+let searchTimer=null;
+$("search").addEventListener("input",e=>{ parseQuery(e.target.value); clearTimeout(searchTimer); searchTimer=setTimeout(renderAll, 130); });
 $("sortSel").addEventListener("change",e=>{sortMode=e.target.value;renderNotes();});
 /* ===== skróty klawiszowe (komputer) ===== */
 document.addEventListener("keydown", e=>{

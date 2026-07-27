@@ -1,4 +1,4 @@
-const CACHE = 'jwstudy-v90';
+const CACHE = 'jwstudy-v91';
 // Najważniejszy jest index.html — reszta to dodatki. Każdy plik zapisujemy OSOBNO,
 // żeby brak jednego (np. ikony) nie przerwał całego zapisu offline.
 const CORE = ['./', './index.html'];
@@ -6,6 +6,7 @@ const EXTRA = [
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
+  './icon-maskable-512.png',
   './apple-touch-icon.png',
   './favicon-32.png'
 ];

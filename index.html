@@ -345,6 +345,8 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #msgModal .msgOk{border:none;border-radius:11px;padding:10px 22px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:#fff}
 #msgModal .msgCancel{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;background:var(--sel);color:var(--text)}
 #msgModal .msgOk.danger{background:#c0392b}
+#msgModal .askBtns{flex-wrap:wrap}
+#msgModal .msgExtra{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s;text-decoration:none}
@@ -639,7 +641,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v89</span></div>
+      <div class="brand-name">JW Study <span class="ver">v90</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -832,7 +834,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
       <div class="help-row"><span class="help-ic">📖</span><div><b>Czytnik</b> (notatka na pełnym ekranie): licznik słów i czasu czytania, <b>Spis</b> (skok do nagłówka), <b>Znajdź</b> w notatce, <b>Aa</b> (rozmiar, interlinia, szerokość, czcionka, tło). Aplikacja <b>zapamiętuje miejsce</b>, w którym skończyłeś czytać.</div></div>
       <div class="help-row"><span class="help-ic">✍️</span><div><b>W edycji</b>: przycisk <b>＋</b> wstawia odnośnik do wersetu, cytat, listę zadań, <b>tabelę</b> i <b>szablon notatki</b>; w menu <b>⋯</b> jest <b>Znajdź i zamień</b> oraz <b>Historia wersji</b> (10 ostatnich).</div></div>
       <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
-      <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.</div></div>
+      <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.<br><b>Przenoszenie między urządzeniami:</b> zapisz kopię na jednym, a na drugim <b>⚙️ Plik → Wczytaj kopię</b> i wybierz <b>Dołącz (scal)</b> — doda tylko brakujące notatki, nic nie skasuje.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
     </div>
     <div class="actions"><button class="btn primary" onclick="closeModal('modalHelp')">Zaczynajmy</button></div>
@@ -2547,6 +2549,31 @@ function showInfo(title, html){
     ok.onclick=()=>{ m.classList.remove("show"); ok.onclick=null; res(); };
   });
 }
+/* okno z kilkoma odpowiedziami (np. Scal / Zastąp / Anuluj) */
+function askChoice(title, html, buttons){
+  return new Promise(res=>{
+    const m=$("msgModal");
+    m.querySelector(".askTitle").textContent=title;
+    m.querySelector(".msgBody").innerHTML=html;
+    const row=m.querySelector(".askBtns");
+    const oldOk=row.querySelector(".msgOk"), oldCancel=row.querySelector(".msgCancel");
+    oldOk.style.display="none"; oldCancel.style.display="none";
+    row.querySelectorAll(".msgExtra").forEach(b=>b.remove());
+    buttons.forEach(b=>{
+      const el=document.createElement("button");
+      el.className="msgExtra "+(b.style==="danger"?"msgOk danger":b.style==="primary"?"msgOk":"msgCancel");
+      el.textContent=b.label;
+      el.onclick=()=>{ cleanup(); res(b.value); };
+      row.appendChild(el);
+    });
+    function cleanup(){
+      m.classList.remove("show");
+      row.querySelectorAll(".msgExtra").forEach(b=>b.remove());
+      oldOk.style.display=""; oldCancel.style.display="";
+    }
+    m.classList.add("show");
+  });
+}
 /* własne okno potwierdzenia — działa w aplikacji na iOS (gdzie confirm() jest zablokowany) */
 function askConfirm(title, html, opts){
   opts=opts||{};
@@ -3376,7 +3403,7 @@ function openFilePicker(mode){
   $("mfTitle").textContent = mode==="jwl" ? "📥 Import backupu JW Library" : "📂 Wczytanie kopii danych";
   $("mfDesc").textContent = mode==="jwl"
     ? "Wybierz plik .jwlibrary (kopię zapasową z aplikacji JW Library). Aplikacja doda tylko nowe notatki — Twoje zmiany zostaną."
-    : "Wybierz zapisany wcześniej plik kopii (.json). Uwaga: wczytanie ZASTĄPI wszystkie obecne dane w aplikacji.";
+    : "Wybierz zapisany wcześniej plik kopii (.json). W następnym kroku wybierzesz, czy dołączyć brakujące notatki (scalanie), czy zastąpić wszystko.";
   const inp = $("mfInput");
   inp.value = "";
   inp.accept = mode==="jwl" ? ".jwlibrary" : ".json,application/json";
@@ -3865,20 +3892,87 @@ function exportJson(){
   clearDirty();
   toast("Zapisano kopię danych");
 }
+/* ===== SCALANIE KOPII (dołącz brakujące, zachowaj to, co masz) =====
+   Etykiety i sekcje z innego urządzenia mogą mieć INNE numery, więc dopasowujemy je
+   po nazwie i przenumerowujemy w wczytywanych notatkach. */
+function mergeBackup(data){
+  const st={notesAdded:0, notesUpdated:0, notesKept:0, tagsAdded:0, secAdded:0};
+  // 1) sekcje — dopasuj po nazwie
+  const secMap={};
+  (Array.isArray(data.sections)?data.sections:[]).forEach(s=>{
+    let mine=sections.find(x=>norm(x.name)===norm(s.name));
+    if(!mine){ mine={id:nextSecId(), name:s.name, ord:sections.length, open:true, color:s.color}; sections.push(mine); st.secAdded++; }
+    secMap[s.id]=mine.id;
+  });
+  // 2) etykiety — dopasuj po nazwie, zapamiętaj przenumerowanie
+  const tagMap={};
+  (data.tags||[]).forEach(t=>{
+    let mine=tags.find(x=>norm(x.name)===norm(t.name));
+    if(!mine){
+      mine={id: Math.max(0,...tags.map(x=>x.id))+1, name:t.name, color:t.color, nw:true};
+      if(t.sec!==undefined && secMap[t.sec]!==undefined) mine.sec=secMap[t.sec];
+      tags.push(mine); st.tagsAdded++;
+    }
+    tagMap[t.id]=mine.id;
+  });
+  // 3) notatki — po identyfikatorze; przy konflikcie wygrywa NOWSZA data zmiany
+  const byG={}; notes.forEach(n=>byG[n.g]=n);
+  const changed=[];
+  (data.notes||[]).forEach(inc=>{
+    const mapped = {...inc, tg:(inc.tg||[]).map(id=>tagMap[id]).filter(v=>v!==undefined)};
+    const mine=byG[inc.g];
+    if(!mine){ notes.push(mapped); changed.push(mapped); st.notesAdded++; return; }
+    const a=(mapped.mo||""), b=(mine.mo||"");
+    if(a>b){ Object.assign(mine, mapped); changed.push(mine); st.notesUpdated++; }
+    else st.notesKept++;
+  });
+  return {st, changed};
+}
 async function handleJsonFile(e){
   const f=e.target.files[0]; e.target.value="";
   if(!f) return;
-  if(!(await askConfirm("Wczytać kopię danych?", "Wczytanie kopii <b>ZASTĄPI</b> wszystkie obecne dane w aplikacji (notatki i zakładki). Tej operacji nie można cofnąć.", {okLabel:"Wczytaj i zastąp", danger:true}))) return;
+  let data;
   try{
-    const data=JSON.parse(await f.text());
+    data=JSON.parse(await f.text());
     if(!data.notes||!data.tags) throw new Error("Nieprawidłowy plik kopii");
+  }catch(err){ toast("Błąd: "+err.message); return; }
+
+  const incoming=(data.notes||[]).filter(n=>!n.del).length;
+  const mineCount=notes.filter(n=>!n.del).length;
+  const choice = await askChoice("Wczytanie kopii danych",
+    `W pliku jest <b>${incoming}</b> notatek, w aplikacji na tym urządzeniu masz <b>${mineCount}</b>.<br><br>`+
+    `<b>Dołącz (scal)</b> — doda tylko to, czego tu nie ma; przy tej samej notatce zostaje <b>nowsza wersja</b>. Nic nie ginie. <i>Zalecane przy przenoszeniu między urządzeniami.</i><br><br>`+
+    `<b>Zastąp wszystko</b> — usuwa obecne dane i wstawia zawartość pliku. Tego nie da się cofnąć.`,
+    [{label:"Anuluj", value:"cancel"},
+     {label:"Zastąp wszystko", value:"replace", style:"danger"},
+     {label:"Dołącz (scal)", value:"merge", style:"primary"}]);
+  if(choice==="cancel" || !choice) return;
+
+  try{
+    if(choice==="merge"){
+      const {st, changed} = mergeBackup(data);
+      sortTags();
+      if(idb){
+        await idbBulkChunked("tags", tags);
+        if(changed.length) await idbBulkChunked("notes", changed);
+        saveSections();
+      }
+      renderAll();
+      showInfo("Kopia dołączona",
+        `• Nowych notatek: <b>${st.notesAdded}</b><br>`+
+        `• Zaktualizowanych (nowsza wersja z pliku): <b>${st.notesUpdated}</b><br>`+
+        `• Zachowanych bez zmian (Twoja wersja nowsza lub taka sama): <b>${st.notesKept}</b><br>`+
+        `• Nowych etykiet: <b>${st.tagsAdded}</b>${st.secAdded?` · sekcji: <b>${st.secAdded}</b>`:""}`);
+      return;
+    }
+    // ZASTĄP WSZYSTKO
     notes=data.notes; tags=data.tags; sections=Array.isArray(data.sections)?data.sections:[];
     if(idb){
       await new Promise((res,rej)=>{const t=idb.transaction(["notes","tags"],"readwrite");t.objectStore("notes").clear();t.objectStore("tags").clear();t.oncomplete=res;t.onerror=rej;});
       await idbBulk("tags",tags); await idbBulk("notes",notes);
       saveSections();
     }
-    renderAll(); toast("Wczytano kopię danych");
+    renderAll(); toast("Wczytano kopię danych (zastąpiono)");
   }catch(err){ toast("Błąd: "+err.message); }
 }
 

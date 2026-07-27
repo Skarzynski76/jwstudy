@@ -55,6 +55,14 @@ header #sortSel option{color:#2b2a27}
 .brand-sub{font-size:11px;color:var(--muted);white-space:nowrap}
 .searchwrap{flex:1;min-width:180px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:0 13px;transition:border-color .15s ease, box-shadow .15s ease}
 .searchwrap:focus-within{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.15)}
+.searchwrap{position:relative}
+#searchSug{position:absolute;top:calc(100% + 6px);left:0;right:0;display:none;z-index:60;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.2);padding:6px;max-height:320px;overflow-y:auto}
+#searchSug .sug{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;cursor:pointer;font-size:13.5px;color:var(--text)}
+#searchSug .sug:hover,#searchSug .sug.on{background:var(--sel)}
+#searchSug .sug .ic{width:16px;height:16px;color:var(--muted);flex-shrink:0}
+#searchSug .sug .sdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+#searchSug .sug .shint{margin-left:auto;font-size:11px;color:var(--muted)}
+#searchSug .sug-lbl{font-size:11px;color:var(--muted);padding:6px 11px 3px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .search-ic{width:18px;height:18px;color:var(--muted);flex-shrink:0}
 #search{flex:1;min-width:60px;padding:10px 0;border:none;background:transparent;font-size:14px;outline:none;color:var(--text)}
 select,button,input{font-family:inherit}
@@ -257,6 +265,28 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #fsWrap .ntitle{font-family:var(--readFont,inherit)}
 /* pasek postępu czytania */
 #fsProg{position:sticky;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20;border-radius:0 2px 2px 0;transition:width .1s linear}
+/* pasek czytnika: licznik + spis + znajdź */
+.fsBar{display:flex;align-items:center;gap:8px;max-width:var(--fsMax,760px);margin:0 auto 10px;padding:6px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.fsStat{font-size:12px;color:var(--muted)}
+.fsBarSp{flex:1}
+.fsBarBtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.fsBarBtn:hover{background:var(--sel);border-color:var(--accent2)}
+.fsBarBtn .ic{width:15px;height:15px;color:var(--muted)}
+/* znajdź w notatce */
+.fsFind{display:flex;align-items:center;gap:6px;max-width:var(--fsMax,760px);margin:0 auto 10px;background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:6px 8px}
+.fsFindInp{flex:1;min-width:80px;border:none;background:transparent;outline:none;font-size:14px;color:var(--text);padding:4px}
+.fsFindCnt{font-size:12px;color:var(--muted);white-space:nowrap}
+.fsFindBtn{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:13px;flex-shrink:0}
+.fsFindBtn:hover{background:var(--sel)}
+.ncontent mark.fsHit{background:#ffe58a;color:inherit;border-radius:3px;padding:0 1px}
+.ncontent mark.fsHit.cur{background:#ffb43d;box-shadow:0 0 0 2px rgba(255,180,61,.5)}
+/* spis treści */
+.fsToc{max-width:var(--fsMax,760px);margin:0 auto 12px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:8px}
+.fsTocItem{padding:8px 11px;border-radius:9px;font-size:13.5px;color:var(--text);cursor:pointer}
+.fsTocItem:hover{background:var(--sel);color:var(--accent)}
+.fsTocItem.sub{padding-left:26px;font-size:13px;color:var(--muted)}
+.fsTocEmpty{padding:12px;font-size:13px;color:var(--muted);text-align:center}
+.tocFlash{background:var(--sel);border-radius:6px;transition:background .3s}
 /* strzałki poprzednia/następna */
 .fsNav{position:fixed;top:50%;transform:translateY(-50%);z-index:11;width:44px;height:64px;border:none;border-radius:12px;background:rgba(0,0,0,.16);color:#fff;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .fsNav:hover{background:rgba(0,0,0,.3)}
@@ -351,6 +381,11 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .ncontent sup{font-size:.7em;vertical-align:super} .ncontent sub{font-size:.7em;vertical-align:sub}
 /* linia pozioma */
 .ncontent hr{border:none;border-top:1.5px solid var(--border);margin:12px 0}
+/* tabela w notatce */
+.ncontent table.ntab{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
+.ncontent table.ntab th,.ncontent table.ntab td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+.ncontent table.ntab th{background:var(--sel);font-weight:600;color:var(--accent)}
+.ncontent[contenteditable="true"] table.ntab td:focus,.ncontent[contenteditable="true"] table.ntab th:focus{outline:2px solid var(--accent2);outline-offset:-2px}
 /* listy zadań (checkboxy) */
 .ncontent ul.tasklist{list-style:none;margin:6px 0;padding-left:2px}
 .ncontent ul.tasklist li{position:relative;padding-left:30px;margin:5px 0;white-space:pre-wrap}
@@ -585,13 +620,14 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v81</span></div>
+      <div class="brand-name">JW Study <span class="ver">v84</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
   <div class="searchwrap">
     <svg class="ic search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input id="search" type="search" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) lub słowo|inne — którekolwiek z nich'>
+    <div id="searchSug"></div>
+    <input id="search" type="search" autocomplete="off" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• bez ogonków też działa: milosc znajdzie miłość&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) — którekolwiek z nich&#10;• tytuł:pokora · etykieta:studium · werset:Jan'>
   </div>
   <select id="sortSel">
     <option value="new">Najnowsze</option>
@@ -761,9 +797,17 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <div class="help-list">
       <div class="help-row"><span class="help-ic">📴</span><div><b>Praca offline (iPhone/iPad)</b> — otwórz aplikację w Safari <u>z internetem</u>, potem <b>Udostępnij → Dodaj do ekranu głównego</b>. Uruchom ją raz z ikony (wciąż z internetem) — pojawi się „✓ gotowa do pracy offline". Od tej pory działa bez sieci. Stan sprawdzisz w <b>⚙️ Plik</b> (🟢 na dole).</div></div>
       <div class="help-row"><span class="help-ic">📚</span><div><b>Trzy kolumny</b> — Księgi Biblii, Etykiety, Notatki. Klikasz pozycję, żeby zawęzić listę notatek.</div></div>
-      <div class="help-row"><span class="help-ic">🔍</span><div><b>Szukaj</b> u góry — notatki po słowach (gwiazdka <code>miłos*</code>, „cudzysłów", alternatywy <code>(a|b)</code>).</div></div>
+      <div class="help-row"><span class="help-ic">🔍</span><div><b>Szukaj</b> u góry:<br>
+        • <code>milosc</code> — <b>bez ogonków też działa</b> (znajdzie „miłość")<br>
+        • <code>miłos*</code> — gwiazdka łapie odmiany<br>
+        • <code>"cała fraza"</code> — dokładnie w tej kolejności<br>
+        • <code>(kot|pies)</code> — którekolwiek ze słów<br>
+        • <code>tytuł:pokora</code> · <code>etykieta:studium</code> · <code>werset:Jan</code> — zawężanie do pola<br>
+        • pod polem podpowiadają się <b>etykiety i ostatnie wyszukiwania</b></div></div>
       <div class="help-row"><span class="help-ic">✚</span><div><b>Nowa notatka</b> — dodaj notatkę i (opcjonalnie) przypnij do konkretnego wersetu.</div></div>
       <div class="help-row"><span class="help-ic">📌</span><div><b>Przypnij</b> ważne notatki — zawsze będą na górze listy.</div></div>
+      <div class="help-row"><span class="help-ic">📖</span><div><b>Czytnik</b> (notatka na pełnym ekranie): licznik słów i czasu czytania, <b>Spis</b> (skok do nagłówka), <b>Znajdź</b> w notatce, <b>Aa</b> (rozmiar, interlinia, szerokość, czcionka, tło). Aplikacja <b>zapamiętuje miejsce</b>, w którym skończyłeś czytać.</div></div>
+      <div class="help-row"><span class="help-ic">✍️</span><div><b>W edycji</b>: przycisk <b>＋</b> wstawia odnośnik do wersetu, cytat, listę zadań, <b>tabelę</b> i <b>szablon notatki</b>; w menu <b>⋯</b> jest <b>Znajdź i zamień</b> oraz <b>Historia wersji</b> (10 ostatnich).</div></div>
       <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
       <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
@@ -926,20 +970,35 @@ function plainOf(n){ return (n.t?n.t+" ":"") + (n.c||""); }
    miłos*          → gwiazdka = dowolna końcówka/odmiana
    "cała fraza"    → dokładna fraza
    (kot|pies)      → jedno z kilku słów; działa też: kot|pies i OR   */
-let qComp=null, qHl=null;
+let qComp=null, qHl=null, qFields=null;
+/* pola do zawężania: tytuł:… etykieta:… werset:… (działa też bez ogonków i po angielsku) */
+const QFIELD_MAP = {
+  tytul:"title", tytuł:"title", title:"title", t:"title",
+  etykieta:"tag", etykiety:"tag", tag:"tag", e:"tag",
+  werset:"ref", wersety:"ref", ref:"ref", ksiega:"ref", księga:"ref", w:"ref",
+  tresc:"body", treść:"body", body:"body"
+};
 function parseQuery(q){
   query = q.trim();
-  qComp = null; qHl = null;
+  qComp = null; qHl = null; qFields = null;
   if(!query) return;
   try{
-    const groups=[]; let orFlag=false;
-    const re=/"([^"]+)"|\(([^)]+)\)|(\S+)/g; let m;
+    const groups=[]; const fields=[]; let orFlag=false;
+    const re=/(\S+?):"([^"]+)"|(\S+?):(\S+)|"([^"]+)"|\(([^)]+)\)|(\S+)/g; let m;
     while((m=re.exec(query))){
+      // 1) pole:wartość  (np. tytuł:pokora, etykieta:"studium osobiste")
+      const fname = m[1]!==undefined ? m[1] : (m[3]!==undefined ? m[3] : null);
+      if(fname!==null){
+        const key = QFIELD_MAP[norm(fname)];
+        const val = m[2]!==undefined ? m[2] : m[4];
+        if(key && val){ fields.push({f:key, v:norm(val)}); continue; }
+      }
       let alts=null;
-      if(m[1]!==undefined) alts=[m[1]];
-      else if(m[2]!==undefined) alts=m[2].split("|").map(s=>s.trim()).filter(Boolean);
+      if(m[5]!==undefined) alts=[m[5]];
+      else if(m[6]!==undefined) alts=m[6].split("|").map(s=>s.trim()).filter(Boolean);
       else{
-        const w=m[3];
+        const w=m[7];
+        if(w===undefined) continue;
         if(w==="|" || /^or$/i.test(w)){ orFlag=true; continue; }
         if(w.includes("|")) alts=w.split("|").map(s=>s.trim()).filter(Boolean);
         else alts=[w];
@@ -948,17 +1007,33 @@ function parseQuery(q){
       if(orFlag && groups.length){ groups[groups.length-1].push(...alts); orFlag=false; }
       else groups.push(alts);
     }
+    qFields = fields.length ? fields : null;
     if(!groups.length) return;
-    const mk = s => s.replace(/[.+?^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\p{L}\\p{N}]*");
+    // wzorce budujemy na tekście BEZ ogonków → „milosc" znajdzie „miłość"
+    const mk = s => norm(s).replace(/[.+?^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\p{L}\\p{N}]*");
     qComp = groups.map(g=>new RegExp(g.map(mk).join("|"),"iu"));
-    qHl = new RegExp("("+groups.flat().map(mk).join("|")+")","giu");
-  }catch(e){ qComp=null; qHl=null; }
+    // podświetlanie działa na oryginalnym tekście — najpierw rozszerzamy litery o warianty z ogonkami,
+    // DOPIERO POTEM wstawiamy wieloznacznik (inaczej zepsulibyśmy \p{L} w środku wzorca)
+    const G={a:"[aąAĄ]",c:"[cćCĆ]",e:"[eęEĘ]",l:"[lłLŁ]",n:"[nńNŃ]",o:"[oóOÓ]",s:"[sśSŚ]",z:"[zźżZŹŻ]"};
+    const mkHl = s => s.replace(/[.+?^${}()|[\]\\]/g,"\\$&")
+      .replace(/[aącćeęlłnńoósśzźżAĄCĆEĘLŁNŃOÓSŚZŹŻ]/g, ch=>G[norm(ch)] || ch)
+      .replace(/\*/g,"[\\p{L}\\p{N}]*");
+    qHl = new RegExp("("+groups.flat().map(mkHl).join("|")+")","giu");
+  }catch(e){ qComp=null; qHl=null; qFields=null; }
+}
+function noteFieldText(n, f){
+  if(f==="title") return n.t||"";
+  if(f==="body")  return n.c||"";
+  if(f==="tag")   return n.tg.map(id=>{ const t=tags.find(x=>x.id===id); return t?t.name:""; }).join(" ");
+  if(f==="ref")   return (refLabel(n)||"") + " " + (n.ks||"") + " " + (n.pub||"");
+  return "";
 }
 function noteMatchesQuery(n){
   if(!query) return true;
-  const txt = plainOf(n);
-  if(qComp) return qComp.every(rx=>rx.test(txt));
-  return txt.toLowerCase().includes(query.toLowerCase());
+  if(qFields && !qFields.every(({f,v})=>norm(noteFieldText(n,f)).includes(v))) return false;
+  if(!qComp) return qFields ? true : norm(plainOf(n)).includes(norm(query));
+  const txt = norm(plainOf(n));
+  return qComp.every(rx=>rx.test(txt));
 }
 function filteredNotes(){
   return notes.filter(n=>!n.del && noteMatchesTag(n,filt.tag) && noteMatchesBook(n,filt.book) && noteMatchesCh(n) && noteMatchesQuery(n));
@@ -1350,7 +1425,8 @@ function renderNotes(){
     io.observe(more);
   }
 }
-function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+/* normalizacja: ma\u0142e litery + usuni\u0119cie ogonk\u00f3w (\u0142/\u0141 nie rozk\u0142ada si\u0119 przez NFD, wi\u0119c osobno) */
+function norm(s){ return (s||"").toLowerCase().replace(/\u0142/g,"l").normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
 function markGroupKey(m){
   if(m.book) return "b:"+m.book+":"+(m.ch||0)+":"+(m.ident||0);   // werset = osobne miejsce
   if(m.doc)  return "d:"+m.doc;                                    // publikacja/artykuł = jedno miejsce
@@ -1614,13 +1690,137 @@ function renderFs(){
     aa.addEventListener("pointerdown", e=>{ e.preventDefault(); openReadPop(aa); });
     br.appendChild(aa);
   }
+  // pasek czytnika: licznik słów/czasu + szukaj w notatce + spis treści
+  const cont = card.querySelector(".ncontent");
+  if(cont){
+    const bar = document.createElement("div"); bar.className="fsBar";
+    const st = readStats(cont);
+    bar.innerHTML = `<span class="fsStat">${st.words} słów · ok. ${st.mins} min czytania</span>
+      <span class="fsBarSp"></span>
+      <button class="fsBarBtn" data-fsb="toc" title="Spis treści (nagłówki)">${ICO.ul} Spis</button>
+      <button class="fsBarBtn" data-fsb="find" title="Znajdź w notatce">${ICO.search} Znajdź</button>`;
+    card.insertBefore(bar, cont);
+    // panel wyszukiwania w notatce
+    const fbox = document.createElement("div"); fbox.className="fsFind"; fbox.style.display="none";
+    fbox.innerHTML = `<input type="search" class="fsFindInp" placeholder="Szukaj w tej notatce…" autocomplete="off">
+      <span class="fsFindCnt">0/0</span>
+      <button class="fsFindBtn" data-ff="prev" title="Poprzednie">↑</button>
+      <button class="fsFindBtn" data-ff="next" title="Następne">↓</button>
+      <button class="fsFindBtn" data-ff="close" title="Zamknij">✕</button>`;
+    card.insertBefore(fbox, cont);
+    // spis treści
+    const toc = document.createElement("div"); toc.className="fsToc"; toc.style.display="none";
+    card.insertBefore(toc, cont);
+    bar.addEventListener("click", e=>{
+      const b=e.target.closest("[data-fsb]"); if(!b) return;
+      if(b.dataset.fsb==="find"){ toc.style.display="none"; const on=fbox.style.display==="none"; fbox.style.display=on?"flex":"none"; if(on) setTimeout(()=>fbox.querySelector(".fsFindInp").focus(),40); else clearFsFind(cont); }
+      else { fbox.style.display="none"; clearFsFind(cont); buildToc(cont,toc); toc.style.display = toc.style.display==="none"?"block":"none"; }
+    });
+    fbox.addEventListener("input", e=>{ if(e.target.classList.contains("fsFindInp")) runFsFind(cont, e.target.value, fbox); });
+    fbox.addEventListener("click", e=>{
+      const b=e.target.closest("[data-ff]"); if(!b) return;
+      if(b.dataset.ff==="close"){ fbox.style.display="none"; clearFsFind(cont); return; }
+      stepFsFind(cont, b.dataset.ff==="next"?1:-1, fbox);
+    });
+    fbox.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); stepFsFind(cont, e.shiftKey?-1:1, fbox); } else if(e.key==="Escape"){ fbox.style.display="none"; clearFsFind(cont); } });
+  }
   w.appendChild(card);
   updateFsProgress(); updateFsNav();
+  restoreReadPos(n.g);
 }
-function closeFs(){ fsGuid = null; closeModal("modalFs"); releaseWake(); updateFsNav(); const p=$("readPop"); if(p) p.style.display="none"; if(fsListDirty){ fsListDirty=false; renderNotes(); } }
+/* ===== licznik słów i czasu czytania ===== */
+function readStats(el){
+  const txt=(el.textContent||"").trim();
+  const words = txt ? (txt.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)||[]).length : 0;
+  return {words, mins: Math.max(1, Math.round(words/200))};
+}
+/* ===== spis treści z nagłówków ===== */
+function buildToc(cont, toc){
+  const hs=[...cont.querySelectorAll("h2,h3")];
+  if(!hs.length){ toc.innerHTML=`<div class="fsTocEmpty">Ta notatka nie ma nagłówków. Dodaj je w edycji: „Tytuł” lub „Nagłówek”.</div>`; return; }
+  toc.innerHTML="";
+  hs.forEach((h,i)=>{
+    if(!h.id) h.id="h_"+i;
+    const a=document.createElement("div");
+    a.className="fsTocItem"+(h.tagName==="H3"?" sub":"");
+    a.textContent=h.textContent||("Sekcja "+(i+1));
+    a.onclick=()=>{ h.scrollIntoView({behavior:"smooth",block:"start"}); h.classList.add("tocFlash"); setTimeout(()=>h.classList.remove("tocFlash"),1200); };
+    toc.appendChild(a);
+  });
+}
+/* ===== znajdź w notatce ===== */
+let fsFindHits=[], fsFindIdx=-1;
+function clearFsFind(cont){
+  cont.querySelectorAll("mark.fsHit").forEach(m=>{ const t=document.createTextNode(m.textContent); m.replaceWith(t); });
+  cont.normalize(); fsFindHits=[]; fsFindIdx=-1;
+}
+function runFsFind(cont, q, box){
+  clearFsFind(cont);
+  const cnt=box.querySelector(".fsFindCnt");
+  q=(q||"").trim();
+  if(q.length<2){ cnt.textContent="0/0"; return; }
+  const nq=norm(q);
+  const walker=document.createTreeWalker(cont, NodeFilter.SHOW_TEXT, {
+    acceptNode(nd){ if(!nd.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      let p=nd.parentNode; while(p&&p!==cont){ if(p.tagName==="SCRIPT"||p.tagName==="STYLE") return NodeFilter.FILTER_REJECT; p=p.parentNode; }
+      return NodeFilter.FILTER_ACCEPT; }
+  });
+  const targets=[]; let t; while(t=walker.nextNode()) targets.push(t);
+  targets.forEach(node=>{
+    const text=node.nodeValue, nt=norm(text);
+    let idx=nt.indexOf(nq), from=0; if(idx<0) return;
+    const frag=document.createDocumentFragment(); let last=0;
+    while(idx>=0){
+      if(idx>last) frag.appendChild(document.createTextNode(text.slice(last,idx)));
+      const m=document.createElement("mark"); m.className="fsHit"; m.textContent=text.slice(idx, idx+q.length);
+      frag.appendChild(m); last=idx+q.length;
+      idx=nt.indexOf(nq, last);
+    }
+    if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  });
+  fsFindHits=[...cont.querySelectorAll("mark.fsHit")];
+  fsFindIdx = fsFindHits.length?0:-1;
+  markCurrentHit(box);
+}
+function markCurrentHit(box){
+  fsFindHits.forEach((m,i)=>m.classList.toggle("cur", i===fsFindIdx));
+  const cnt=box.querySelector(".fsFindCnt");
+  cnt.textContent = fsFindHits.length ? (fsFindIdx+1)+"/"+fsFindHits.length : "0/0";
+  if(fsFindIdx>=0) fsFindHits[fsFindIdx].scrollIntoView({behavior:"smooth",block:"center"});
+}
+function stepFsFind(cont, dir, box){
+  if(!fsFindHits.length) return;
+  fsFindIdx=(fsFindIdx+dir+fsFindHits.length)%fsFindHits.length;
+  markCurrentHit(box);
+}
+/* ===== zapamiętane miejsce czytania ===== */
+const READPOS_KEY = KP+"ReadPos";
+function readPosAll(){ try{ return JSON.parse(localStorage.getItem(READPOS_KEY)||"{}"); }catch(e){ return {}; } }
+function saveReadPos(){
+  if(!fsGuid) return;
+  const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
+  const max=fm.scrollHeight-fm.clientHeight;
+  const all=readPosAll();
+  if(max>200 && fm.scrollTop>60) all[fsGuid]=Math.round(fm.scrollTop);
+  else delete all[fsGuid];
+  const keys=Object.keys(all); if(keys.length>60) delete all[keys[0]];
+  try{ localStorage.setItem(READPOS_KEY, JSON.stringify(all)); }catch(e){}
+}
+function restoreReadPos(g){
+  const pos=readPosAll()[g]; if(!pos) return;
+  const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
+  setTimeout(()=>{
+    if(fm.scrollHeight-fm.clientHeight < pos) return;
+    fm.scrollTop=pos; updateFsProgress();
+    toast("Wrócono do miejsca, gdzie skończyłeś");
+  }, 80);
+}
+function closeFs(){ saveReadPos(); fsGuid = null; closeModal("modalFs"); releaseWake(); updateFsNav(); const p=$("readPop"); if(p) p.style.display="none"; if(fsListDirty){ fsListDirty=false; renderNotes(); } }
 /* ===== CZYTNIK: nawigacja, panel Aa, pasek postępu, wake lock ===== */
 function fsGo(dir){
   if(!fsGuid) return;
+  saveReadPos();
   const i = fsNavList.indexOf(fsGuid); if(i<0) return;
   const j = i+dir; if(j<0 || j>=fsNavList.length) return;
   fsGuid = fsNavList[j]; renderFs();
@@ -1681,8 +1881,11 @@ $("modalFs").addEventListener("click", e=>{ if(e.target.id==="modalFs") closeFs(
 $("fsPrev").onclick = ()=>fsGo(-1);
 $("fsNext").onclick = ()=>fsGo(1);
 // pasek postępu czytania
-(function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return; let raf=0;
-  fm.addEventListener("scroll", ()=>{ if(raf) return; raf=requestAnimationFrame(()=>{ raf=0; updateFsProgress(); }); }, {passive:true}); })();
+(function(){ const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return; let raf=0, posT=null;
+  fm.addEventListener("scroll", ()=>{
+    if(!raf) raf=requestAnimationFrame(()=>{ raf=0; updateFsProgress(); });
+    clearTimeout(posT); posT=setTimeout(saveReadPos, 400);   // zapamiętaj miejsce czytania
+  }, {passive:true}); })();
 // przesunięcie palcem (swipe) — zmiana notatki (tylko wyraźny poziomy gest, nigdy przy zaznaczaniu tekstu)
 (function(){
   const fm=$("modalFs").querySelector(".fsmodal"); if(!fm) return;
@@ -2008,7 +2211,10 @@ function openEbPop(kind, btn, bar){
        <div class="dd-sep"></div>
        <div data-ins="quote">❝ Blok cytatu wersetu</div>
        <div data-ins="task">☑ Lista zadań (checkbox)</div>
-       <div data-ins="hr">— Linia pozioma</div>`;
+       <div data-ins="table">▦ Tabela</div>
+       <div data-ins="hr">— Linia pozioma</div>
+       <div class="dd-sep"></div>
+       <div data-ins="tpl">📋 Szablon notatki…</div>`;
   } else {
     pop.innerHTML =
       `<div data-cmd="outdent">${ICO.outdent}Zmniejsz wcięcie</div>
@@ -2020,6 +2226,9 @@ function openEbPop(kind, btn, bar){
        <div class="dd-sep"></div>
        <div data-cmd="superscript">x² Indeks górny</div>
        <div data-cmd="subscript">x₂ Indeks dolny</div>
+       <div class="dd-sep"></div>
+       <div data-ins="replace">${ICO.search}Znajdź i zamień…</div>
+       <div data-ins="history">${ICO.undo}Historia wersji…</div>
        <div class="dd-sep"></div>
        <div data-clear="1">🧹 Wyczyść formatowanie</div>`;
   }
@@ -2047,9 +2256,13 @@ $("ebPop").addEventListener("pointerdown", ev=>{
     pop.style.display="none";
     if(k==="verse"){ insertVerseRef(ce); return; }   // własne okienko + commit w środku
     if(k==="url"){ insertUrlLink(ce); return; }
+    if(k==="tpl"){ insertTemplate(ce); return; }
+    if(k==="replace"){ openReplace(ce); return; }
+    if(k==="history"){ openHistory(ce); return; }
     restoreSel(ce);
     if(k==="quote") document.execCommand("formatBlock",false,"<blockquote>");
     else if(k==="task") insertTaskList(ce);
+    else if(k==="table") insertTable(ce);
     else if(k==="hr") document.execCommand("insertHorizontalRule");
     if(ce) commitLiveEdit(ce);
     return;
@@ -2225,6 +2438,110 @@ async function insertUrlLink(ce){
 function insertTaskList(ce){
   restoreSel(ce);
   document.execCommand("insertHTML", false, '<ul class="tasklist"><li>Zadanie…</li></ul>');
+}
+/* ===== TABELA ===== */
+function insertTable(ce){
+  restoreSel(ce);
+  const rows=3, cols=2;
+  let html='<table class="ntab"><tbody>';
+  for(let r=0;r<rows;r++){
+    html+="<tr>";
+    for(let c=0;c<cols;c++) html += r===0 ? "<th>Nagłówek "+(c+1)+"</th>" : "<td>&nbsp;</td>";
+    html+="</tr>";
+  }
+  html+="</tbody></table><div><br></div>";
+  document.execCommand("insertHTML", false, html);
+}
+/* ===== SZABLONY NOTATKI ===== */
+const NOTE_TEMPLATES = [
+  {n:"Studium wersetu", h:'<h2>Werset</h2><div><br></div><h3>Myśl główna</h3><div><br></div><h3>Zastosowanie w życiu</h3><div><br></div>'},
+  {n:"Notatka z zebrania", h:'<h2>Temat</h2><div><br></div><h3>Najważniejsze punkty</h3><ul><li>&nbsp;</li><li>&nbsp;</li></ul><h3>Wersety</h3><div><br></div><h3>Co zastosuję</h3><ul class="tasklist"><li>&nbsp;</li></ul>'},
+  {n:"Przygotowanie do służby", h:'<h2>Prezentacja</h2><div><br></div><h3>Werset</h3><div><br></div><h3>Pytanie na zachętę</h3><div><br></div><h3>Publikacja do zaproponowania</h3><div><br></div>'},
+  {n:"Pytanie i odpowiedź", h:'<h2>Pytanie</h2><div><br></div><h3>Odpowiedź</h3><div><br></div><h3>Wersety potwierdzające</h3><ul><li>&nbsp;</li></ul>'},
+  {n:"Plan czytania Biblii", h:'<h2>Rozdziały</h2><div><br></div><h3>Co zwróciło uwagę</h3><div><br></div><h3>Pytania do zbadania</h3><ul class="tasklist"><li>&nbsp;</li></ul>'}
+];
+async function insertTemplate(ce){
+  const dd=$("dropdown");
+  dd.innerHTML = `<div class="dd-lbl">Wstaw szablon</div>` +
+    NOTE_TEMPLATES.map((t,i)=>`<div data-tpl="${i}">📋 ${esc(t.n)}</div>`).join("");
+  dd.style.display="block";
+  const bar=ce.parentElement.querySelector(".editbar");
+  const r=(bar||ce).getBoundingClientRect();
+  dd.style.left=Math.min(r.left, innerWidth-280)+"px";
+  dd.style.top=Math.min(r.bottom+6, innerHeight-260)+"px";
+  dd.onclick=ev=>{
+    const t=ev.target.closest("[data-tpl]"); if(!t) return;
+    dd.style.display="none";
+    ce.focus();
+    const tpl=NOTE_TEMPLATES[+t.dataset.tpl];
+    if(edSavedRange && ce.contains(edSavedRange.commonAncestorContainer)){
+      const s=getSelection(); s.removeAllRanges(); s.addRange(edSavedRange);
+    }
+    document.execCommand("insertHTML", false, tpl.h);
+    commitLiveEdit(ce);
+    toast("Wstawiono szablon: "+tpl.n);
+  };
+}
+/* ===== ZNAJDŹ I ZAMIEŃ (w edytowanej notatce) ===== */
+async function openReplace(ce){
+  const find = await askText({title:"Znajdź i zamień", placeholder:"Czego szukać?", okLabel:"Dalej"});
+  if(find===null || find==="") return;
+  const rep = await askText({title:"Zamień na", placeholder:"Nowy tekst (puste = usuń)", okLabel:"Zamień wszystko"});
+  if(rep===null) return;
+  const nf=norm(find); let count=0;
+  const walker=document.createTreeWalker(ce, NodeFilter.SHOW_TEXT, {
+    acceptNode(nd){ return nd.nodeValue && nd.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }
+  });
+  const targets=[]; let t; while(t=walker.nextNode()) targets.push(t);
+  targets.forEach(node=>{
+    const text=node.nodeValue, nt=norm(text);
+    let idx=nt.indexOf(nf); if(idx<0) return;
+    let out="", last=0;
+    while(idx>=0){ out+=text.slice(last,idx)+rep; last=idx+find.length; count++; idx=nt.indexOf(nf,last); }
+    out+=text.slice(last);
+    node.nodeValue=out;
+  });
+  if(count){ commitLiveEdit(ce); toast("Zamieniono: "+count+(count===1?" miejsce":" miejsc")); }
+  else toast("Nie znaleziono: "+find);
+}
+/* ===== HISTORIA WERSJI ===== */
+const VER_KEY = KP+"Versions";
+function versionsAll(){ try{ return JSON.parse(localStorage.getItem(VER_KEY)||"{}"); }catch(e){ return {}; } }
+function saveVersion(n){
+  if(!n || !n.h) return;
+  const all=versionsAll();
+  const list=all[n.g]||[];
+  if(list.length && list[0].h===n.h) return;             // bez zmian — nie zapisuj
+  list.unshift({t:new Date().toISOString(), h:n.h, ttl:n.t||""});
+  all[n.g]=list.slice(0,10);                              // 10 ostatnich wersji
+  const keys=Object.keys(all); if(keys.length>40) delete all[keys[0]];
+  try{ localStorage.setItem(VER_KEY, JSON.stringify(all)); }catch(e){}
+}
+async function openHistory(ce){
+  const card=ce.closest(".ncard"); const n=notes.find(x=>x.g===card.dataset.g); if(!n) return;
+  const list=(versionsAll()[n.g])||[];
+  if(!list.length){ showInfo("Historia wersji", "Nie ma jeszcze zapisanych wcześniejszych wersji tej notatki.<br><br>Wersja zapisuje się przy każdym zakończeniu edycji — wróć tu po kolejnych zmianach."); return; }
+  const dd=$("dropdown");
+  dd.innerHTML=`<div class="dd-lbl">Przywróć wcześniejszą wersję</div>`+
+    list.map((v,i)=>{
+      const d=new Date(v.t); const when=d.toLocaleDateString("pl")+" "+d.toTimeString().slice(0,5);
+      const words=(v.h.replace(/<[^>]*>/g," ").match(/\S+/g)||[]).length;
+      return `<div data-ver="${i}">🕓 ${when} <span style="color:var(--muted);font-size:11.5px">· ${words} słów</span></div>`;
+    }).join("");
+  dd.style.display="block";
+  const r=ce.getBoundingClientRect();
+  dd.style.left=Math.min(r.left, innerWidth-300)+"px";
+  dd.style.top=Math.min(r.top+40, innerHeight-300)+"px";
+  dd.onclick=async ev=>{
+    const it=ev.target.closest("[data-ver]"); if(!it) return;
+    dd.style.display="none";
+    const v=list[+it.dataset.ver];
+    if(!(await askConfirm("Przywrócić tę wersję?", "Obecna treść notatki zostanie zastąpiona wersją z "+new Date(v.t).toLocaleString("pl")+".<br><br>Bieżącą wersję zapiszemy w historii, więc będzie można wrócić.", {okLabel:"Przywróć"}))) return;
+    saveVersion(n);
+    pushUndo({type:"note", label:"przywrócenie wersji", before:cloneNote(n)});
+    n.h=v.h; n.c=htmlToPlain(v.h); markDirty(n); renderAll();
+    toast("Przywrócono wcześniejszą wersję");
+  };
 }
 function blockOf(node, ce){
   let el = node && node.nodeType===3 ? node.parentNode : node;
@@ -2509,6 +2826,7 @@ function toggleEdit(card,n){
     card.querySelector(".editbar")?.remove();
     titleEl.contentEditable="false"; contEl.contentEditable="false";
     btn.innerHTML=ICO.edit; btn.title="Edytuj notatkę";
+    saveVersion(n);   // zapisz poprzednią treść do historii wersji
     pushUndo({type:"note", label:"edycję notatki", before:cloneNote(n)});
     n.t = titleEl.textContent.trim();
     const clean = sanitize(contEl.innerHTML);
@@ -2538,6 +2856,10 @@ function sanitize(html){
         else if(tag==="I"||tag==="EM"){ const i=document.createElement("i"); walk(node,i); dst.appendChild(i); }
         else if(tag==="U"){ const u=document.createElement("u"); walk(node,u); dst.appendChild(u); }
         else if(tag==="S"||tag==="STRIKE"||tag==="DEL"){ const s=document.createElement("s"); walk(node,s); dst.appendChild(s); }
+        else if(tag==="TABLE"){ const tb=document.createElement("table"); tb.className="ntab"; walk(node,tb); dst.appendChild(tb); }
+        else if(tag==="TBODY"||tag==="THEAD"||tag==="TR"||tag==="TD"||tag==="TH"){
+          const e3=document.createElement(tag.toLowerCase()); walk(node,e3); dst.appendChild(e3);
+        }
         else if(tag==="SUP"||tag==="SUB"){ const e2=document.createElement(tag.toLowerCase()); walk(node,e2); dst.appendChild(e2); }
         else if(tag==="HR"){ dst.appendChild(document.createElement("hr")); }
         else if(tag==="A"){
@@ -3414,7 +3736,80 @@ document.querySelectorAll(".colResizer").forEach(rz=>{
   });
 });
 let searchTimer=null;
-$("search").addEventListener("input",e=>{ parseQuery(e.target.value); clearTimeout(searchTimer); searchTimer=setTimeout(renderAll, 130); });
+$("search").addEventListener("input",e=>{ parseQuery(e.target.value); clearTimeout(searchTimer); searchTimer=setTimeout(renderAll, 130); showSearchSug(e.target.value); });
+
+/* ===== PODPOWIEDZI POD POLEM SZUKANIA (etykiety, pola, ostatnie wyszukiwania) ===== */
+const SUG_KEY = KP+"Recent";
+function recentSearches(){ try{ return JSON.parse(localStorage.getItem(SUG_KEY)||"[]"); }catch(e){ return []; } }
+function pushRecent(q){
+  q=(q||"").trim(); if(q.length<2) return;
+  let r=recentSearches().filter(x=>x!==q); r.unshift(q); r=r.slice(0,8);
+  try{ localStorage.setItem(SUG_KEY, JSON.stringify(r)); }catch(e){}
+}
+let sugIdx=-1;
+function hideSearchSug(){ const s=$("searchSug"); if(s){ s.style.display="none"; sugIdx=-1; } }
+function showSearchSug(val){
+  const box=$("searchSug"); if(!box) return;
+  const v=(val||"").trim(); const last=(v.split(/\s+/).pop()||"");
+  const nl=norm(last);
+  const items=[];
+  // 1) etykiety pasujące do ostatniego słowa
+  if(nl.length>=1){
+    tags.filter(t=>norm(t.name).includes(nl)).slice(0,5).forEach(t=>{
+      items.push({type:"tag", label:t.name, color:t.color, hint:"etykieta",
+        apply:()=> v.replace(/\S+$/,"") + 'etykieta:"'+t.name+'" '});
+    });
+  }
+  // 2) pola (gdy użytkownik zaczyna pisać nazwę pola)
+  if(nl.length>=1){
+    [["tytuł:","szukaj w tytule"],["etykieta:","po etykiecie"],["werset:","po odnośniku"]]
+      .filter(([f])=>norm(f).startsWith(nl))
+      .forEach(([f,h])=>items.push({type:"field", label:f, hint:h, apply:()=> v.replace(/\S+$/,"")+f}));
+  }
+  // 3) ostatnie wyszukiwania (gdy pole puste lub krótkie)
+  if(v.length<2){
+    recentSearches().slice(0,6).forEach(q=>items.push({type:"recent", label:q, hint:"ostatnie", apply:()=>q}));
+  }
+  if(!items.length){ hideSearchSug(); return; }
+  box.innerHTML="";
+  let lastType=null;
+  items.forEach((it,i)=>{
+    if(it.type!==lastType){
+      const l=document.createElement("div"); l.className="sug-lbl";
+      l.textContent = it.type==="tag"?"Etykiety":it.type==="field"?"Zawężanie":"Ostatnie wyszukiwania";
+      box.appendChild(l); lastType=it.type;
+    }
+    const d=document.createElement("div"); d.className="sug"; d.dataset.i=i;
+    const ic = it.type==="tag" ? `<span class="sdot" style="background:${it.color||"var(--muted)"}"></span>`
+             : it.type==="field" ? ICO.search : ICO.undo;
+    d.innerHTML = ic + `<span>${esc(it.label)}</span><span class="shint">${esc(it.hint)}</span>`;
+    d.onmousedown = ev=>{ ev.preventDefault(); applySug(it); };
+    box.appendChild(d);
+  });
+  box.style.display="block"; sugIdx=-1;
+  box._items=items;
+}
+function applySug(it){
+  const inp=$("search");
+  inp.value = it.apply();
+  parseQuery(inp.value); renderAll();
+  if(it.type==="recent") pushRecent(inp.value);
+  hideSearchSug(); inp.focus();
+}
+$("search").addEventListener("focus", e=>showSearchSug(e.target.value));
+$("search").addEventListener("blur", ()=>{ pushRecent($("search").value); setTimeout(hideSearchSug,120); });
+$("search").addEventListener("keydown", e=>{
+  const box=$("searchSug"); const open = box && box.style.display==="block";
+  if(e.key==="Enter"){ pushRecent(e.target.value); if(open&&sugIdx>=0&&box._items){ e.preventDefault(); applySug(box._items[sugIdx]); } else hideSearchSug(); return; }
+  if(!open) return;
+  const rows=[...box.querySelectorAll(".sug")];
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+    e.preventDefault();
+    sugIdx = e.key==="ArrowDown" ? Math.min(rows.length-1, sugIdx+1) : Math.max(0, sugIdx-1);
+    rows.forEach((r,i)=>r.classList.toggle("on", i===sugIdx));
+    rows[sugIdx]?.scrollIntoView({block:"nearest"});
+  } else if(e.key==="Escape"){ hideSearchSug(); }
+});
 $("sortSel").addEventListener("change",e=>{sortMode=e.target.value;renderNotes();});
 /* ===== skróty klawiszowe (komputer) ===== */
 document.addEventListener("keydown", e=>{

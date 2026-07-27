@@ -114,8 +114,27 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 #colBooks .divider{color:var(--muted);border-top:1px solid var(--border);font-weight:600}
 #colBooks .list::-webkit-scrollbar{width:8px}
 #colBooks .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-#btnNewTag{margin:4px 12px 8px;padding:6px 10px;background:transparent;border:1px dashed var(--muted);color:var(--muted);border-radius:8px;cursor:pointer;font-size:12.5px}
-#btnNewTag:hover{background:var(--sel);color:var(--accent);border-color:var(--accent2)}
+.tagBtns{display:flex;gap:6px;margin:4px 12px 8px}
+.tagBtns button{flex:1;padding:6px 8px;background:transparent;border:1px dashed var(--muted);color:var(--muted);border-radius:8px;cursor:pointer;font-size:12px;white-space:nowrap}
+.tagBtns button:hover{background:var(--sel);color:var(--accent);border-color:var(--accent2)}
+/* sekcje etykiet — wyraźny, kolorowany pasek */
+.secHead{display:flex;align-items:center;gap:8px;margin:12px 3px 5px;padding:9px 12px;border-radius:10px;cursor:pointer;
+  background:var(--secBg,var(--accent));color:var(--secFg,#fff);border:none;
+  font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  box-shadow:0 1px 3px rgba(0,0,0,.16)}
+.secHead:hover{filter:brightness(1.07)}
+.secHead:active{transform:translateY(1px)}
+.secHead.dropTarget{outline:2px dashed #fff;outline-offset:-3px}
+.secArr{font-size:10px;width:11px;flex-shrink:0;opacity:.85}
+.secName{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.secCnt{font-size:10.5px;font-weight:600;opacity:.85;background:rgba(255,255,255,.22);padding:2px 8px;border-radius:999px;letter-spacing:0}
+.secMore{opacity:.6;font-size:15px;padding:0 2px;cursor:pointer;flex-shrink:0;line-height:1}
+.secHead:hover .secMore{opacity:1}
+.secEmpty{font-size:11px;color:var(--muted);padding:4px 12px 8px 24px;font-style:italic}
+/* etykiety w sekcji — wcięcie z pionową linią prowadzącą */
+#colTags .item.inSec{margin-left:14px;position:relative}
+#colTags .item.inSec::before{content:"";position:absolute;left:-8px;top:-3px;bottom:-3px;width:2px;background:var(--secBg,var(--border));opacity:.35;border-radius:2px}
+@media (hover:none){ .secMore{opacity:.85} }
 
 #colTags{width:220px;min-width:180px;background:var(--bg);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
 #colTags h2{color:var(--muted);font-weight:600}
@@ -620,7 +639,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v84</span></div>
+      <div class="brand-name">JW Study <span class="ver">v89</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -662,7 +681,10 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="colResizer" data-c="colBooks" title="Przeciągnij, aby zmienić szerokość"></div>
   <div class="col" id="colTags">
     <h2><button class="colToggle" data-c="colTags" title="Zwiń / rozwiń">⟨⟨</button>Etykiety</h2>
-    <button id="btnNewTag">✚ Nowa etykieta</button>
+    <div class="tagBtns">
+      <button id="btnNewTag">✚ Nowa etykieta</button>
+      <button id="btnNewSec" title="Grupuj etykiety w sekcje, np. Kongresy">📁 Nowa sekcja</button>
+    </div>
     <div class="list" id="tagList"></div>
   </div>
   <div class="colResizer" data-c="colTags" title="Przeciągnij, aby zmienić szerokość"></div>
@@ -806,6 +828,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
         • pod polem podpowiadają się <b>etykiety i ostatnie wyszukiwania</b></div></div>
       <div class="help-row"><span class="help-ic">✚</span><div><b>Nowa notatka</b> — dodaj notatkę i (opcjonalnie) przypnij do konkretnego wersetu.</div></div>
       <div class="help-row"><span class="help-ic">📌</span><div><b>Przypnij</b> ważne notatki — zawsze będą na górze listy.</div></div>
+      <div class="help-row"><span class="help-ic">📁</span><div><b>Sekcje etykiet</b> — gdy masz dużo etykiet, pogrupuj je: <b>📁 Nowa sekcja</b> (np. „Kongresy”), potem przy etykiecie <b>⋯ → Sekcja</b>. Sekcje zwijasz kliknięciem w nagłówek.</div></div>
       <div class="help-row"><span class="help-ic">📖</span><div><b>Czytnik</b> (notatka na pełnym ekranie): licznik słów i czasu czytania, <b>Spis</b> (skok do nagłówka), <b>Znajdź</b> w notatce, <b>Aa</b> (rozmiar, interlinia, szerokość, czcionka, tło). Aplikacja <b>zapamiętuje miejsce</b>, w którym skończyłeś czytać.</div></div>
       <div class="help-row"><span class="help-ic">✍️</span><div><b>W edycji</b>: przycisk <b>＋</b> wstawia odnośnik do wersetu, cytat, listę zadań, <b>tabelę</b> i <b>szablon notatki</b>; w menu <b>⋯</b> jest <b>Znajdź i zamień</b> oraz <b>Historia wersji</b> (10 ostatnich).</div></div>
       <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
@@ -855,7 +878,49 @@ async function idbBulkChunked(store,items){
   }
 }
 function idbCount(store){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).count();t.onsuccess=()=>res(t.result);t.onerror=rej;});}
-function saveNote(n){ if(idb) idbPut("notes", n).catch(()=>{}); }
+/* ===== OCHRONA PRZED BRAKIEM MIEJSCA =====
+   Gdy pamięć urządzenia się zapełni, zapis do bazy NIE UDAJE SIĘ.
+   Notatka byłaby widoczna na ekranie, ale zniknęłaby po odświeżeniu — dlatego
+   zamiast ignorować błąd, wyraźnie o tym informujemy i blokujemy ciszę. */
+let storageFull = false;
+function isQuotaError(e){
+  const n=(e&&(e.name||e.message)||"")+"";
+  return /quota|QuotaExceeded|storage|full/i.test(n);
+}
+function reportSaveError(e, what){
+  console.error("Błąd zapisu:", e);
+  if(isQuotaError(e)){
+    if(storageFull) return;
+    storageFull = true;
+    showInfo("⚠️ Brak miejsca w pamięci urządzenia",
+      "<b>Ostatnia zmiana NIE ZOSTAŁA ZAPISANA.</b><br><br>"+
+      "Pamięć aplikacji na tym urządzeniu jest pełna. Żeby nie stracić danych:<br><br>"+
+      "1. Zrób teraz kopię: <b>⚙️ Plik → Zapisz kopię danych (JSON)</b><br>"+
+      "2. Usuń zbędne <b>zdjęcia</b> z notatek (zajmują najwięcej miejsca)<br>"+
+      "3. Opróżnij <b>🗑 Kosz</b><br><br>"+
+      "Do czasu zwolnienia miejsca nowe zmiany mogą się nie zapisywać.");
+  } else {
+    toast("Nie udało się zapisać"+(what?" ("+what+")":"")+" — zrób kopię danych");
+  }
+}
+function saveNote(n){ if(idb) idbPut("notes", n).catch(e=>reportSaveError(e,"notatka")); }
+/* sprawdzenie miejsca przed wstawieniem zdjęcia */
+async function checkSpaceForImage(bytes){
+  try{
+    if(!(navigator.storage && navigator.storage.estimate)) return true;
+    const {usage=0, quota=0} = await navigator.storage.estimate();
+    if(!quota) return true;
+    const free = quota - usage;
+    if(free < bytes*3){
+      const mb=x=>(x/1048576).toFixed(1)+" MB";
+      return await askConfirm("Mało miejsca w pamięci",
+        "Zostało tylko <b>"+mb(free)+"</b> wolnego miejsca na tym urządzeniu.<br><br>"+
+        "Dodanie zdjęcia może się nie udać albo zablokować zapis kolejnych zmian. Zalecam najpierw zrobić kopię danych i usunąć zbędne zdjęcia.<br><br>Wstawić mimo to?",
+        {okLabel:"Wstaw mimo to", danger:true});
+    }
+  }catch(e){}
+  return true;
+}
 /* natychmiastowy zapis treści edytowanej notatki (np. po operacji na zdjęciu) */
 function commitLiveEdit(ce){
   if(!ce) return;
@@ -868,7 +933,7 @@ function commitLiveEdit(ce){
     saveNote(n); if(typeof bumpDirty==="function") bumpDirty();
   }catch(e){}
 }
-function saveTags(){ if(idb) idbBulk("tags", tags).catch(()=>{}); if(typeof bumpDirty==="function") bumpDirty(); }
+function saveTags(){ if(idb) idbBulk("tags", tags).catch(e=>reportSaveError(e,"etykiety")); if(typeof bumpDirty==="function") bumpDirty(); }
 
 /* ================= START ================= */
 async function decodeEmbedded(){
@@ -915,8 +980,14 @@ async function boot(){
       }
       if(missing.length) setTimeout(()=>toast("Uzupełniono "+missing.length+" brakujących notatek"), 600);
     }
+  } else if(!emb){
+    // Pierwsze uruchomienie, a wbudowanych danych nie da się rozpakować
+    // (np. starsza przeglądarka bez DecompressionStream). NIE przerywamy startu —
+    // aplikacja ma po prostu ruszyć pusta, żeby dało się pracować i wczytać kopię.
+    notes = []; tags = [];
+    console.warn("Start bez danych wbudowanych — pusta aplikacja");
+    setTimeout(()=>toast("Zaczynasz z pustą listą — możesz wczytać kopię przez ⚙️ Plik"), 800);
   } else {
-    if(!emb) throw new Error("Nie można wczytać danych");
     notes = emb.notes; tags = emb.tags;
     if(idb){
       try{
@@ -933,6 +1004,7 @@ async function boot(){
   if(sf){ try{ Object.assign(filt, JSON.parse(sf)); }catch(e){} }
   if(typeof filt.book==="number" && filt.book>0) expandedBook = filt.book;
   if(idb){ try{ deletedTagNames = (await idbGet("meta","deletedTags")) || []; }catch(e){} }
+  if(idb){ try{ sections = (await idbGet("meta","sections")) || []; }catch(e){ sections=[]; } }
   purgeOldTrash();   // usuń trwale notatki, które są w koszu ponad 30 dni
   buildStatic();
   renderAll();
@@ -961,6 +1033,24 @@ async function boot(){
 
 /* ================= FILTRY ================= */
 function offlineReady(){ return !!(navigator.serviceWorker && navigator.serviceWorker.controller); }
+/* zajętość pamięci urządzenia (dane aplikacji: notatki + zdjęcia) */
+async function showStorageInfo(){
+  const el=document.getElementById("ddStorage"); if(!el) return;
+  const imgCount = notes.reduce((s,n)=> s + ((n.h||"").match(/<img/gi)||[]).length, 0);
+  try{
+    if(navigator.storage && navigator.storage.estimate){
+      const {usage=0, quota=0} = await navigator.storage.estimate();
+      const mb = u => u>=1048576 ? (u/1048576).toFixed(1)+" MB" : Math.round(u/1024)+" KB";
+      const pct = quota ? Math.min(100, Math.round(usage/quota*100)) : 0;
+      let txt = `💽 Zajęte: ${mb(usage)}` + (quota ? ` z ~${mb(quota)} (${pct}%)` : "");
+      if(imgCount) txt += ` · zdjęć: ${imgCount}`;
+      if(pct>=85) txt += " — ⚠️ mało miejsca, zrób kopię i usuń zbędne zdjęcia";
+      el.textContent = txt;
+    } else {
+      el.textContent = "💽 Notatek: "+notes.filter(n=>!n.del).length + (imgCount?" · zdjęć: "+imgCount:"");
+    }
+  }catch(e){ el.textContent = "💽 Notatek: "+notes.filter(n=>!n.del).length; }
+}
 function noteMatchesTag(n,t){ if(t==="all")return true; if(t==="none")return n.tg.length===0; return n.tg.includes(t); }
 function noteMatchesBook(n,b){ if(b==="all")return true; if(b===0)return !n.b; return n.b===b; }
 function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
@@ -1046,9 +1136,39 @@ function renderTags(){
   base.forEach(n=>{ if(!n.tg.length)untagged++; n.tg.forEach(t=>counts[t]=(counts[t]||0)+1); });
   const el = $("tagList");
   let html = tagItem("all","Wszystkie",base.length) + tagItem("none","Bez etykiety",untagged);
+  // ——— SEKCJE (grupy etykiet) ———
+  const secs = sections.slice().sort((a,b)=>(a.ord??0)-(b.ord??0));
+  secs.forEach(s=>{
+    const inside = tags.filter(t=>t.sec===s.id);
+    const sum = inside.reduce((a,t)=>a+(counts[t.id]||0),0);
+    const sc = s.color ? ` style="--secBg:${s.color}"` : "";
+    html += `<div class="secHead${s.open===false?" closed":""}" data-sec="${s.id}"${sc}>
+      <span class="secArr">${s.open===false?"▸":"▾"}</span>
+      <span class="secName">${esc(s.name)}</span>
+      <span class="secCnt">${inside.length}${sum?" · "+sum:""}</span>
+      <span class="secMore" title="Opcje sekcji">⋯</span></div>`;
+    if(s.open!==false){
+      if(!inside.length) html += `<div class="secEmpty">Pusta — przenieś tu etykiety przez ⋯ przy etykiecie</div>`;
+      else inside.forEach(t=>{ html += tagItem(t.id,t.name,counts[t.id]||0,true,t.color,true); });
+    }
+  });
+  // ——— ETYKIETY POZA SEKCJAMI ———
+  const loose = tags.filter(t=>!t.sec || !sections.some(s=>s.id===t.sec));
   html += '<div class="divider">Moje etykiety</div>';
-  tags.forEach(t=>{ html += tagItem(t.id,t.name,counts[t.id]||0,true,t.color); });
+  loose.forEach(t=>{ html += tagItem(t.id,t.name,counts[t.id]||0,true,t.color); });
   el.innerHTML = html;
+  // obsługa nagłówków sekcji
+  el.querySelectorAll(".secHead").forEach(h=>{
+    const sid=+h.dataset.sec;
+    h.onclick = e=>{
+      if(e.target.classList.contains("secMore")){ const s=sections.find(x=>x.id===sid); if(s) sectionMenu(e,s); return; }
+      toggleSection(sid);
+    };
+    // upuszczenie etykiety na sekcję (przeciąganie na komputerze)
+    h.ondragover = e=>{ if(dragTagId!=null){ e.preventDefault(); h.classList.add("dropTarget"); } };
+    h.ondragleave = ()=> h.classList.remove("dropTarget");
+    h.ondrop = e=>{ e.preventDefault(); h.classList.remove("dropTarget"); if(dragTagId!=null){ setTagSection(dragTagId, sid); dragTagId=null; } };
+  });
   el.querySelectorAll(".item").forEach(it=>{
     it.onclick = e=>{
       if(e.target.classList.contains("more")){
@@ -1061,12 +1181,104 @@ function renderTags(){
       if(innerWidth<=900) mobileShow("colNotes");
     };
     if(it.dataset.droppable){
+      // przeciąganie etykiety do sekcji
+      it.draggable = true;
+      it.ondragstart = e=>{ dragTagId = +it.dataset.k; e.dataTransfer.effectAllowed="move"; };
+      it.ondragend = ()=>{ dragTagId = null; };
       it.ondragover = e=>{ e.preventDefault(); it.classList.add("dropTarget"); };
       it.ondragleave = ()=> it.classList.remove("dropTarget");
-      it.ondrop = e=>{ e.preventDefault(); it.classList.remove("dropTarget"); dropOnTag(e, +it.dataset.k); };
+      it.ondrop = e=>{ e.preventDefault(); it.classList.remove("dropTarget"); if(dragTagId==null) dropOnTag(e, +it.dataset.k); };
     }
   });
 }
+let dragTagId = null;
+/* ================= SEKCJE ETYKIET =================
+   Sekcja grupuje etykiety (np. „Kongresy" → Kongres 2019, 2020…).
+   Etykieta należy do sekcji przez pole t.sec (id sekcji). */
+let sections = [];
+function saveSections(){ if(idb) idbPut("meta", sections, "sections").catch(e=>reportSaveError(e,"sekcje")); }
+function nextSecId(){ return Math.max(0, ...sections.map(s=>s.id||0)) + 1; }
+async function createSection(){
+  const name = await askText({title:"Nowa sekcja", placeholder:"np. Kongresy", okLabel:"Utwórz",
+    hint:"Sekcja grupuje etykiety — potem przeniesiesz je przez menu ⋯ przy etykiecie."});
+  if(!name || !name.trim()) return;
+  const nm=name.trim();
+  if(sections.some(s=>s.name===nm)){ toast("Sekcja o tej nazwie już istnieje"); return; }
+  sections.push({id:nextSecId(), name:nm, ord:sections.length, open:true});
+  saveSections(); renderTags();
+  toast("Utworzono sekcję „"+nm+"”");
+}
+function toggleSection(id){
+  const s=sections.find(x=>x.id===id); if(!s) return;
+  s.open = !s.open; saveSections(); renderTags();
+}
+async function renameSection(id){
+  const s=sections.find(x=>x.id===id); if(!s) return;
+  const name = await askText({title:"Zmień nazwę sekcji", value:s.name, okLabel:"Zapisz"});
+  if(!name || !name.trim()) return;
+  s.name=name.trim(); saveSections(); renderTags(); toast("Zmieniono nazwę sekcji");
+}
+async function deleteSection(id){
+  const s=sections.find(x=>x.id===id); if(!s) return;
+  const inside = tags.filter(t=>t.sec===id).length;
+  if(!(await askConfirm("Usunąć sekcję?", "Sekcja „"+esc(s.name)+"”."+(inside?"<br><br>Etykiety ("+inside+") NIE zostaną usunięte — wrócą do listy „Moje etykiety”.":""), {okLabel:"Usuń sekcję", danger:true}))) return;
+  tags.forEach(t=>{ if(t.sec===id) delete t.sec; });
+  sections = sections.filter(x=>x.id!==id);
+  saveSections(); saveTags(); renderTags(); toast("Usunięto sekcję");
+}
+function moveSection(id, dir){
+  sections.forEach((s,i)=>{ if(s.ord===undefined) s.ord=i; });
+  sections.sort((a,b)=>a.ord-b.ord);
+  const i=sections.findIndex(s=>s.id===id); if(i<0) return;
+  const j=i+dir; if(j<0||j>=sections.length) return;
+  const t=sections[i].ord; sections[i].ord=sections[j].ord; sections[j].ord=t;
+  sections.sort((a,b)=>a.ord-b.ord);
+  saveSections(); renderTags();
+}
+function setTagSection(tagId, secId){
+  const t=tags.find(x=>x.id===tagId); if(!t) return;
+  if(secId===null) delete t.sec; else t.sec=secId;
+  saveTags(); renderTags();
+  toast(secId===null ? "Etykieta poza sekcjami" : ("Przeniesiono do sekcji „"+(sections.find(s=>s.id===secId)||{}).name+"”"));
+}
+function sectionMenu(e, s){
+  const dd=$("dropdown");
+  const upI=_svg('<path d="M12 19V5M6 11l6-6 6 6"/>'), downI=_svg('<path d="M12 5v14M6 13l6 6 6-6"/>');
+  const inside=tags.filter(t=>t.sec===s.id).length;
+  const spal = c => {
+    const sel = (c||"") === (s.color||"");
+    return `<span class="pal ${c?"":"pal-none"} ${sel?"sel":""}" data-sc="${c||""}" style="${c?`background:${c}`:""}" title="${c||"Domyślny (zielony)"}">${c?"":"✕"}</span>`;
+  };
+  dd.innerHTML =
+    `<div class="dd-lbl">Sekcja „${esc(s.name)}”${inside?" · "+inside+" etykiet":""}</div>
+     <div data-sm="ren">${ICO.edit}Zmień nazwę</div>
+     <div class="dd-lbl">Kolor paska sekcji</div>
+     <div class="palrow">${spal("")}${SECCOLORS.map(c=>spal(c)).join("")}</div>
+     <div class="dd-sep"></div>
+     <div data-sm="up">${upI}Przesuń w górę</div>
+     <div data-sm="down">${downI}Przesuń w dół</div>
+     <div class="dd-sep"></div>
+     <div data-sm="del" class="dd-danger">${ICO.trash}Usuń sekcję</div>`;
+  dd.style.display="block";
+  const r=e.target.getBoundingClientRect();
+  dd.style.left=Math.min(r.left, innerWidth-260)+"px";
+  dd.style.top=Math.min(r.bottom+4, innerHeight-220)+"px";
+  dd.onclick=ev=>{
+    if(ev.target.dataset.sc!==undefined){
+      s.color = ev.target.dataset.sc || undefined;
+      saveSections(); dd.style.display="none"; renderTags(); return;
+    }
+    const m=ev.target.closest("[data-sm]"); if(!m) return;
+    dd.style.display="none";
+    const a=m.dataset.sm;
+    if(a==="ren") renameSection(s.id);
+    else if(a==="up") moveSection(s.id,-1);
+    else if(a==="down") moveSection(s.id,1);
+    else if(a==="del") deleteSection(s.id);
+  };
+}
+/* kolory pasków sekcji — nasycone, dobrze widoczne z białym tekstem */
+const SECCOLORS = ["#1e5b46","#4a6f8f","#6b5b95","#a5673f","#8a5a72","#3f7d7a","#7a6a3f","#5f6b7a","#8c4a4a"];
 const TAGCOLORS = ["#c9a227","#b08d57","#a86b3c","#9aa3ad","#5f6b7a","#4a6f8f","#3f8f6b","#a5788a","#6d7178"];
 /* pastelowe kompozycje: jeden zgrany odcień na całą kompozycję kolumn i belek */
 const PASTELS = [["Lawenda","#8b79b0"],["Mięta","#5fa88c"],["Brzoskwinia","#c08663"],["Błękit","#6f93bd"],["Róż","#bd7f9c"],["Grafit","#6d7178"]];
@@ -1136,11 +1348,11 @@ function openColorMenu(e){
   cm.style.left=Math.max(8,Math.min(r.right-w, innerWidth-w-8))+"px";
   cm.style.top=Math.min(r.bottom+6, Math.max(8, innerHeight-h-8))+"px";
 }
-function tagItem(key,name,cnt,user,color){
+function tagItem(key,name,cnt,user,color,inSection){
   const active = String(filt.tag)===String(key);
   const dot = color ? `<span class="tgdot" style="background:${color}"></span>`
             : (key==="all" ? `<span class="tgdot all"></span>` : `<span class="tgdot none"></span>`);
-  return `<div class="item ${active?"active":""} ${cnt?"":"zero"}" data-k="${key}" ${user?'data-droppable="1"':""}>
+  return `<div class="item ${active?"active":""} ${cnt?"":"zero"}${inSection?" inSec":""}" data-k="${key}" ${user?'data-droppable="1"':""}>
     ${dot}<span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
 }
 function cmpTags(a,b){
@@ -1180,6 +1392,13 @@ function tagMenu(e, t){
      <div class="dd-lbl">Kolor zakładki</div>
      <div class="palrow">${pal("")}${TAGCOLORS.map(c=>pal(c)).join("")}</div>
      <div class="dd-sep"></div>
+     <div class="dd-lbl">Sekcja</div>
+     ${sections.length
+        ? sections.slice().sort((a,b)=>(a.ord??0)-(b.ord??0)).map(s=>
+            `<div data-sec2="${s.id}">${t.sec===s.id?"✓ ":"📁 "}${esc(s.name)}</div>`).join("")
+          + (t.sec!==undefined ? `<div data-sec2="none">✕ Wyjmij z sekcji</div>` : "")
+        : `<div class="dd-note" style="padding:4px 12px 8px">Brak sekcji — utwórz przyciskiem „＋ Nowa sekcja”</div>`}
+     <div class="dd-sep"></div>
      <div data-tm="up">${upI}Przesuń w górę</div>
      <div data-tm="down">${downI}Przesuń w dół</div>
      <div data-tm="top">${topI}Na samą górę</div>
@@ -1199,6 +1418,8 @@ function tagMenu(e, t){
       t.color = ev.target.dataset.pc || undefined;
       saveTags(); dd.style.display="none"; renderAll(); return;
     }
+    const s2 = ev.target.closest("[data-sec2]");
+    if(s2){ dd.style.display="none"; setTagSection(t.id, s2.dataset.sec2==="none" ? null : +s2.dataset.sec2); return; }
     const m = ev.target.dataset.tm;
     if(!m) return;
     dd.style.display = "none";
@@ -1225,6 +1446,7 @@ function createTag(name){
   saveTags();
   return t;
 }
+$("btnNewSec").onclick = createSection;
 $("btnNewTag").onclick = async ()=>{
   const name = await askText({title:"Nowa etykieta", placeholder:"Nazwa etykiety", okLabel:"Utwórz"});
   if(name && name.trim()){
@@ -1243,7 +1465,7 @@ async function deleteTag(t){
   tags = tags.filter(x=>x.id!==t.id);
   const affected = [];
   notes.forEach(n=>{ if(n.tg.includes(t.id)){ n.tg=n.tg.filter(x=>x!==t.id); n.tgd=true; affected.push(n); } });
-  if(idb){ idbDelKey("tags", t.id).catch(()=>{}); if(affected.length) idbBulkChunked("notes", affected).catch(()=>{}); }
+  if(idb){ idbDelKey("tags", t.id).catch(()=>{}); if(affected.length) idbBulkChunked("notes", affected).catch(e=>reportSaveError(e,"notatki")); }
   bumpDirty();
   if(filt.tag===t.id){ filt.tag="all"; persistFilt(); }
   renderAll(); toast("Usunięto zakładkę „"+t.name+"”");
@@ -2182,6 +2404,7 @@ function buildEditbar(n){
     if(!f) return;
     try{
       const url = await compressImage(f);
+      if(!(await checkSpaceForImage(url.length))) return;
       const ceIns = bar.parentElement.querySelector(".ncontent");
       insertImageUrl(ceIns, url, edSavedRange);
     }catch(err){ toast("Nie udało się wczytać zdjęcia"); }
@@ -2507,15 +2730,30 @@ async function openReplace(ce){
 /* ===== HISTORIA WERSJI ===== */
 const VER_KEY = KP+"Versions";
 function versionsAll(){ try{ return JSON.parse(localStorage.getItem(VER_KEY)||"{}"); }catch(e){ return {}; } }
+/* Wersje trzymamy BEZ zdjęć — pamięć ustawień ma tylko ~5 MB,
+   a jedno zdjęcie w treści zajęłoby jej znaczną część. */
+function stripImagesForVersion(html){
+  return (html||"").replace(/<img[^>]*>/gi, '<span class="verImgNote">[zdjęcie — nie jest zapisywane w historii]</span>');
+}
 function saveVersion(n){
   if(!n || !n.h) return;
+  const light = stripImagesForVersion(n.h);
+  if(light.length > 200000) return;                       // pojedyncza wersja > ~200 KB — pomijamy
   const all=versionsAll();
   const list=all[n.g]||[];
-  if(list.length && list[0].h===n.h) return;             // bez zmian — nie zapisuj
-  list.unshift({t:new Date().toISOString(), h:n.h, ttl:n.t||""});
+  if(list.length && list[0].h===light) return;            // bez zmian — nie zapisuj
+  list.unshift({t:new Date().toISOString(), h:light, ttl:n.t||"", img:/\<img/i.test(n.h)});
   all[n.g]=list.slice(0,10);                              // 10 ostatnich wersji
   const keys=Object.keys(all); if(keys.length>40) delete all[keys[0]];
-  try{ localStorage.setItem(VER_KEY, JSON.stringify(all)); }catch(e){}
+  // zapis z zabezpieczeniem: gdy brak miejsca, kasujemy najstarsze wpisy i próbujemy ponownie
+  for(let attempt=0; attempt<6; attempt++){
+    try{ localStorage.setItem(VER_KEY, JSON.stringify(all)); return; }
+    catch(e){
+      const ks=Object.keys(all);
+      if(!ks.length) return;
+      delete all[ks[0]];
+    }
+  }
 }
 async function openHistory(ce){
   const card=ce.closest(".ncard"); const n=notes.find(x=>x.g===card.dataset.g); if(!n) return;
@@ -2536,7 +2774,8 @@ async function openHistory(ce){
     const it=ev.target.closest("[data-ver]"); if(!it) return;
     dd.style.display="none";
     const v=list[+it.dataset.ver];
-    if(!(await askConfirm("Przywrócić tę wersję?", "Obecna treść notatki zostanie zastąpiona wersją z "+new Date(v.t).toLocaleString("pl")+".<br><br>Bieżącą wersję zapiszemy w historii, więc będzie można wrócić.", {okLabel:"Przywróć"}))) return;
+    const imgWarn = v.img ? "<br><br>⚠️ Ta wersja zawierała <b>zdjęcia</b> — historia ich nie przechowuje (zajmowałyby zbyt dużo miejsca), więc po przywróceniu trzeba je wstawić ponownie." : "";
+    if(!(await askConfirm("Przywrócić tę wersję?", "Obecna treść notatki zostanie zastąpiona wersją z "+new Date(v.t).toLocaleString("pl")+".<br><br>Bieżącą wersję zapiszemy w historii, więc będzie można wrócić."+imgWarn, {okLabel:"Przywróć", danger:!!v.img}))) return;
     saveVersion(n);
     pushUndo({type:"note", label:"przywrócenie wersji", before:cloneNote(n)});
     n.h=v.h; n.c=htmlToPlain(v.h); markDirty(n); renderAll();
@@ -2739,7 +2978,7 @@ document.addEventListener("paste", async e=>{
     if(it.type && it.type.indexOf("image")===0){
       e.preventDefault();
       const f=it.getAsFile();
-      if(f){ try{ const url=await compressImage(f); insertImageUrl(ce, url, null); }catch(err){ toast("Nie udało się wkleić obrazu"); } }
+      if(f){ try{ const url=await compressImage(f); if(!(await checkSpaceForImage(url.length))) return; insertImageUrl(ce, url, null); }catch(err){ toast("Nie udało się wkleić obrazu"); } }
       return;
     }
   } }
@@ -2764,7 +3003,7 @@ document.addEventListener("drop", async e=>{
     e.preventDefault();
     let range = caretRangeFromPoint(e.clientX, e.clientY);
     if(!(range && ce.contains(range.startContainer))) range=null;
-    for(const f of files){ if(f.type && f.type.indexOf("image")===0){ try{ const url=await compressImage(f); insertImageUrl(ce, url, range); range=null; }catch(_){} } }
+    for(const f of files){ if(f.type && f.type.indexOf("image")===0){ try{ const url=await compressImage(f); if(!(await checkSpaceForImage(url.length))) return; insertImageUrl(ce, url, range); range=null; }catch(_){} } }
   }
 });
 /* PRZYTRZYMAJ zdjęcie (long-press / przytrzymanie myszy) → podnieś do przeniesienia, potem dotknij miejsca */
@@ -3093,8 +3332,10 @@ $("btnMenu").onclick = e=>{
     <div data-m="info">ℹ️ Gdzie zapisują się moje dane?</div>
     <div data-m="help">❓ Jak to działa (samouczek)</div>
     <div class="dd-sep"></div>
-    <div class="dd-note" style="font-size:12px">${offlineReady() ? "🟢 Tryb offline: GOTOWY — możesz odłączyć internet" : "🔴 Tryb offline: jeszcze niegotowy — patrz „Jak to działa"}</div>`;
+    <div class="dd-note" style="font-size:12px">${offlineReady() ? "🟢 Tryb offline: GOTOWY — możesz odłączyć internet" : "🔴 Tryb offline: jeszcze niegotowy — patrz „Jak to działa"}</div>
+    <div class="dd-note" id="ddStorage" style="font-size:12px">💽 Sprawdzam zajętość pamięci…</div>`;
   dd.style.display="block";
+  showStorageInfo();
   const r=e.target.getBoundingClientRect();
   dd.style.left=Math.min(r.left,innerWidth-290)+"px";
   dd.style.top=(r.bottom+4)+"px";
@@ -3208,7 +3449,7 @@ function importFromDb(db){
     else if((inc.mo||"")>(ex.mo||"")){ const keepCol=ex.col; Object.assign(ex,inc); ex.h=null; if(!inc.col)ex.col=keepCol; changed.push(ex); updated++; }
     else skipped++;
   });
-  if(idb&&changed.length) idbBulk("notes",changed).catch(()=>{});
+  if(idb&&changed.length) idbBulk("notes",changed).catch(e=>reportSaveError(e,"import"));
   // wykryj symbol Biblii używany na tym urządzeniu (nwt / nwtsty / inne), do budowania linków do wersetów
   try{
     const bk=db.exec("SELECT KeySymbol, COUNT(*) c FROM Location WHERE BookNumber IS NOT NULL AND KeySymbol IS NOT NULL GROUP BY KeySymbol ORDER BY c DESC LIMIT 1");
@@ -3590,7 +3831,7 @@ function exportTagPdf(t){
 /* ================= KOPIA DO CHMURY ================= */
 async function shareBackup(){
   const name = "moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json";
-  const blob = new Blob([JSON.stringify({tags,notes})],{type:"application/json"});
+  const blob = new Blob([JSON.stringify({tags,notes,sections})],{type:"application/json"});
   // 1. iPad/iPhone i telefony: systemowy arkusz udostępniania (OneDrive, iCloud Drive, Dysk Google…)
   try{
     const file = new File([blob], name, {type:"application/json"});
@@ -3619,7 +3860,7 @@ async function shareBackup(){
 /* ================= KOPIA JSON ================= */
 function exportJson(){
   const name="moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json";
-  const blob=new Blob([JSON.stringify({tags,notes})],{type:"application/json"});
+  const blob=new Blob([JSON.stringify({tags,notes,sections})],{type:"application/json"});
   saveFile(blob, name, "Kopia notatek (JSON)");
   clearDirty();
   toast("Zapisano kopię danych");
@@ -3631,10 +3872,11 @@ async function handleJsonFile(e){
   try{
     const data=JSON.parse(await f.text());
     if(!data.notes||!data.tags) throw new Error("Nieprawidłowy plik kopii");
-    notes=data.notes; tags=data.tags;
+    notes=data.notes; tags=data.tags; sections=Array.isArray(data.sections)?data.sections:[];
     if(idb){
       await new Promise((res,rej)=>{const t=idb.transaction(["notes","tags"],"readwrite");t.objectStore("notes").clear();t.objectStore("tags").clear();t.oncomplete=res;t.onerror=rej;});
       await idbBulk("tags",tags); await idbBulk("notes",notes);
+      saveSections();
     }
     renderAll(); toast("Wczytano kopię danych");
   }catch(err){ toast("Błąd: "+err.message); }

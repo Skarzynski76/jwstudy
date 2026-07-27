@@ -115,9 +115,17 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 #colBooks .divider{color:var(--muted);border-top:1px solid var(--border);font-weight:600}
 #colBooks .list::-webkit-scrollbar{width:8px}
 #colBooks .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-.tagBtns{display:flex;gap:6px;margin:4px 12px 8px}
-.tagBtns button{flex:1;padding:6px 8px;background:transparent;border:1px dashed var(--muted);color:var(--muted);border-radius:8px;cursor:pointer;font-size:12px;white-space:nowrap}
+/* przyciski „Nowa etykieta / Nowa sekcja" — same układają się w 1 lub 2 rzędy
+   zależnie od szerokości kolumny, nigdy nie ucinają napisu */
+.tagBtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 10px 9px}
+.tagBtns button{flex:1 1 118px;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:8px 10px;background:var(--panel);border:1px solid var(--border);color:var(--text);
+  border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:500;line-height:1.2;
+  transition:background .12s ease,border-color .12s ease,color .12s ease}
 .tagBtns button:hover{background:var(--sel);color:var(--accent);border-color:var(--accent2)}
+.tagBtns button:active{transform:translateY(1px)}
+.tagBtns .tb-ic{font-size:13px;flex-shrink:0;opacity:.8}
+.tagBtns .tb-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* sekcje etykiet — wyraźny, kolorowany pasek */
 .secHead{display:flex;align-items:center;gap:8px;margin:12px 3px 5px;padding:9px 12px;border-radius:10px;cursor:pointer;
   background:var(--secBg,var(--accent));color:var(--secFg,#fff);border:none;
@@ -165,7 +173,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 #colNotes{flex:1;background:var(--panel);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
 .item{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:10px;cursor:pointer;font-size:var(--colFs,13.5px);margin:5px 3px;position:relative;transition:background .12s ease,border-color .12s ease}
 .item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.item .cnt{font-size:11.5px}
+.item .cnt{font-size:11.5px;flex-shrink:0;font-variant-numeric:tabular-nums}
 .item.zero{opacity:.45}
 .item.dropTarget{outline:2px dashed #fff;outline-offset:-2px}
 .item .ren{opacity:0;font-size:12px;padding:0 3px;cursor:pointer}
@@ -642,7 +650,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v91</span></div>
+      <div class="brand-name">JW Study <span class="ver">v93</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -685,8 +693,8 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="col" id="colTags">
     <h2><button class="colToggle" data-c="colTags" title="Zwiń / rozwiń">⟨⟨</button>Etykiety</h2>
     <div class="tagBtns">
-      <button id="btnNewTag">✚ Nowa etykieta</button>
-      <button id="btnNewSec" title="Grupuj etykiety w sekcje, np. Kongresy">📁 Nowa sekcja</button>
+      <button id="btnNewTag" title="Utwórz nową etykietę"><span class="tb-ic">✚</span><span class="tb-txt">Nowa etykieta</span></button>
+      <button id="btnNewSec" title="Grupuj etykiety w sekcje, np. Kongresy"><span class="tb-ic">📁</span><span class="tb-txt">Nowa sekcja</span></button>
     </div>
     <div class="list" id="tagList"></div>
   </div>
@@ -835,7 +843,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
       <div class="help-row"><span class="help-ic">📖</span><div><b>Czytnik</b> (notatka na pełnym ekranie): licznik słów i czasu czytania, <b>Spis</b> (skok do nagłówka), <b>Znajdź</b> w notatce, <b>Aa</b> (rozmiar, interlinia, szerokość, czcionka, tło). Aplikacja <b>zapamiętuje miejsce</b>, w którym skończyłeś czytać.</div></div>
       <div class="help-row"><span class="help-ic">✍️</span><div><b>W edycji</b>: przycisk <b>＋</b> wstawia odnośnik do wersetu, cytat, listę zadań, <b>tabelę</b> i <b>szablon notatki</b>; w menu <b>⋯</b> jest <b>Znajdź i zamień</b> oraz <b>Historia wersji</b> (10 ostatnich).</div></div>
       <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
-      <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.<br><b>Przenoszenie między urządzeniami:</b> zapisz kopię na jednym, a na drugim <b>⚙️ Plik → Wczytaj kopię</b> i wybierz <b>Dołącz (scal)</b> — doda tylko brakujące notatki, nic nie skasuje.</div></div>
+      <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.<br><b>Przenoszenie między urządzeniami:</b> zapisz kopię na jednym, a na drugim <b>⚙️ Plik → Wczytaj kopię</b> i wybierz <b>Dołącz + układ</b> — doda brakujące notatki i przeniesie porządek etykiet (sekcje, kolory), więc wszędzie będzie tak samo. Nic nie kasuje.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
     </div>
     <div class="actions"><button class="btn primary" onclick="closeModal('modalHelp')">Zaczynajmy</button></div>
@@ -3896,13 +3904,19 @@ function exportJson(){
 /* ===== SCALANIE KOPII (dołącz brakujące, zachowaj to, co masz) =====
    Etykiety i sekcje z innego urządzenia mogą mieć INNE numery, więc dopasowujemy je
    po nazwie i przenumerowujemy w wczytywanych notatkach. */
-function mergeBackup(data){
-  const st={notesAdded:0, notesUpdated:0, notesKept:0, tagsAdded:0, secAdded:0};
+/* takeLayout=true → przenosi też UKŁAD: przypisanie etykiet do sekcji, kolory i kolejność.
+   Dzięki temu porządek zrobiony na jednym urządzeniu pojawia się na pozostałych. */
+function mergeBackup(data, takeLayout){
+  const st={notesAdded:0, notesUpdated:0, notesKept:0, tagsAdded:0, secAdded:0, organized:0};
   // 1) sekcje — dopasuj po nazwie
   const secMap={};
   (Array.isArray(data.sections)?data.sections:[]).forEach(s=>{
     let mine=sections.find(x=>norm(x.name)===norm(s.name));
-    if(!mine){ mine={id:nextSecId(), name:s.name, ord:sections.length, open:true, color:s.color}; sections.push(mine); st.secAdded++; }
+    if(!mine){ mine={id:nextSecId(), name:s.name, ord:(s.ord??sections.length), open:true, color:s.color}; sections.push(mine); st.secAdded++; }
+    else if(takeLayout){
+      if(s.color) mine.color=s.color;          // wygląd paska przenosimy
+      if(s.ord!==undefined) mine.ord=s.ord;    // i kolejność sekcji
+    }
     secMap[s.id]=mine.id;
   });
   // 2) etykiety — dopasuj po nazwie, zapamiętaj przenumerowanie
@@ -3912,7 +3926,15 @@ function mergeBackup(data){
     if(!mine){
       mine={id: Math.max(0,...tags.map(x=>x.id))+1, name:t.name, color:t.color, nw:true};
       if(t.sec!==undefined && secMap[t.sec]!==undefined) mine.sec=secMap[t.sec];
+      if(t.ord!==undefined) mine.ord=t.ord;
       tags.push(mine); st.tagsAdded++;
+    } else if(takeLayout){
+      // przenieś układ na etykietę, która już tu jest
+      const wantSec = (t.sec!==undefined && secMap[t.sec]!==undefined) ? secMap[t.sec] : undefined;
+      if(wantSec!==undefined && mine.sec!==wantSec){ mine.sec=wantSec; st.organized++; }
+      else if(wantSec===undefined && mine.sec!==undefined && data.sections){ delete mine.sec; st.organized++; }
+      if(t.color && t.color!==mine.color) mine.color=t.color;
+      if(t.ord!==undefined) mine.ord=t.ord;
     }
     tagMap[t.id]=mine.id;
   });
@@ -3940,18 +3962,21 @@ async function handleJsonFile(e){
 
   const incoming=(data.notes||[]).filter(n=>!n.del).length;
   const mineCount=notes.filter(n=>!n.del).length;
+  const hasLayout = (Array.isArray(data.sections) && data.sections.length) || (data.tags||[]).some(t=>t.sec!==undefined||t.color);
   const choice = await askChoice("Wczytanie kopii danych",
     `W pliku jest <b>${incoming}</b> notatek, w aplikacji na tym urządzeniu masz <b>${mineCount}</b>.<br><br>`+
-    `<b>Dołącz (scal)</b> — doda tylko to, czego tu nie ma; przy tej samej notatce zostaje <b>nowsza wersja</b>. Nic nie ginie. <i>Zalecane przy przenoszeniu między urządzeniami.</i><br><br>`+
+    `<b>Dołącz + układ</b> — dołącza notatki i przenosi <b>porządek etykiet</b>: sekcje, przypisania i kolory. Wybierz to, żeby na wszystkich urządzeniach było tak samo.<br><br>`+
+    `<b>Dołącz (same notatki)</b> — dodaje tylko treść, układ etykiet na tym urządzeniu zostaje bez zmian.<br><br>`+
     `<b>Zastąp wszystko</b> — usuwa obecne dane i wstawia zawartość pliku. Tego nie da się cofnąć.`,
     [{label:"Anuluj", value:"cancel"},
      {label:"Zastąp wszystko", value:"replace", style:"danger"},
-     {label:"Dołącz (scal)", value:"merge", style:"primary"}]);
+     {label:"Dołącz (same notatki)", value:"merge"},
+     {label:"Dołącz + układ", value:"mergeLayout", style:"primary"}]);
   if(choice==="cancel" || !choice) return;
 
   try{
-    if(choice==="merge"){
-      const {st, changed} = mergeBackup(data);
+    if(choice==="merge" || choice==="mergeLayout"){
+      const {st, changed} = mergeBackup(data, choice==="mergeLayout");
       sortTags();
       if(idb){
         await idbBulkChunked("tags", tags);
@@ -3963,7 +3988,8 @@ async function handleJsonFile(e){
         `• Nowych notatek: <b>${st.notesAdded}</b><br>`+
         `• Zaktualizowanych (nowsza wersja z pliku): <b>${st.notesUpdated}</b><br>`+
         `• Zachowanych bez zmian (Twoja wersja nowsza lub taka sama): <b>${st.notesKept}</b><br>`+
-        `• Nowych etykiet: <b>${st.tagsAdded}</b>${st.secAdded?` · sekcji: <b>${st.secAdded}</b>`:""}`);
+        `• Nowych etykiet: <b>${st.tagsAdded}</b>${st.secAdded?` · sekcji: <b>${st.secAdded}</b>`:""}`+
+        (choice==="mergeLayout" ? `<br>• Etykiet uporządkowanych wg układu z pliku: <b>${st.organized}</b>` : ""));
       return;
     }
     // ZASTĄP WSZYSTKO

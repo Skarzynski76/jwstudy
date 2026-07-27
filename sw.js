@@ -1,4 +1,4 @@
-const CACHE = 'jwstudy-v91';
+const CACHE = 'jwstudy-v93';
 // Najważniejszy jest index.html — reszta to dodatki. Każdy plik zapisujemy OSOBNO,
 // żeby brak jednego (np. ikony) nie przerwał całego zapisu offline.
 const CORE = ['./', './index.html'];

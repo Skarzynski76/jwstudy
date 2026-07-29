@@ -510,6 +510,12 @@ mark{padding:0 1px;border-radius:3px}
 .tagpick{max-height:150px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:7px;background:var(--bg)}
 .tagpick label{display:inline-flex;align-items:center;gap:6px;margin:0;font-size:13px;color:var(--text);cursor:pointer;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:5px 12px 5px 9px;transition:background .12s, border-color .12s}
 .tagpick label:hover{border-color:var(--accent2)}
+.nnDot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+/* tworzenie etykiety wprost w oknie nowej notatki */
+.nnNewTag{display:flex;gap:8px;margin-top:8px;align-items:center}
+.nnNewTag input[type=text]{flex:1;min-width:0;padding:9px 12px;border:1px solid var(--border);border-radius:11px;font-size:13.5px;background:var(--bg);color:var(--text);outline:none}
+.nnNewTag input[type=text]:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(140,111,82,.15)}
+.nnNewTag .btn{flex-shrink:0;padding:9px 14px}
 .tagpick input:checked+span,.tagpick label:has(input:checked){border-color:var(--accent);background:var(--sel)}
 #dropdown{position:fixed;background:var(--panel);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.26);z-index:70;max-height:76vh;overflow-y:auto;display:none;min-width:250px;padding:8px}
 #dropdown div{padding:10px 12px;cursor:pointer;font-size:13.5px;border-radius:11px;display:flex;align-items:center;gap:10px;margin:1px 0;background:none;border:none;box-shadow:none;color:var(--text)}
@@ -650,7 +656,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v93</span></div>
+      <div class="brand-name">JW Study <span class="ver">v95</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -659,12 +665,21 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <div id="searchSug"></div>
     <input id="search" type="search" autocomplete="off" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• bez ogonków też działa: milosc znajdzie miłość&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) — którekolwiek z nich&#10;• tytuł:pokora · etykieta:studium · werset:Jan'>
   </div>
-  <select id="sortSel">
-    <option value="new">Najnowsze</option>
-    <option value="old">Najstarsze</option>
-    <option value="bible">Kolejność biblijna</option>
-    <option value="alpha">Alfabetycznie</option>
-    <option value="recent">Ostatnio otwierane</option>
+  <select id="sortSel" title="Kolejność notatek na liście">
+    <optgroup label="Według zmiany">
+      <option value="new">Ostatnio zmienione</option>
+      <option value="old">Najdawniej zmienione</option>
+      <option value="edited">Tylko edytowane — najpierw</option>
+    </optgroup>
+    <optgroup label="Według utworzenia">
+      <option value="createdNew">Ostatnio utworzone</option>
+      <option value="createdOld">Najdawniej utworzone</option>
+    </optgroup>
+    <optgroup label="Inne">
+      <option value="bible">Kolejność biblijna</option>
+      <option value="alpha">Alfabetycznie</option>
+      <option value="recent">Ostatnio otwierane</option>
+    </optgroup>
   </select>
   <button class="btn ico-btn" id="btnTheme" title="Motyw"></button>
   <button class="btn ico-btn" id="btnColors" title="Kolory i gotowe kompozycje"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-.9 2-1.8 0-1.3 1-2.2 2.2-2.2H18a3 3 0 0 0 3-3A8 8 0 0 0 12 3z"/><circle cx="7.5" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="16.3" cy="11" r="1" fill="currentColor" stroke="none"/></svg></button>
@@ -783,6 +798,10 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
       </div>
     </div>
     <label>Etykiety</label><div class="tagpick" id="nnTags"></div>
+    <div class="nnNewTag">
+      <input type="text" id="nnNewTagName" placeholder="Nowa etykieta — wpisz nazwę i kliknij ＋" autocomplete="off">
+      <button type="button" id="nnAddTag" class="btn">＋ Dodaj</button>
+    </div>
     <div class="actions">
       <button class="btn" onclick="closeModal('modalNew')">Anuluj</button>
       <button class="btn primary" id="nnSave">＋ Utwórz notatkę</button>
@@ -1550,14 +1569,19 @@ function bookBlock(i, cnt, base){
 }
 
 /* ================= KOLUMNA 3: NOTATKI ================= */
+const crOf = n => n.cr || n.mo || "";     // data utworzenia (starsze zapisy mogą jej nie mieć)
+const moOf = n => n.mo || n.cr || "";     // data ostatniej zmiany
 function sortNotes(arr){
   const by = {
-    new:(a,b)=>(b.mo||"").localeCompare(a.mo||""),
-    old:(a,b)=>(a.mo||"").localeCompare(b.mo||""),
-    bible:(a,b)=>(a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0)||(a.mo||"").localeCompare(b.mo||""),
+    new:(a,b)=>moOf(b).localeCompare(moOf(a)),                    // ostatnia zmiana — najnowsze
+    old:(a,b)=>moOf(a).localeCompare(moOf(b)),                    // ostatnia zmiana — najstarsze
+    createdNew:(a,b)=>crOf(b).localeCompare(crOf(a)),             // utworzone — najnowsze
+    createdOld:(a,b)=>crOf(a).localeCompare(crOf(b)),             // utworzone — najstarsze
+    edited:(a,b)=>((b.ed?1:0)-(a.ed?1:0)) || moOf(b).localeCompare(moOf(a)),  // edytowane najpierw
+    bible:(a,b)=>(a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0)||moOf(a).localeCompare(moOf(b)),
     alpha:(a,b)=>(a.t||a.c||"").localeCompare(b.t||b.c||"","pl"),
-    recent:(a,b)=>(b.la||"").localeCompare(a.la||"") || (b.mo||"").localeCompare(a.mo||"")
-  }[sortMode];
+    recent:(a,b)=>(b.la||"").localeCompare(a.la||"") || moOf(b).localeCompare(moOf(a))
+  }[sortMode] || ((a,b)=>moOf(b).localeCompare(moOf(a)));
   return arr.sort((a,b)=> ((b.pin?1:0)-(a.pin?1:0)) || by(a,b));   // przypięte zawsze na górze
 }
 function togglePin(n){
@@ -3327,15 +3351,39 @@ function buildStatic(){
   $("nnBook").innerHTML = '<option value="0">— brak (notatka ogólna) —</option>' +
     BOOKS.map((b,i)=>i?`<option value="${i}">${b}</option>`:"").join("");
 }
+/* lista etykiet w oknie nowej notatki — zachowuje zaznaczenia przy przerysowaniu */
+function renderNnTags(keepChecked){
+  const checked = keepChecked || [...$("nnTags").querySelectorAll("input:checked")].map(i=>+i.value);
+  $("nnTags").innerHTML = tags.map(t=>{
+    const chk = checked.includes(t.id) ? "checked" : "";
+    const dot = t.color ? `<span class="nnDot" style="background:${t.color}"></span>` : "";
+    return `<label><input type="checkbox" value="${t.id}" ${chk}> ${dot}${esc(t.name)}</label>`;
+  }).join("");
+}
 $("btnNew").onclick = ()=>{
   $("nnTitle").value=""; $("nnContent").value=""; $("nnBook").value="0"; $("nnCh").value=""; $("nnV").value="";
-  $("nnTags").innerHTML = tags.map(t=>{
-    const chk=(typeof filt.tag==="number"&&filt.tag===t.id)?"checked":"";
-    return `<label><input type="checkbox" value="${t.id}" ${chk}> ${esc(t.name)}</label>`;
-  }).join("");
+  $("nnNewTagName").value="";
+  renderNnTags(typeof filt.tag==="number" ? [filt.tag] : []);
   if(typeof filt.book==="number"&&filt.book>0) $("nnBook").value=String(filt.book);
   openModal("modalNew");
 };
+/* utworzenie etykiety wprost w oknie nowej notatki */
+function nnCreateTag(){
+  const inp=$("nnNewTagName");
+  const name=(inp.value||"").trim();
+  if(!name){ toast("Wpisz nazwę etykiety"); inp.focus(); return; }
+  const existing = tags.find(t=>norm(t.name)===norm(name));
+  const t = existing || createTag(name);
+  if(!t) return;
+  const checked=[...$("nnTags").querySelectorAll("input:checked")].map(i=>+i.value);
+  if(!checked.includes(t.id)) checked.push(t.id);
+  renderNnTags(checked);
+  inp.value=""; inp.focus();
+  renderTags();
+  toast(existing ? ("Etykieta „"+t.name+"” już istnieje — zaznaczono") : ("Utworzono etykietę „"+t.name+"”"));
+}
+$("nnAddTag").onclick = nnCreateTag;
+$("nnNewTagName").addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); nnCreateTag(); } });
 $("nnSave").onclick = ()=>{
   const c=$("nnContent").value.trim(), t=$("nnTitle").value.trim();
   if(!c&&!t){ toast("Wpisz tytuł lub treść"); return; }
@@ -3559,6 +3607,17 @@ function applyChangesToDb(db){
   let maxTagMapId=one("SELECT MAX(TagMapId) FROM TagMap")||0;
   const nowIso=new Date().toISOString().substring(0,19)+"+00:00";
   const gid={};
+  /* JW Library wymaga pełnego znacznika czasu „RRRR-MM-DDTGG:MM:SS+00:00".
+     Nasze notatki bywają zapisane jako sama data albo z milisekundami/Z —
+     bez ujednolicenia JWL potrafi pominąć taki wpis. */
+  const jwlDate = v => {
+    if(!v) return nowIso;
+    const d = new Date(v);
+    if(!isNaN(d)) return d.toISOString().substring(0,19)+"+00:00";
+    const s = String(v);
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s+"T00:00:00+00:00";
+    return nowIso;
+  };
   const r1=db.exec("SELECT NoteId, Guid FROM Note");
   if(r1.length) r1[0].values.forEach(([id,g])=>gid[g]=id);
   const tname={};
@@ -3634,7 +3693,7 @@ function applyChangesToDb(db){
         }
       }catch(e){ locId=null; blockType=0; blockId=null; }
       db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, LocationId, NoteId) VALUES (?,?,?,?,?,?,?,?,?)",
-        [n.g,n.t||null,n.c||null,n.mo||nowIso,n.cr||nowIso,blockType,blockId,locId,maxNoteId]);
+        [n.g, n.t||null, (n.c||n.t||" "), jwlDate(n.mo), jwlDate(n.cr), blockType, blockId, locId, maxNoteId]);
       n.tg.forEach(tid=>{
         const dt=appTagToDb[tid]; if(dt===undefined)return;
         maxTagMapId++;
@@ -3644,7 +3703,7 @@ function applyChangesToDb(db){
     }
     if(dbId===undefined) return;
     if(n.ed){
-      db.run("UPDATE Note SET Title=?, Content=?, LastModified=? WHERE NoteId=?",[n.t||null,n.c||null,n.mo||nowIso,dbId]);
+      db.run("UPDATE Note SET Title=?, Content=?, LastModified=? WHERE NoteId=?",[n.t||null, n.c||null, jwlDate(n.mo), dbId]);
     }
     if(n.tgd){
       db.run("DELETE FROM TagMap WHERE NoteId=?",[dbId]);
@@ -3694,8 +3753,10 @@ async function exportOneNoteJwl(n){
         if(locId==null){ maxLocId++; db.run("INSERT INTO Location (LocationId, BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, IssueTagNumber) VALUES (?,?,?,?,?,0,0)",[maxLocId,n.b,n.ch,key,meps]); locId=maxLocId; }
         if(n.v){ blockType=2; blockId=n.v; } else { blockType=1; blockId=n.ch; }
       }
+      const jwlD = v => { if(!v) return nowIso; const d=new Date(v); if(!isNaN(d)) return d.toISOString().substring(0,19)+"+00:00";
+        const s=String(v); return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s+"T00:00:00+00:00" : nowIso; };
       db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, LocationId, NoteId) VALUES (?,?,?,?,?,?,?,?,1)",
-        [n.g, n.t||null, n.c||null, n.mo||nowIso, n.cr||nowIso, blockType, blockId, locId]);
+        [n.g, n.t||null, (n.c||n.t||" "), jwlD(n.mo), jwlD(n.cr), blockType, blockId, locId]);
       try{ db.run("UPDATE LastModified SET LastModified=?",[nowIso]); }catch(e){}
     }, "Notatka");
     chooseSaveOrShare(blob, name, "Notatka → JW Library");
@@ -4173,7 +4234,18 @@ $("search").addEventListener("keydown", e=>{
     rows[sugIdx]?.scrollIntoView({block:"nearest"});
   } else if(e.key==="Escape"){ hideSearchSug(); }
 });
-$("sortSel").addEventListener("change",e=>{sortMode=e.target.value;renderNotes();});
+$("sortSel").addEventListener("change",e=>{
+  sortMode=e.target.value;
+  try{ localStorage.setItem(KP+"Sort", sortMode); }catch(err){}
+  renderNotes();
+});
+// przywróć ostatnio wybraną kolejność
+(function(){
+  try{
+    const s=localStorage.getItem(KP+"Sort");
+    if(s && [...$("sortSel").options].some(o=>o.value===s)){ sortMode=s; $("sortSel").value=s; }
+  }catch(e){}
+})();
 /* ===== skróty klawiszowe (komputer) ===== */
 document.addEventListener("keydown", e=>{
   const t=e.target, typing = t && (t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.isContentEditable);

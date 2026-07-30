@@ -377,6 +377,15 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #msgModal .msgOk.danger{background:#c0392b}
 #msgModal .askBtns{flex-wrap:wrap}
 #msgModal .msgExtra{border:none;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
+/* okno eksportu do JW Library — kroki i ostrzeżenie */
+.exp-steps{display:flex;flex-direction:column;gap:10px;margin:4px 0 14px}
+.exp-step{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;line-height:1.5;color:var(--text)}
+.exp-n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#256b52;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.exp-base{background:var(--sel);border:1px solid var(--border);border-radius:11px;padding:10px 13px;font-size:12.5px;color:var(--text);line-height:1.5;margin-bottom:12px}
+.exp-base.warn{background:#fdf3e3;border-color:#f0dcb8;color:#7a5a1c}
+.exp-file{font-size:11.5px;color:var(--muted);word-break:break-all}
+.exp-warn{background:#fdf3e3;border:1px solid #f0dcb8;border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.55;color:#7a5a1c}
+html[data-theme="dark"] .exp-base.warn,html[data-theme="dark"] .exp-warn{background:#2e2517;border-color:#4a3c22;color:#d8b978}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
 .refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s;text-decoration:none}
@@ -751,7 +760,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v100</span></div>
+      <div class="brand-name">JW Study <span class="ver">v102</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -3713,7 +3722,7 @@ async function handleImportFile(e){
     const db=new SQL.Database(dbBytes);
     const res=importFromDb(db);
     db.close();
-    if(idb){ await idbPut("files",buf,"lastBackup"); await idbPut("meta",file.name,"lastBackupName"); }
+    if(idb){ await idbPut("files",buf,"lastBackup"); await idbPut("meta",file.name,"lastBackupName"); await idbPut("meta",new Date().toISOString(),"lastBackupDate"); }
     renderAll();
     showInfo("Import zakończony", `Kopia z JW Library została <b>dołączona</b> (bez kasowania Twoich danych).<br><br>`+
       `• Nowych notatek: <b>${res.added}</b><br>`+
@@ -3786,12 +3795,40 @@ function openUrlJWL(url){
 
 /* ================= EKSPORT .JWLIBRARY ================= */
 async function startExport(){
-  let has=false;
-  if(idb){ has=!!(await idbGet("files","lastBackup")); }
-  $("expInfo").innerHTML = has
-    ? `Utworzę plik <b>.jwlibrary</b> na bazie ostatnio zaimportowanego backupu, z naniesionymi Twoimi zmianami (edycje, nowe notatki, zakładki, zmiany nazw, usunięcia).<br><br>⚠️ <b>Uwaga:</b> import backupu w JW Library <b>zastępuje</b> dane w aplikacji na urządzeniu. Importuj ten plik tylko wtedy, gdy powstał z Twojego najnowszego backupu.`
-    : `Aby wyeksportować do JW Library, najpierw zaimportuj swój oryginalny plik backupu (⚙️ Plik → Importuj backup). Aplikacja zachowa go i będzie nanosić na niego Twoje zmiany — dzięki temu nie stracisz podświetleń, playlist ani innych danych.`;
-  $("expGo").style.display=has?"":"none";
+  let has=false, bkDate=null, bkName="";
+  if(idb){
+    has=!!(await idbGet("files","lastBackup"));
+    try{ bkDate = await idbGet("meta","lastBackupDate"); bkName = (await idbGet("meta","lastBackupName"))||""; }catch(e){}
+  }
+  if(!has){
+    $("expInfo").innerHTML =
+      `Aby wyeksportować do JW Library, najpierw zaimportuj swoją kopię z JW Library (<b>⚙️ Plik → Importuj backup</b>).<br><br>`+
+      `Aplikacja zachowa ją jako podstawę i będzie nanosić na nią Twoje zmiany — dzięki temu nie stracisz podkreśleń, playlist ani innych danych.`;
+    $("expGo").style.display="none";
+    openModal("modalExport"); return;
+  }
+  const newCnt = notes.filter(n=>!n.del).length;
+  let ageTxt="", stale=false;
+  if(bkDate){
+    const days=Math.floor((Date.now()-Date.parse(bkDate))/86400000);
+    stale = days>=14;
+    const d=new Date(bkDate);
+    const nice=d.toLocaleDateString("pl",{day:"numeric",month:"long",year:"numeric"});
+    ageTxt = days===0 ? `dzisiaj (${nice})` : days===1 ? `wczoraj (${nice})` : `${days} dni temu (${nice})`;
+  }
+  $("expInfo").innerHTML =
+    `<div class="exp-steps">
+       <div class="exp-step"><span class="exp-n">1</span><div>Powstanie <b>nowy plik .jwlibrary</b>: Twoja zaimportowana kopia + <b>${newCnt}</b> notatek z tej aplikacji.</div></div>
+       <div class="exp-step"><span class="exp-n">2</span><div>Przenieś plik na urządzenie z JW Library.</div></div>
+       <div class="exp-step"><span class="exp-n">3</span><div>W JW Library: <b>Ustawienia → Kopia zapasowa → Przywróć</b>.</div></div>
+     </div>
+     ${bkDate?`<div class="exp-base ${stale?"warn":""}">Podstawą jest kopia zaimportowana <b>${ageTxt}</b>${bkName?`<br><span class="exp-file">${esc(bkName)}</span>`:""}</div>`:""}
+     <div class="exp-warn">
+       <b>⚠️ Ważne:</b> przywrócenie w JW Library <b>zastępuje wszystko</b> na tamtym urządzeniu.
+       Jeśli po ${bkDate?"tej dacie":"zaimportowaniu kopii"} dodałeś coś <b>w samym JW Library</b> (podkreślenia, notatki, zakładki) — to przepadnie.
+       <br><br>Najbezpieczniej: zrób <b>świeżą kopię w JW Library</b>, zaimportuj ją tutaj, a dopiero potem eksportuj.
+     </div>`;
+  $("expGo").style.display="";
   openModal("modalExport");
 }
 $("expGo").onclick = async ()=>{
@@ -3803,7 +3840,7 @@ $("expGo").onclick = async ()=>{
     const zip=await JSZip.loadAsync(buf);
     const dbBytes=await zip.file("userData.db").async("uint8array");
     const db=new SQL.Database(dbBytes);
-    applyChangesToDb(db);
+    const expStat = applyChangesToDb(db);
     const outDb=db.export(); db.close();
     zip.file("userData.db",outDb);
     const hashBuf=await crypto.subtle.digest("SHA-256",outDb);
@@ -3820,8 +3857,15 @@ $("expGo").onclick = async ()=>{
     zip.file("manifest.json",JSON.stringify(manifest));
     const zblob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});
     const blob=new Blob([zblob],{type:"application/octet-stream"});
-    chooseSaveOrShare(blob, manifest.name, "Kopia JW Library");
-    toast("Plik .jwlibrary gotowy");
+    // NAJPIERW podsumowanie (użytkownik je zamyka), DOPIERO POTEM wybór zapisu —
+    // inaczej okno informacyjne zasłaniałoby listę „Zapisz / Udostępnij".
+    await showInfo("Plik .jwlibrary gotowy",
+      `W pliku znalazło się:<br><br>`+
+      `• Notatek dopisanych: <b>${expStat.inserted}</b><br>`+
+      `• Notatek zaktualizowanych: <b>${expStat.updated}</b><br>`+
+      (expStat.deleted?`• Usuniętych: <b>${expStat.deleted}</b><br>`:"")+
+      `<br>Po zamknięciu tego okna wybierz, gdzie zapisać plik.`);
+    setTimeout(()=>chooseSaveOrShare(blob, manifest.name, "Kopia JW Library"), 60);
   }catch(err){ console.error(err); toast("Błąd eksportu: "+err.message); }
 };
 function applyChangesToDb(db){
@@ -3831,6 +3875,7 @@ function applyChangesToDb(db){
   let maxTagMapId=one("SELECT MAX(TagMapId) FROM TagMap")||0;
   const nowIso=new Date().toISOString().substring(0,19)+"+00:00";
   const gid={};
+  let insertedCount=0, updatedCount=0, deletedCount=0;
   /* JW Library wymaga pełnego znacznika czasu „RRRR-MM-DDTGG:MM:SS+00:00".
      Nasze notatki bywają zapisane jako sama data albo z milisekundami/Z —
      bez ujednolicenia JWL potrafi pominąć taki wpis. */
@@ -3901,10 +3946,14 @@ function applyChangesToDb(db){
       if(dbId!==undefined){
         db.run("DELETE FROM TagMap WHERE NoteId=?",[dbId]);
         db.run("DELETE FROM Note WHERE NoteId=?",[dbId]);
+        deletedCount++;
       }
       return;
     }
-    if(n.nw&&dbId===undefined){
+    // WSTAW KAŻDĄ notatkę, której nie ma w bazie docelowej — nie tylko oznaczoną jako „nowa".
+    // Wcześniej notatki wczytane z kopii JSON z innego urządzenia albo z danych wbudowanych
+    // nie miały flagi „nw" i były po cichu POMIJANE (w JW Library pojawiały się same etykiety).
+    if(dbId===undefined){
       maxNoteId++;
       let locId=null, blockType=0, blockId=null;
       try{
@@ -3918,7 +3967,8 @@ function applyChangesToDb(db){
       }catch(e){ locId=null; blockType=0; blockId=null; }
       db.run("INSERT INTO Note (Guid, Title, Content, LastModified, Created, BlockType, BlockIdentifier, LocationId, NoteId) VALUES (?,?,?,?,?,?,?,?,?)",
         [n.g, n.t||null, (n.c||n.t||" "), jwlDate(n.mo), jwlDate(n.cr), blockType, blockId, locId, maxNoteId]);
-      n.tg.forEach(tid=>{
+      insertedCount++;
+      (n.tg||[]).forEach(tid=>{
         const dt=appTagToDb[tid]; if(dt===undefined)return;
         maxTagMapId++;
         db.run("INSERT INTO TagMap (TagMapId, NoteId, TagId, Position) VALUES (?,?,?,?)",[maxTagMapId,maxNoteId,dt,nextPos(dt)]);
@@ -3928,10 +3978,11 @@ function applyChangesToDb(db){
     if(dbId===undefined) return;
     if(n.ed){
       db.run("UPDATE Note SET Title=?, Content=?, LastModified=? WHERE NoteId=?",[n.t||null, n.c||null, jwlDate(n.mo), dbId]);
+      updatedCount++;
     }
     if(n.tgd){
       db.run("DELETE FROM TagMap WHERE NoteId=?",[dbId]);
-      n.tg.forEach(tid=>{
+      (n.tg||[]).forEach(tid=>{
         const dt=appTagToDb[tid]; if(dt===undefined)return;
         maxTagMapId++;
         db.run("INSERT INTO TagMap (TagMapId, NoteId, TagId, Position) VALUES (?,?,?,?)",[maxTagMapId,dbId,dt,nextPos(dt)]);
@@ -3939,6 +3990,7 @@ function applyChangesToDb(db){
     }
   });
   try{ db.run("UPDATE LastModified SET LastModified=?",[nowIso]); }catch(e){}
+  return {inserted:insertedCount, updated:updatedCount, deleted:deletedCount};
 }
 /* ===== EKSPORT POJEDYNCZEJ NOTATKI DO .JWLIBRARY (z przypięciem do wersetu) ===== */
 async function buildJwlibraryBlob(transform, label){
@@ -4052,9 +4104,10 @@ function chooseSaveOrShare(blob, filename, title){
     `<div data-sv="disk">${ICO.file}Zapisz na dysku</div>`+
     (canShareFiles(blob,filename)?`<div data-sv="share">${shareIcon}Udostępnij (Mail, SMS, AirDrop)</div>`:``);
   dd.style.display="block";
-  const w=dd.offsetWidth||270;
-  dd.style.left=Math.max(8,(innerWidth-w)/2)+"px";
-  dd.style.top=Math.min(90, Math.max(8, innerHeight-220))+"px";
+  dd.style.maxHeight="none"; dd.style.overflowY="visible";
+  const w=dd.offsetWidth||270, h=dd.offsetHeight||140;
+  dd.style.left=Math.max(10,(innerWidth-w)/2)+"px";
+  dd.style.top=Math.max(10, Math.min(110, innerHeight-h-20))+"px";
   dd.onclick=async ev=>{
     const a=ev.target.closest("[data-sv]"); if(!a) return;
     dd.style.display="none";

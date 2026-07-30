@@ -550,6 +550,13 @@ mark{padding:0 1px;border-radius:3px}
 .help-row:first-child{border-top:none}
 .help-ic{font-size:20px;flex-shrink:0;width:26px;text-align:center;line-height:1.3}
 .help-modal code{background:var(--sel);padding:1px 6px;border-radius:6px;font-size:12.5px;font-family:inherit}
+/* ponumerowane kroki w instrukcji */
+.help-steps{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.help-step{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5}
+.hs-n{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#256b52;color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.help-warn{background:#fdf3e3;border:1px solid #f0dcb8;border-radius:11px;padding:10px 12px;font-size:12.5px;line-height:1.55;color:#7a5a1c;margin-top:6px}
+.help-tip{background:var(--sel);border-radius:11px;padding:9px 12px;font-size:12.5px;line-height:1.5;color:var(--text);margin-top:8px}
+html[data-theme="dark"] .help-warn{background:#2e2517;border-color:#4a3c22;color:#d8b978}
 /* karta powiązania z wersetem */
 .nn-ref .row>div{flex:1}
 .nn-ref .col-book{flex:2}
@@ -760,7 +767,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v103</span></div>
+      <div class="brand-name">JW Study <span class="ver">v104</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -989,7 +996,19 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
       <div class="help-row"><span class="help-ic">📁</span><div><b>Sekcje etykiet</b> — gdy masz dużo etykiet, pogrupuj je: <b>📁 Nowa sekcja</b> (np. „Kongresy”), potem przy etykiecie <b>⋯ → Sekcja</b>. Sekcje zwijasz kliknięciem w nagłówek.</div></div>
       <div class="help-row"><span class="help-ic">📖</span><div><b>Czytnik</b> (notatka na pełnym ekranie): licznik słów i czasu czytania, <b>Spis</b> (skok do nagłówka), <b>Znajdź</b> w notatce, <b>Aa</b> (rozmiar, interlinia, szerokość, czcionka, tło). Aplikacja <b>zapamiętuje miejsce</b>, w którym skończyłeś czytać.</div></div>
       <div class="help-row"><span class="help-ic">✍️</span><div><b>W edycji</b>: przycisk <b>＋</b> wstawia odnośnik do wersetu, cytat, listę zadań, <b>tabelę</b> i <b>szablon notatki</b>; w menu <b>⋯</b> jest <b>Znajdź i zamień</b> oraz <b>Historia wersji</b> (10 ostatnich).</div></div>
-      <div class="help-row"><span class="help-ic">⚙️</span><div><b>Plik → Importuj backup .jwlibrary</b> — wczytuje Twoje notatki z JW Library.</div></div>
+      <div class="help-row"><span class="help-ic">🔄</span><div><b>Wymiana notatek z JW Library</b><br>
+        Aplikacja <u>nie zmienia</u> JW Library bezpośrednio. Bierze kopię, którą do niej wczytasz, dopisuje Twoje notatki i tworzy <b>nowy plik .jwlibrary</b>, który przywracasz w JW Library.
+        <div class="help-steps">
+          <div class="help-step"><span class="hs-n">1</span><div>W <b>JW Library</b>: Ustawienia → Kopia zapasowa → <b>Utwórz kopię</b>. Rób ją <u>zawsze świeżą</u>.</div></div>
+          <div class="help-step"><span class="hs-n">2</span><div>Tutaj: <b>⚙️ Plik → Importuj backup .jwlibrary</b> — wczytasz notatki i ustawisz podstawę do eksportu.</div></div>
+          <div class="help-step"><span class="hs-n">3</span><div>Pracuj w aplikacji: dodawaj i edytuj notatki, nadawaj etykiety.</div></div>
+          <div class="help-step"><span class="hs-n">4</span><div>Tutaj: <b>⚙️ Plik → Eksportuj do JW Library</b>. Zobaczysz, ile notatek trafiło do pliku, i wybierzesz, gdzie go zapisać.</div></div>
+          <div class="help-step"><span class="hs-n">5</span><div>W <b>JW Library</b>: Ustawienia → Kopia zapasowa → <b>Przywróć</b> i wskaż ten plik.</div></div>
+        </div>
+        <div class="help-warn"><b>⚠️ Najważniejsze:</b> przywracanie w JW Library <b>zastępuje wszystko</b> na tamtym urządzeniu. Jeśli po kroku 1 dodasz coś <u>w samym JW Library</u> (podkreślenia, notatki, zakładki), to przy kroku 5 przepadnie.<br>
+        Dlatego trzymaj się kolejności: <b>kopia → import → praca tutaj → eksport → przywrócenie</b>, i nie pracuj w JW Library w międzyczasie.</div>
+        <div class="help-tip">Twoje podkreślenia, playlisty i pozostałe dane z JW Library <b>zostają nietknięte</b> — aplikacja dopisuje tylko notatki i etykiety.</div>
+      </div></div>
       <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.<br><b>Przenoszenie między urządzeniami:</b> zapisz kopię na jednym, a na drugim <b>⚙️ Plik → Wczytaj kopię</b> i wybierz <b>Dołącz + układ</b> — doda brakujące notatki i przeniesie porządek etykiet (sekcje, kolory), więc wszędzie będzie tak samo. Nic nie kasuje.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
     </div>

@@ -173,6 +173,29 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .item .arr{width:14px;text-align:center;color:inherit;opacity:.55;font-size:10px}
 
 #colNotes{flex:1;background:var(--panel);border:1px solid var(--border);box-shadow:0 6px 18px rgba(60,50,30,.07)}
+/* przełącznik układu listy */
+#viewBar{display:flex;align-items:center;gap:9px;padding:10px 14px 0}
+.vb-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.vb-group{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--panel)}
+.vb{border:none;background:transparent;color:var(--muted);cursor:pointer;padding:6px 10px;display:inline-flex;align-items:center;justify-content:center;transition:background .14s,color .14s}
+.vb+.vb{border-left:1px solid var(--border)}
+.vb .ic{width:17px;height:17px}
+.vb:hover{background:var(--sel);color:var(--text)}
+.vb.on{background:#256b52;color:#fff}
+html[data-theme="dark"] .vb-group{background:var(--panel)}
+html[data-theme="dark"] .vb.on{background:#2e7a5f}
+/* ——— UKŁADY LISTY NOTATEK ——— */
+/* zwarta lista: tytuł + jedna linia treści */
+#noteList.v-compact .ncard{padding:10px 14px;margin-bottom:7px;border-radius:12px}
+#noteList.v-compact .nhead{margin:-10px -14px 7px;padding:6px 38px 5px 12px}
+#noteList.v-compact .ntitle{font-size:13.5px}
+#noteList.v-compact .ncontent{font-size:calc(var(--noteFs,14px) - 1.5px);max-height:2.9em;overflow:hidden;line-height:1.45;
+  -webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);mask-image:linear-gradient(180deg,#000 60%,transparent)}
+#noteList.v-compact .ncontent img{display:none}
+#noteList.v-compact .ntools{display:none}
+#noteList.v-compact .chips{margin-bottom:4px}
+#noteList.v-compact .nmeta2{margin-bottom:5px}
+#noteList.v-compact .ncard:hover .ntools{display:block}
 /* szybkie filtry nad listą notatek */
 #quickFilters{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 4px}
 .qf{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer;white-space:nowrap;
@@ -223,7 +246,7 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .marksMore{padding:8px 12px;font-size:12px;color:var(--muted);text-align:center}
 .marksToggle{color:var(--accent);cursor:pointer;font-weight:600;white-space:nowrap;border-bottom:1px dotted var(--accent)}
 .marksToggle:hover{color:var(--accent2)}
-.ncard{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:15px 18px;margin-bottom:14px;position:relative;
+.ncard{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:13px 16px;margin-bottom:10px;position:relative;
   box-shadow:inset 4px 0 0 0 var(--cardAccent,transparent), 0 1px 2px rgba(40,50,35,.05), 0 3px 10px rgba(40,50,35,.055);
   transition:box-shadow .2s ease, transform .16s cubic-bezier(.22,.9,.32,1), border-color .2s ease;overflow:hidden}
 .ncard:hover{transform:translateY(-1px);border-color:rgba(37,107,82,.22);
@@ -231,32 +254,38 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 .ncard.pinned{box-shadow:inset 4px 0 0 0 var(--cardAccent,transparent),0 0 0 1.5px var(--accent2),0 4px 12px rgba(60,50,30,.12)}
 /* wirtualizacja: karty poza ekranem nie są renderowane (płynniej, mniej pamięci) */
 #noteList .ncard{content-visibility:auto;contain-intrinsic-size:auto 240px}
+#noteList.v-compact .ncard{contain-intrinsic-size:auto 110px}
 #noteList .ncard.editing{content-visibility:visible}
 .pinmark{font-size:13px;vertical-align:1px}
 .sbtn.ico.pinon{color:#a9821a;background:#fdf3d8;border-color:#e6cf8a}
 html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;color:#e9c862}
-.drag{position:absolute;top:9px;right:10px;cursor:grab;color:rgba(255,255,255,.75);font-size:15px;padding:2px 6px;border-radius:6px;z-index:2}
+.drag{position:absolute;top:4px;right:8px;cursor:grab;color:rgba(255,255,255,.75);font-size:15px;padding:2px 6px;border-radius:6px;z-index:2}
 .drag:hover{background:rgba(255,255,255,.18);color:#fff}
 /* metalicznie zielony pasek tytułu notatki */
-.nhead{position:relative;margin:-15px -18px 11px;padding:11px 44px 10px 16px;border-radius:9px 12px 0 0;
+.nhead{position:relative;margin:-13px -16px 7px;padding:5px 36px 4px 12px;border-radius:9px 12px 0 0;
   background:#256b52;
   border-bottom:1px solid rgba(0,0,0,.14);
   box-shadow:none}
 .nhead::after{display:none}
-.ntitle{font-weight:700;font-size:16px;margin:0;word-wrap:break-word;line-height:1.3;letter-spacing:-.01em;color:#fff;text-shadow:none;position:relative;z-index:1}
-.nmeta2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;align-items:center}
-.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 10px;font-size:11.5px;font-weight:500}
+.ntitle{font-weight:600;font-size:14.5px;margin:0;word-wrap:break-word;line-height:1.35;letter-spacing:-.005em;color:#fff;text-shadow:none;position:relative;z-index:1}
+.nmeta2{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:500}
 .pill.ref{background:var(--sel);color:var(--accent)}
 .pill.ks{background:#eef1f5;color:#5a6472;font-weight:normal}
 .pill.date{background:#f2f2f0;color:#84807a;font-weight:normal}
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
-.chip{background:#eee9e0;padding:2px 9px;border-radius:10px;font-size:11.5px;display:inline-flex;align-items:center;gap:4px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.chip{background:#eee9e0;padding:1px 8px;border-radius:9px;font-size:11px;display:inline-flex;align-items:center;gap:4px}
 .chip .x{cursor:pointer;font-weight:bold;color:#a33;opacity:0}
 .chip:hover .x{opacity:1}
 /* sekcja narzędzi — oddzielona od treści, kompaktowa */
-.ntools{margin:12px -18px -15px;padding:7px 14px 8px;background:var(--bg);border-top:1px solid var(--border)}
-.btnrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;align-items:center}
-.sbtn.ico{padding:6px 9px;font-size:14.5px;line-height:1;gap:0}
+/* dolny pasek narzędzi — wąski i dyskretny, żeby karta była lżejsza */
+.ntools{margin:7px -16px -13px;padding:3px 10px 4px;background:var(--bg);border-top:1px solid var(--border);border-radius:0 0 13px 13px}
+.btnrow{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:0;align-items:center}
+.sbtn.ico{padding:4px 7px;font-size:13px;line-height:1;gap:0;border:none;background:transparent;color:var(--muted);border-radius:8px}
+.sbtn.ico .ic{width:17px;height:17px}
+.sbtn.ico:hover{background:var(--sel);color:var(--accent)}
+.ncard:not(:hover) .ntools{opacity:.55;transition:opacity .18s ease}
+.ncard:hover .ntools{opacity:1}
 .ic{width:18px;height:18px;display:block;pointer-events:none}
 .sbtn.ico .ic{width:19px;height:19px}
 .eb-img .ic{width:18px;height:18px;pointer-events:none}
@@ -291,7 +320,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 #modalFs .fsmodal{background:var(--bg);border-radius:0;width:100vw;height:100vh;height:100dvh;max-height:100dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) calc(14px + env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,0px);position:relative;box-shadow:none}
 #fsClose{display:none}
 /* przycisk zamknięcia wewnątrz zielonej belki nagłówka (pełny ekran) */
-.fsCloseInline{position:absolute;top:50%;right:12px;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:none;background:#fff;color:#1e5b46;font-size:19px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:4;display:flex;align-items:center;justify-content:center}
+.fsCloseInline{position:absolute;top:50%;right:9px;transform:translateY(-50%);width:27px;height:27px;border-radius:50%;border:none;background:#fff;color:#1e5b46;font-size:16px;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3);z-index:4;display:flex;align-items:center;justify-content:center}
 .fsCloseInline:hover{background:#eef2ef}
 .fsCloseInline:active{transform:translateY(-50%) scale(.93)}
 .fsFont{display:inline-flex;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-left:4px;flex-shrink:0}
@@ -767,7 +796,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v104</span></div>
+      <div class="brand-name">JW Study <span class="ver">v116</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -826,6 +855,13 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   </div>
   <div class="colResizer" data-c="colTags" title="Przeciągnij, aby zmienić szerokość"></div>
   <div class="col mshow" id="colNotes">
+    <div id="viewBar">
+      <span class="vb-lbl">Widok</span>
+      <div class="vb-group">
+        <button class="vb" data-view="list" title="Lista — pełne karty">${''}</button>
+        <button class="vb" data-view="compact" title="Zwarta lista — tytuł i początek treści">${''}</button>
+      </div>
+    </div>
     <div id="quickFilters">
       <button class="qf" data-qf="all">Wszystkie</button>
       <button class="qf" data-qf="pin">Przypięte</button>
@@ -990,6 +1026,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
         • <code>"cała fraza"</code> — dokładnie w tej kolejności<br>
         • <code>(kot|pies)</code> — którekolwiek ze słów<br>
         • <code>tytuł:pokora</code> · <code>etykieta:studium</code> · <code>werset:Jan</code> — zawężanie do pola<br>
+        • szuka też w <b>odnośniku</b> — wpisz np. <code>Lekcja 1 (a)</code> albo <code>pt14</code>, a znajdziesz wszystkie notatki z tej lekcji/publikacji<br>
         • pod polem podpowiadają się <b>etykiety i ostatnie wyszukiwania</b></div></div>
       <div class="help-row"><span class="help-ic">✚</span><div><b>Nowa notatka</b> — dodaj notatkę i (opcjonalnie) przypnij do konkretnego wersetu.</div></div>
       <div class="help-row"><span class="help-ic">📌</span><div><b>Przypnij</b> ważne notatki — zawsze będą na górze listy.</div></div>
@@ -1184,6 +1221,7 @@ async function boot(){
   if(idb){ try{ sections = (await idbGet("meta","sections")) || []; }catch(e){ sections=[]; } }
   purgeOldTrash();   // usuń trwale notatki, które są w koszu ponad 30 dni
   buildStatic();
+  initViewBar();
   renderAll();
   // iPad/iPhone uruchomione z ikony ekranu początkowego: na iPadzie env(safe-area-inset-top)
   // bywa równe 0 mimo paska stanu — wymuś minimalny margines
@@ -1255,7 +1293,12 @@ async function showStorageInfo(){
 function noteMatchesTag(n,t){ if(t==="all")return true; if(t==="none")return n.tg.length===0; return n.tg.includes(t); }
 function noteMatchesBook(n,b){ if(b==="all")return true; if(b===0)return !n.b; return n.b===b; }
 function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
-function plainOf(n){ return (n.t?n.t+" ":"") + (n.c||""); }
+/* Tekst przeszukiwany: tytuł + treść + ODNOŚNIK (nazwa lekcji/publikacji lub werset)
+   — dzięki temu „Lekcja 1 (a)" albo „pt14" znajdzie wszystkie notatki z tym odnośnikiem. */
+function plainOf(n){
+  return (n.t?n.t+" ":"") + (n.c||"") + " " +
+         (refLabel(n)||"") + " " + (n.pub||"") + " " + (n.ks||"");
+}
 /* Wyszukiwanie rozszerzone:
    słowo1 słowo2   → oba muszą wystąpić
    miłos*          → gwiazdka = dowolna końcówka/odmiana
@@ -1301,7 +1344,11 @@ function parseQuery(q){
     qFields = fields.length ? fields : null;
     if(!groups.length) return;
     // wzorce budujemy na tekście BEZ ogonków → „milosc" znajdzie „miłość"
-    const mk = s => norm(s).replace(/[.+?^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\p{L}\\p{N}]*");
+    // SAME LICZBY dopasowujemy jako osobne słowa, żeby „Lekcja 1" nie trafiało w „pt14"
+    const mk = s => {
+      const base = norm(s).replace(/[.+?^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\p{L}\\p{N}]*");
+      return /^\d+$/.test(norm(s)) ? "(?<![\\p{L}\\p{N}])"+base+"(?![\\p{L}\\p{N}])" : base;
+    };
     qComp = groups.map(g=>new RegExp(g.map(mk).join("|"),"iu"));
     // podświetlanie działa na oryginalnym tekście — najpierw rozszerzamy litery o warianty z ogonkami,
     // DOPIERO POTEM wstawiamy wieloznacznik (inaczej zepsulibyśmy \p{L} w środku wzorca)
@@ -1319,12 +1366,44 @@ function noteFieldText(n, f){
   if(f==="ref")   return (refLabel(n)||"") + " " + (n.ks||"") + " " + (n.pub||"");
   return "";
 }
+/* „ściśnięty" tekst: same litery i cyfry, bez spacji i znaków —
+   dzięki temu „Lekcja 1A" znajdzie „Lekcja 1 (a)", a „Jan3:16" → „Jan 3:16". */
+function squash(s){ return norm(s).replace(/[^\p{L}\p{N}]+/gu,""); }
 function noteMatchesQuery(n){
   if(!query) return true;
   if(qFields && !qFields.every(({f,v})=>norm(noteFieldText(n,f)).includes(v))) return false;
-  if(!qComp) return qFields ? true : norm(plainOf(n)).includes(norm(query));
-  const txt = norm(plainOf(n));
-  return qComp.every(rx=>rx.test(txt));
+  const plain = plainOf(n);
+  if(!qComp) return qFields ? true : norm(plain).includes(norm(query));
+  const txt = norm(plain);
+  if(qComp.every(rx=>rx.test(txt))) return true;
+  // zapasowo: dopasowanie bez spacji i znaków przestankowych
+  const sq = squash(query);
+  return sq.length>=3 && squash(plain).includes(sq);
+}
+/* ===== UKŁAD LISTY NOTATEK: lista / zwarta / kafelki 2 / kafelki 3 ===== */
+let noteView = "list";
+try{ const v=localStorage.getItem(KP+"View"); if(["list","compact"].includes(v)) noteView=v; }catch(e){}
+function applyNoteView(){
+  const el=$("noteList"); if(!el) return;
+  el.classList.remove("v-list","v-compact");
+  el.classList.add("v-"+noteView);
+  document.querySelectorAll("#viewBar .vb").forEach(b=>b.classList.toggle("on", b.dataset.view===noteView));
+}
+function setNoteView(v){
+  noteView=v;
+  try{ localStorage.setItem(KP+"View", v); }catch(e){}
+  applyNoteView(); renderNotes();
+}
+function initViewBar(){
+  const ic={
+    list:_svg('<path d="M4 6h16M4 12h16M4 18h16"/>'),
+    compact:_svg('<path d="M4 5h16M4 9h16M4 13h16M4 17h16M4 21h16"/>')
+  };
+  document.querySelectorAll("#viewBar .vb").forEach(b=>{
+    b.innerHTML = ic[b.dataset.view]||"";
+    b.onclick = ()=>setNoteView(b.dataset.view);
+  });
+  applyNoteView();
 }
 /* szybkie filtry nad listą notatek */
 let quickFilter = "all";
@@ -4564,6 +4643,7 @@ document.addEventListener("keydown", e=>{
 });
 document.querySelectorAll(".overlay").forEach(o=>o.addEventListener("click",e=>{if(e.target===o)o.classList.remove("show");}));
 
+initViewBar();   // przełącznik układu działa niezależnie od wczytania danych
 boot().catch(err=>{
   console.error(err);
   $("loadMsg").textContent="Błąd wczytywania: "+err.message+" — użyj nowoczesnej przeglądarki (Chrome, Edge, Safari 16.4+, Firefox).";

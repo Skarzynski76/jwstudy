@@ -273,6 +273,10 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 .pill.ref{background:var(--sel);color:var(--accent)}
 .pill.ks{background:#eef1f5;color:#5a6472;font-weight:normal}
 .pill.date{background:#f2f2f0;color:#84807a;font-weight:normal}
+.pill.issue{background:#eef1f5;color:#5a6472;font-weight:normal}
+.pill.par{background:var(--sel);color:var(--accent);font-weight:600}
+html[data-theme="dark"] .pill.issue{background:#33333c;color:#b6b3bf}
+html[data-theme="dark"] .pill.par{background:#3a3a45;color:var(--accent2)}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
 .chip{background:#eee9e0;padding:1px 8px;border-radius:9px;font-size:calc(var(--noteFs,14px) - 3px);display:inline-flex;align-items:center;gap:4px}
 .chip .x{cursor:pointer;font-weight:bold;color:#a33;opacity:0}
@@ -796,7 +800,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v118</span></div>
+      <div class="brand-name">JW Study <span class="ver">v119</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -1298,7 +1302,9 @@ function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
    — dzięki temu „Lekcja 1 (a)" albo „pt14" znajdzie wszystkie notatki z tym odnośnikiem. */
 function plainOf(n){
   return (n.t?n.t+" ":"") + (n.c||"") + " " +
-         (refLabel(n)||"") + " " + (n.pub||"") + " " + (n.ks||"");
+         (refLabel(n)||"") + " " + (n.pub||"") + " " + (n.ks||"") + " " +
+         (n.ks?pubFullName(n.ks)+" ":"") + (n.itn?issueLabel(n.itn)+" ":"") +
+         (n.par?("akapit "+n.par):"");
 }
 /* Wyszukiwanie rozszerzone:
    słowo1 słowo2   → oba muszą wystąpić
@@ -1891,6 +1897,36 @@ function toggleReading(card){
     else ex.style.display="none";
   }
 }
+/* ===== ŹRÓDŁO NOTATKI: publikacja, wydanie, akapit ===== */
+const PUB_NAMES = {
+  w:"Strażnica", wp:"Strażnica (do rozpowszechniania)", g:"Przebudźcie się!",
+  km:"Nasza Służba Królestwa", mwb:"Nasze życie i służba", "mwb-pl":"Nasze życie i służba",
+  bt:"Dawajmy świadectwo o Królestwie Bożym", bh:"Czego naprawdę uczy Biblia?",
+  bhs:"Czego naprawdę uczy Biblia? (skrócone)", lff:"Już zawsze ciesz się życiem!",
+  jy:"Jezus — droga", cl:"Zbliż się do Jehowy", lvs:"Trwajcie w miłości Bożej",
+  od:"Zorganizowani do spełniania woli Jehowy", it:"Wnikliwe poznawanie Pism",
+  si:"Całe Pismo jest natchnione", pt:"Kurs Służby Pionierskiej", pt14:"Kurs Służby Pionierskiej",
+  nwt:"Pismo Święte w Przekładzie Nowego Świata", nwtsty:"Biblia — wydanie do studium",
+  yb:"Rocznik Świadków Jehowy", es:"Codzienne badanie Pism", sjj:"Śpiewajmy Jehowie",
+  rr:"Królestwo Boże panuje!", ia:"Naśladujmy ich wiarę", kr:"Królestwo Boże panuje!"
+};
+function pubFullName(ks){
+  if(!ks) return "";
+  const k=String(ks).toLowerCase();
+  if(PUB_NAMES[k]) return PUB_NAMES[k];
+  const base=k.replace(/[\d-]+$/,"");           // np. „w22" → „w", „lff-pl" → „lff"
+  return PUB_NAMES[base] ? PUB_NAMES[base]+" ("+ks+")" : ks;
+}
+const MONTHS_PL   =["","styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"];
+const MONTHS_PL_D =["","stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+function issueLabel(itn){
+  const s=String(itn||"");
+  if(s.length!==8) return s;
+  const y=s.slice(0,4), m=+s.slice(4,6), d=+s.slice(6,8);
+  if(!+y) return s;
+  if(!m) return y;
+  return d>1 ? (d+" "+(MONTHS_PL_D[m]||"")+" "+y) : ((MONTHS_PL[m]||"")+" "+y);
+}
 function refLabel(n){
   if(n.b){ let s=BOOKS[n.b]; if(n.ch)s+=" "+n.ch+(n.v?":"+n.v:""); return s; }
   return n.pub||"";
@@ -2121,7 +2157,9 @@ function noteCard(n){
      <div class="nmeta2">
        ${link ? `<a class="refbtn" href="${link}" target="_blank" rel="noopener noreferrer" data-act="openref" title="Otwórz w JW Library">📖 ${esc(ref||"Otwórz w JW Library")} ↗</a>` : (ref?`<span class="pill ref">📖 ${esc(ref)}</span>`:`<button class="refbtn assign" data-act="assignref" title="Przypisz werset — utworzy link do JW Library">📌 Przypisz werset</button>`)}
        ${link ? `<button class="refbtn edref" data-act="assignref" title="Zmień przypisany werset">✎</button>` : ""}
-       ${n.ks?`<span class="pill ks">${esc(n.ks)}</span>`:""}
+       ${n.ks?`<span class="pill ks" title="${esc(pubFullName(n.ks))}">${esc(n.ks)}</span>`:""}
+       ${n.itn?`<span class="pill issue" title="Wydanie">${esc(issueLabel(n.itn))}</span>`:""}
+       ${n.par?`<span class="pill par" title="Akapit w publikacji">¶ ${n.par}</span>`:""}
        <span class="pill date">🕓 ${date}</span>
      </div>
      <div class="chips">${n.tg.map(tid=>{const t=tags.find(x=>x.id===tid);return t?`<span class="chip"${t.color?` style="background:linear-gradient(180deg,${shade(t.color,.15)},${shade(t.color,-.18)});color:#fff"`:""}>${esc(t.name)}<span class="x" data-untag="${tid}" title="Usuń z zakładki">×</span></span>`:"";}).join("")}</div>

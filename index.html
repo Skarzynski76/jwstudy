@@ -188,7 +188,7 @@ html[data-theme="dark"] .vb.on{background:#2e7a5f}
 /* zwarta lista: tytuł + jedna linia treści */
 #noteList.v-compact .ncard{padding:10px 14px;margin-bottom:7px;border-radius:12px}
 #noteList.v-compact .nhead{margin:-10px -14px 7px;padding:6px 38px 5px 12px}
-#noteList.v-compact .ntitle{font-size:13.5px}
+#noteList.v-compact .ntitle{font-size:calc(var(--noteFs,14px) - .5px)}
 #noteList.v-compact .ncontent{font-size:calc(var(--noteFs,14px) - 1.5px);max-height:2.9em;overflow:hidden;line-height:1.45;
   -webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);mask-image:linear-gradient(180deg,#000 60%,transparent)}
 #noteList.v-compact .ncontent img{display:none}
@@ -267,14 +267,14 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
   border-bottom:1px solid rgba(0,0,0,.14);
   box-shadow:none}
 .nhead::after{display:none}
-.ntitle{font-weight:600;font-size:14.5px;margin:0;word-wrap:break-word;line-height:1.35;letter-spacing:-.005em;color:#fff;text-shadow:none;position:relative;z-index:1}
+.ntitle{font-weight:600;font-size:calc(var(--noteFs,14px) + .5px);margin:0;word-wrap:break-word;line-height:1.35;letter-spacing:-.005em;color:#fff;text-shadow:none;position:relative;z-index:1}
 .nmeta2{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;align-items:center}
-.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:500}
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:calc(var(--noteFs,14px) - 3px);font-weight:500}
 .pill.ref{background:var(--sel);color:var(--accent)}
 .pill.ks{background:#eef1f5;color:#5a6472;font-weight:normal}
 .pill.date{background:#f2f2f0;color:#84807a;font-weight:normal}
 .chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
-.chip{background:#eee9e0;padding:1px 8px;border-radius:9px;font-size:11px;display:inline-flex;align-items:center;gap:4px}
+.chip{background:#eee9e0;padding:1px 8px;border-radius:9px;font-size:calc(var(--noteFs,14px) - 3px);display:inline-flex;align-items:center;gap:4px}
 .chip .x{cursor:pointer;font-weight:bold;color:#a33;opacity:0}
 .chip:hover .x{opacity:1}
 /* sekcja narzędzi — oddzielona od treści, kompaktowa */
@@ -417,7 +417,7 @@ html[data-theme="dark"] .sbtn.ico.pinon{background:#3a3320;border-color:#6a5a2a;
 html[data-theme="dark"] .exp-base.warn,html[data-theme="dark"] .exp-warn{background:#2e2517;border-color:#4a3c22;color:#d8b978}
 #fsWrap .nhead{position:sticky;top:0;z-index:6}
 /* odnośnik jako przycisk */
-.refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:filter .1s;text-decoration:none}
+.refbtn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--accent2);background:var(--sel);color:var(--accent);border-radius:14px;padding:5px 12px;font-size:calc(var(--noteFs,14px) - 1.5px);font-weight:600;cursor:pointer;transition:filter .1s;text-decoration:none}
 .refbtn:hover{filter:brightness(.97)}
 .refbtn:active{transform:translateY(1px)}
 .refbtn.assign{border-style:dashed;background:transparent;color:var(--muted);font-weight:500}
@@ -796,7 +796,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v116</span></div>
+      <div class="brand-name">JW Study <span class="ver">v118</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -816,6 +816,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
       <option value="createdOld">Najdawniej utworzone</option>
     </optgroup>
     <optgroup label="Inne">
+      <option value="pub">Kolejność w publikacji</option>
       <option value="bible">Kolejność biblijna</option>
       <option value="alpha">Alfabetycznie</option>
       <option value="recent">Ostatnio otwierane</option>
@@ -1857,6 +1858,21 @@ function sortNotes(arr){
     createdOld:(a,b)=>crOf(a).localeCompare(crOf(b)),             // utworzone — najstarsze
     edited:(a,b)=>((b.ed?1:0)-(a.ed?1:0)) || moOf(b).localeCompare(moOf(a)),  // edytowane najpierw
     bible:(a,b)=>(a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0)||moOf(a).localeCompare(moOf(b)),
+    /* Kolejność w publikacji: najpierw notatki z publikacji (wg symbolu, numeru wydania,
+       artykułu i akapitu), na końcu notatki biblijne i ogólne. */
+    pub:(a,b)=>{
+      const pa=a.b?1:0, pb=b.b?1:0;                       // biblijne na koniec
+      if(pa!==pb) return pa-pb;
+      if(!a.b && !b.b){
+        const ks=(a.ks||"").localeCompare(b.ks||"","pl");  if(ks) return ks;
+        const it=(a.itn||0)-(b.itn||0);                    if(it) return it;
+        const tt=(a.pub||"").localeCompare(b.pub||"","pl");if(tt) return tt;
+        const dc=(a.doc||0)-(b.doc||0);                    if(dc) return dc;
+        const pr=(a.par||0)-(b.par||0);                    if(pr) return pr;
+        return moOf(a).localeCompare(moOf(b));
+      }
+      return (a.b||99)-(b.b||99)||(a.ch||0)-(b.ch||0)||(a.v||0)-(b.v||0);
+    },
     alpha:(a,b)=>(a.t||a.c||"").localeCompare(b.t||b.c||"","pl"),
     recent:(a,b)=>(b.la||"").localeCompare(a.la||"") || moOf(b).localeCompare(moOf(a))
   }[sortMode] || ((a,b)=>moOf(b).localeCompare(moOf(a)));
@@ -3856,6 +3872,8 @@ function importFromDb(db){
     const inc={ g, t:(title||"").trim(), c:content||"",
       b:book||0, ch:ch||null, v:(book&&btype===2)?bid:null,
       pub:!book?(locTitle||keySym||""):"", ks:keySym||"", doc:docId||0, itn:itn||0,
+      // numer akapitu w publikacji — potrzebny do sortowania „po kolejności w publikacji"
+      par:(!book && bid) ? bid : 0,
       col:col||0, cr:created, mo:mo, tg:(ntags[nid]||[]).sort() };
     const ex=byG[g];
     if(!ex){ notes.push(inc); changed.push(inc); added++; }

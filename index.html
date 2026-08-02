@@ -16,8 +16,8 @@
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
 <style>
 :root{
-  --bg:#f4f2ee; --panel:#ffffff; --border:#e2ddd4; --text:#2b2a27; --muted:#8a857b;
-  --accent:#5b4636; --accent2:#8c6f52; --sel:#efe7db;
+  --bg:#f2f2f7; --panel:#ffffff; --border:rgba(60,60,67,.13); --text:#1c1c1e; --muted:#8a8a8e;
+  --accent:#256b52; --accent2:#3f9070; --sel:#eef0f4;
   --c1bg:#242427; --c1item:#e8e8ea; --c1hover:#37373c; --c1active:#8c6f52;
   --c2bg:#4c4c52; --c2item:#f0f0f2; --c2hover:#5d5d64; --c2active:#8c6f52;
   --hl1:#ffe97d; --hl2:#b7e4a7; --hl3:#a8d5f2; --hl4:#d9b8f0; --hl5:#f5b0b0; --hl6:#ffcf8f; --hl7:#9fe3d5;
@@ -119,14 +119,14 @@ main{flex:1;display:flex;min-height:0;gap:10px;padding:10px;background:radial-gr
 #colBooks .list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 /* przyciski „Nowa etykieta / Nowa sekcja" — same układają się w 1 lub 2 rzędy
    zależnie od szerokości kolumny, nigdy nie ucinają napisu */
-.tagBtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 10px 9px}
+.tagBtns{display:flex;flex-wrap:wrap;gap:6px;margin:6px 6px 8px}
 .tagBtns button{flex:1 1 118px;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;
   padding:8px 10px;background:var(--panel);border:1px solid var(--border);color:var(--text);
   border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:500;line-height:1.2;
   transition:background .12s ease,border-color .12s ease,color .12s ease}
 .tagBtns button:hover{background:var(--sel);color:var(--accent);border-color:var(--accent2)}
 .tagBtns button:active{transform:translateY(1px)}
-.tagBtns .tb-ic{font-size:13px;flex-shrink:0;opacity:.8}
+.tagBtns .tb-ic{width:16px;height:16px;flex-shrink:0;opacity:.75}
 .tagBtns .tb-txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* sekcje etykiet — wyraźny, kolorowany pasek */
 .secHead{display:flex;align-items:center;gap:8px;margin:12px 3px 5px;padding:9px 12px;border-radius:10px;cursor:pointer;
@@ -196,6 +196,53 @@ html[data-theme="dark"] .vb.on{background:#2e7a5f}
 #noteList.v-compact .chips{margin-bottom:4px}
 #noteList.v-compact .nmeta2{margin-bottom:5px}
 #noteList.v-compact .ncard:hover .ntools{display:block}
+/* przyklejone nagłówki grup na liście notatek */
+.listGroup{position:sticky;top:0;z-index:9;margin:14px 0 8px;padding:7px 12px;
+  background:var(--sel);color:var(--accent);border:1px solid var(--border);border-radius:10px;
+  font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.listGroup:first-child{margin-top:2px}
+html[data-theme="dark"] .listGroup{background:#33333c;color:var(--accent2);border-color:var(--border)}
+/* ——— PANEL PUBLIKACJI (dolna 1/3 kolumny Etykiety) ——— */
+/* dwie zaokrąglone „kolumny" jedna nad drugą: etykiety u góry, publikacje na dole */
+#tagPanel{flex:2 1 0;min-height:120px;display:flex;flex-direction:column;overflow:hidden;
+  margin:8px 8px 0;border:1px solid var(--border);border-radius:12px;background:transparent}
+#tagPanel > h2{padding:10px 12px 4px}
+#colTags .list#tagList{flex:1 1 0;min-height:60px;padding:0 5px 8px}
+/* wyraźna przerwa między kolumną etykiet a kolumną publikacji */
+#pubPanel{flex:1 1 0;min-height:120px;display:flex;flex-direction:column;position:relative;overflow:hidden;
+  margin:22px 8px 8px;border:1px solid var(--border);border-radius:12px;background:transparent}
+html[data-theme="dark"] #pubPanel{border-color:var(--border)}
+.pubTitle{display:flex;align-items:center;gap:8px;font-size:11.5px!important;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);margin:0;padding:9px 12px 7px;font-weight:700}
+.pubActs{margin-left:auto;display:flex;align-items:center;gap:6px}
+.pubBack{font-size:11px;color:var(--accent);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:600;
+  padding:2px 8px;border-radius:8px;background:var(--sel);white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.pubBack:hover{filter:brightness(.96)}
+.pubReset{font-size:12px;color:var(--muted);cursor:pointer;padding:1px 6px;border-radius:8px;background:var(--sel);line-height:1.5}
+.pubReset:hover{color:var(--accent)}
+#pubList{flex:1;overflow-y:auto;padding:4px 5px 8px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#pubList::-webkit-scrollbar{width:8px}
+#pubList::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+#pubList .item{margin:3px 0}
+#pubList .item .arr{font-size:12px;opacity:.5;padding-right:4px}
+#pubList .item.pubCat .nm{font-weight:600}
+#pubList .item.pubYear .nm{font-variant-numeric:tabular-nums}
+.pubEmpty{font-size:11.5px;color:var(--muted);padding:10px 14px;font-style:italic}
+/* uchwyt do przenoszenia pozycji w panelu publikacji */
+.pubDrag{flex:0 0 auto;display:flex;align-items:center;opacity:.34;cursor:grab;
+  touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;margin-left:-3px}
+.pubDrag .ic{width:15px;height:15px}
+.mic{display:inline-block;vertical-align:-2px}
+.pill .mic,.refbtn .mic{width:14px;height:14px;vertical-align:-2px}
+.drag .mic{width:15px;height:15px}
+.pinmark .mic{width:13px;height:13px}
+.pubDrag:hover{opacity:.75}
+#pubList .item.dragging{opacity:.85;background:var(--sel);box-shadow:0 4px 14px rgba(0,0,0,.18);cursor:grabbing}
+#pubList .item.dragging .pubDrag{cursor:grabbing;opacity:.9}
+#pubList.reordering .item{transition:transform .12s ease}
+#pubList.reordering{cursor:grabbing}
 /* szybkie filtry nad listą notatek */
 #quickFilters{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 4px}
 .qf{border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:999px;padding:5px 12px;font-size:12.5px;cursor:pointer;white-space:nowrap;
@@ -687,7 +734,8 @@ html[data-theme="dark"] #colorMenu{box-shadow:0 18px 48px rgba(0,0,0,.55)}
 .colToggle{float:right;border:none;background:rgba(255,255,255,.12);color:inherit;border-radius:6px;cursor:pointer;font-size:12px;padding:2px 8px;margin-top:-2px}
 .colToggle:hover{background:rgba(255,255,255,.25)}
 .col.collapsed{width:42px!important;min-width:42px!important;cursor:pointer}
-.col.collapsed .list,.col.collapsed #btnNewTag{display:none}
+.col.collapsed .list,.col.collapsed #btnNewTag,.col.collapsed #pubPanel{display:none}
+.col.collapsed #tagPanel{border:0;margin:0;overflow:visible}
 .col.collapsed h2{writing-mode:vertical-rl;transform:rotate(180deg);padding:14px 10px;white-space:nowrap;font-size:12px}
 .col.collapsed .colToggle{float:none;display:block;margin:0 auto 8px;transform:rotate(180deg)}
 .colResizer{flex:0 0 7px;align-self:stretch;cursor:col-resize;background:transparent;position:relative;z-index:6;touch-action:none}
@@ -711,12 +759,14 @@ html[data-theme="dark"] .colResizer::before{background:rgba(255,255,255,.12)}
   .colToggle{display:none}
   .col.collapsed .list{display:block}
   .col.collapsed #btnNewTag{display:block}
+  .col.collapsed #pubPanel{display:flex}
+  #pubPanel{min-height:150px}
   .col.collapsed h2{writing-mode:horizontal-tb;transform:none;padding:12px 14px 6px;font-size:12px}
 }
 /* ====== TRYB NOCNY ====== */
 html[data-theme="dark"]{
-  --bg:#1d1d21; --panel:#292930; --border:#3b3b44; --text:#e7e5e0; --muted:#9c99a3;
-  --accent:#b3966f; --accent2:#c9ad85; --sel:#3a3a45;
+  --bg:#111114; --panel:#1c1c1e; --border:rgba(84,84,88,.55); --text:#f2f2f7; --muted:#98989f;
+  --accent:#48c08d; --accent2:#6ed3a8; --sel:#2c2c2e;
 }
 html[data-theme="dark"] main{background:radial-gradient(900px 520px at 12% -5%,rgba(90,80,140,.4),transparent 60%),radial-gradient(820px 560px at 105% 15%,rgba(40,90,110,.4),transparent 58%),radial-gradient(700px 500px at 50% 115%,rgba(110,80,60,.32),transparent 60%),linear-gradient(180deg,#141416,#0e0e10)}
 html[data-theme="dark"] #colBooks,html[data-theme="dark"] #colTags,html[data-theme="dark"] #colNotes{box-shadow:0 6px 18px rgba(0,0,0,.4)}
@@ -791,6 +841,209 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   .chip .x{opacity:.8}
   .ncontent{-webkit-user-select:text;user-select:text}
 }
+/* ═══════════════════════════════════════════════════════════════
+   REDESIGN — warstwa wyglądu w stylu iOS.
+   Tylko prezentacja: żadna funkcja, żaden skrypt nie jest tu zmieniany.
+   ═══════════════════════════════════════════════════════════════ */
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-.008em}
+
+/* ——— płaskie tła zamiast gradientów ——— */
+main{background:var(--bg);gap:12px;padding:12px}
+html[data-theme="dark"] main,html[data-theme="sepia"] main{background:var(--bg)}
+html[data-theme="sepia"]{--bg:#efe6d3;--panel:#fbf5e9;--border:rgba(90,72,40,.16);--sel:#eee3cd}
+
+/* ——— pasek górny ——— */
+header{background:var(--accent);border-bottom:0;box-shadow:none;padding:10px 14px;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));gap:8px}
+.brand-logo{box-shadow:none;border-radius:9px}
+.brand-name{font-weight:600;font-size:16px;letter-spacing:-.02em}
+header .btn{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;font-weight:500;padding:8px 13px}
+header .btn:hover{background:rgba(255,255,255,.26)}
+header .btn.primary{background:#fff;border:0;color:var(--accent);font-weight:500}
+header .btn.primary:hover{background:#f4f7f5}
+header .fontctl{border:0;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden}
+header .fontctl button{background:transparent;border:0;color:#fff}
+header .fontctl button+button{border-left:1px solid rgba(255,255,255,.2)}
+header .fontctl button:hover{background:rgba(255,255,255,.16)}
+.searchwrap{border:0;border-radius:11px;background:rgba(255,255,255,.16);padding:0 12px}
+.searchwrap .ic{color:rgba(255,255,255,.75)}
+#search{color:#fff;font-size:15px;padding:9px 0}
+#search::placeholder{color:rgba(255,255,255,.65)}
+.searchwrap:focus-within{background:#fff;box-shadow:none;border:0}
+.searchwrap:focus-within #search{color:var(--text)}
+.searchwrap:focus-within #search::placeholder{color:var(--muted)}
+.searchwrap:focus-within .ic{color:var(--muted)}
+
+/* ——— kolumny jako karty ——— */
+.col{border-radius:16px}
+#colBooks,#colTags{background:var(--panel);border:.5px solid var(--border);box-shadow:none}
+#colNotes{background:var(--panel);border:.5px solid var(--border);box-shadow:none}
+#colBooks::after,#colTags::after,#colNotes::after{display:none}
+html[data-theme="dark"] #colBooks,html[data-theme="dark"] #colTags,html[data-theme="dark"] #colNotes{box-shadow:none}
+.col h2{font-size:11.5px;letter-spacing:.04em;font-weight:600;color:var(--muted);padding:13px 15px 5px}
+.divider{color:var(--muted);font-size:10.5px;letter-spacing:.06em;border-top:.5px solid var(--border);margin:10px 12px 4px;padding-top:8px}
+#tagPanel,#pubPanel{border:0;margin:0}
+#pubPanel{border-top:.5px solid var(--border);margin-top:10px;padding-top:2px;border-radius:0}
+#colTags .list#tagList{padding:0 7px 4px}
+#pubList{padding:2px 7px 8px}
+
+/* ——— pozycje list: bez ramek, samo podświetlenie ——— */
+.item{border-radius:11px;padding:9px 11px;margin:1px 4px;font-weight:400;
+  transition:background .16s ease,color .16s ease,transform .12s ease}
+#colBooks .item,#colTags .item{background:transparent;border:0;box-shadow:none;font-weight:400}
+#colBooks .item:hover,#colTags .item:hover{background:var(--sel);border:0}
+#colBooks .item.active,#colTags .item.active{background:var(--accent);color:#fff;border:0;box-shadow:none;font-weight:500}
+.item:active{transform:scale(.98)}
+.item .cnt{color:var(--muted);font-size:11.5px}
+#pubList .item .arr{color:var(--muted);opacity:.55}
+.secHead{border-radius:11px;border:0;background:var(--sel)}
+
+/* ——— karty notatek ——— */
+.ncard{border:.5px solid var(--border);border-radius:16px;padding:0 0 0 0;overflow:hidden;
+  box-shadow:none;transition:box-shadow .2s ease,transform .16s cubic-bezier(.22,.9,.32,1)}
+.ncard:hover{transform:none;border-color:var(--border);box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.ncard.pinned{box-shadow:0 0 0 1.5px var(--accent2)}
+.ncard>*:not(.nhead):not(.ntools){margin-left:16px;margin-right:16px}
+.nhead{margin:0;padding:13px 38px 2px 16px;border-radius:0;background:transparent;border-bottom:0;box-shadow:none}
+.ncard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cardAccent,transparent);z-index:1}
+#noteList.v-compact .ncard{padding:0;border-radius:13px}
+#noteList.v-compact .nhead{margin:0;padding:10px 34px 2px 14px}
+#noteList.v-compact .ncard>*:not(.nhead):not(.ntools){margin-left:14px;margin-right:14px}
+.ntitle{color:var(--text);font-weight:600;letter-spacing:-.015em;line-height:1.3;text-shadow:none}
+.ntitle[contenteditable="true"]{color:var(--text);background:var(--sel);border:0;box-shadow:none;border-radius:10px;padding:7px 9px}
+.drag{color:var(--muted);opacity:.5;top:11px}
+.drag:hover{background:var(--sel);color:var(--text);opacity:1}
+.ncontent{margin-top:5px;line-height:1.62;color:var(--text)}
+.ncard>.ncontent{padding-bottom:2px}
+.nmeta2{margin:7px 0 6px}
+.chips{margin:0 0 8px}
+.ntools{margin:8px 0 0;padding:5px 10px;background:var(--bg);border-top:.5px solid var(--border);border-radius:0}
+html[data-theme="dark"] .ntools{background:rgba(255,255,255,.04)}
+.ncard:not(:hover) .ntools{opacity:.75}
+
+/* ——— pigułki i chipy ——— */
+.pill{border-radius:999px;padding:2px 9px;font-weight:500}
+.pill.ref,.pill.par{background:var(--sel);color:var(--accent)}
+.pill.ks,.pill.issue{background:var(--sel);color:var(--muted);font-weight:400}
+.pill.date{background:transparent;color:var(--muted);padding-left:2px;font-weight:400}
+.chip{background:var(--sel);color:var(--text);border-radius:999px;padding:2px 9px}
+.chip .x{color:var(--muted)}
+html[data-theme="dark"] .chip{background:var(--sel);color:var(--text)}
+
+/* ——— przyciski ——— */
+.btn{border:.5px solid var(--border);border-radius:11px;background:var(--panel);font-weight:500;
+  box-shadow:none;transition:background .15s ease,transform .1s ease}
+.btn:hover{background:var(--sel)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{background:transparent;border-color:var(--border);color:#c0392b}
+.sbtn{border:0;background:transparent;color:var(--accent);border-radius:9px;font-weight:500;padding:6px 11px;
+  transition:background .15s ease,transform .1s ease}
+.sbtn:hover{background:var(--sel);border:0}
+.sbtn:active{transform:scale(.96)}
+.sbtn.warn{color:#c0392b;border:0;background:transparent}
+.sbtn.warn:hover{background:rgba(192,57,43,.09);border:0}
+.sbtn.ico{color:var(--muted)}
+.sbtn.ico:hover{background:var(--sel);color:var(--accent)}
+.tagBtns button{border:.5px solid var(--border);border-radius:10px;background:var(--panel);font-weight:500;box-shadow:none}
+.tagBtns button:hover{background:var(--sel)}
+.qf{border:.5px solid var(--border);border-radius:999px;background:var(--panel);font-weight:500;box-shadow:none}
+.qf.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.vb-group{border:.5px solid var(--border);border-radius:10px;background:var(--panel);overflow:hidden}
+.vb.on{background:var(--accent);color:#fff}
+.fontctl{border:.5px solid var(--border);border-radius:11px}
+#sortSel{border:.5px solid var(--border);border-radius:10px;padding:7px 10px;background:var(--panel);font-size:13px}
+.tagrow select,.tagrow input{border:.5px solid var(--border);border-radius:9px;background:var(--panel);box-shadow:none}
+.tagrow select{background-image:none;font-weight:400;color:var(--text)}
+
+/* ——— okna dialogowe w stylu iOS ——— */
+.overlay{background:rgba(0,0,0,.32);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.modal,#askModal .askbox,.fsmodal{border:0;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.modal{padding:22px 24px}
+#askModal .askbox{padding:0;width:min(340px,86vw);overflow:hidden;text-align:center}
+#askModal .askTitle{font-size:16px;font-weight:600;padding:20px 20px 4px;margin:0;letter-spacing:-.015em}
+#askModal .askHint{font-size:13px;color:var(--muted);padding:0 20px;line-height:1.45}
+#askModal .askInput{margin:12px 16px 4px;width:calc(100% - 32px);border:.5px solid var(--border);border-radius:10px;
+  background:var(--bg);font-size:15px;padding:9px 11px}
+#askModal .askInput:focus{border-color:var(--accent);box-shadow:none;outline:none}
+#askModal .askBtns{display:flex;gap:0;margin:16px 0 0;padding:0;border-top:.5px solid var(--border)}
+#askModal .askBtns button{flex:1;border:0;border-radius:0;background:transparent;padding:13px 8px;
+  font-size:15px;font-weight:400;color:var(--accent);box-shadow:none}
+#askModal .askBtns button+button{border-left:.5px solid var(--border)}
+#askModal .askBtns button:hover{background:var(--sel)}
+#askModal .askOk{font-weight:600}
+#askModal .askCancel{color:var(--muted)}
+#msgModal .askbox{padding:0;width:min(340px,86vw);overflow:hidden;text-align:center}
+#msgModal .askTitle{font-size:16px;font-weight:600;padding:20px 20px 4px;margin:0}
+#msgModal .msgBody{font-size:13.5px;color:var(--muted);padding:0 20px 4px;line-height:1.5}
+#msgModal .msgExtra{padding:0 20px}
+#msgModal .askBtns{display:flex;gap:0;margin:16px 0 0;padding:0;border-top:.5px solid var(--border)}
+#msgModal .askBtns{flex-wrap:wrap}
+#msgModal .askBtns button{flex:1 1 40%;min-width:110px;border:0;border-radius:0;background:transparent;padding:13px 8px;
+  font-size:15px;font-weight:400;color:var(--accent);box-shadow:none}
+#msgModal .askBtns button+button{border-left:.5px solid var(--border)}
+#msgModal .askBtns button:hover{background:var(--sel)}
+#msgModal .msgOk{font-weight:600}
+#msgModal .msgOk.danger{color:#c0392b}
+#msgModal .msgCancel{color:var(--muted)}
+#dropdown,#ebPop,#readPop,#colorMenu,#searchSug{border:.5px solid var(--border);border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,.18);padding:6px}
+#dropdown div,#ebPop div[data-cmd],#ebPop div[data-ins],#searchSug .sug{border-radius:9px}
+#dropdown div:hover,#searchSug .sug:hover,#searchSug .sug.on{background:var(--sel)}
+#toast{border-radius:14px;background:rgba(28,28,30,.94);font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.editbar{border:.5px solid var(--border);border-radius:14px;box-shadow:none;background:var(--panel)}
+.editbar button{border-radius:9px}
+.nn-card{border:.5px solid var(--border);border-radius:14px;background:var(--bg)}
+#mobileTabs button{border:.5px solid var(--border);border-radius:10px;font-weight:500}
+#mobileTabs button.on{background:var(--accent);border-color:var(--accent)}
+
+/* ——— ikony kreskowe: wyrównanie w tekście ——— */
+.mic{display:inline-block;vertical-align:-2px;width:15px;height:15px}
+.pill .mic,.refbtn .mic{width:14px;height:14px}
+.drag .mic,.pubDrag .mic{width:15px;height:15px}
+.pinmark .mic{width:13px;height:13px}
+.item .more .mic,.secMore .mic{width:16px;height:16px;vertical-align:-3px}
+.item .more,.secMore{opacity:0;transition:opacity .15s ease}
+.item:hover .more,.secHead:hover .secMore,.item .more:focus,.secMore:focus{opacity:.6}
+.item .more:hover,.secMore:hover{opacity:1}
+@media (hover:none){.item .more,.secMore{opacity:.5}}
+#readExit .mic{width:16px;height:16px;vertical-align:-3px}
+.eb-more .mic,.eb-color .mic{width:17px;height:17px}
+.refbtn{border:.5px solid var(--border);background:var(--sel);border-radius:999px;font-weight:500}
+.refbtn.edref{background:transparent;border:0}
+.refbtn:active{transform:scale(.97)}
+
+/* ——— delikatne animacje ——— */
+@keyframes iosIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.modal,#askModal .askbox,#msgModal .askbox{animation:iosIn .22s cubic-bezier(.32,.72,.35,1)}
+#dropdown,#ebPop,#readPop,#colorMenu{animation:iosIn .16s cubic-bezier(.32,.72,.35,1)}
+.btn,.sbtn,.qf,.vb,.item,.tagBtns button{-webkit-tap-highlight-color:transparent}
+@media (hover:none){
+  .btn:active,.sbtn:active,.qf:active,.tagBtns button:active{background:var(--sel)}
+  .ncard:active{background:var(--sel)}
+}
+@media (prefers-reduced-motion:reduce){
+  .modal,#askModal .askbox,#msgModal .askbox,#dropdown,#ebPop,#readPop,#colorMenu{animation:none}
+}
+
+/* ——— responsywność ——— */
+@media (max-width:900px){
+  main{padding:10px;gap:10px}
+  header{padding:8px 12px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+  #mobileTabs{padding:8px 10px;background:var(--panel);border-bottom:.5px solid var(--border)}
+  .ncard{border-radius:14px}
+  .item{padding:11px 12px}
+  #askModal .askbox,#msgModal .askbox{width:min(320px,88vw)}
+}
+@media (max-width:620px){
+  main{padding:8px;gap:8px}
+  .modal{padding:18px 16px;border-radius:16px}
+  .ncard>*:not(.nhead):not(.ntools){margin-left:13px;margin-right:13px}
+  .nhead{padding:11px 34px 2px 13px}
+  .ntools{padding:5px 8px}
+  .btn{padding:9px 12px}
+}
 </style>
 </head>
 <body>
@@ -800,7 +1053,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v119</span></div>
+      <div class="brand-name">JW Study <span class="ver">v130</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
@@ -851,12 +1104,18 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
   </div>
   <div class="colResizer" data-c="colBooks" title="Przeciągnij, aby zmienić szerokość"></div>
   <div class="col" id="colTags">
-    <h2><button class="colToggle" data-c="colTags" title="Zwiń / rozwiń">⟨⟨</button>Etykiety</h2>
-    <div class="tagBtns">
-      <button id="btnNewTag" title="Utwórz nową etykietę"><span class="tb-ic">✚</span><span class="tb-txt">Nowa etykieta</span></button>
-      <button id="btnNewSec" title="Grupuj etykiety w sekcje, np. Kongresy"><span class="tb-ic">📁</span><span class="tb-txt">Nowa sekcja</span></button>
+    <div id="tagPanel">
+      <h2><button class="colToggle" data-c="colTags" title="Zwiń / rozwiń">⟨⟨</button>Etykiety</h2>
+      <div class="tagBtns">
+        <button id="btnNewTag" title="Utwórz nową etykietę"><svg class="ic tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="tb-txt">Nowa etykieta</span></button>
+        <button id="btnNewSec" title="Grupuj etykiety w sekcje, np. Kongresy"><svg class="ic tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.4A1.6 1.6 0 0 1 5.1 5.8h3.7l1.9 2.1h8.2a1.6 1.6 0 0 1 1.6 1.6v8.1a1.6 1.6 0 0 1-1.6 1.6H5.1a1.6 1.6 0 0 1-1.6-1.6z"/></svg><span class="tb-txt">Nowa sekcja</span></button>
+      </div>
+      <div class="list" id="tagList"></div>
     </div>
-    <div class="list" id="tagList"></div>
+    <div id="pubPanel">
+      <h2 class="pubTitle">Publikacje <span class="pubActs"><span id="pubReset" class="pubReset" style="display:none" title="Przywróć domyślną kolejność">↺</span><span id="pubBack" class="pubBack" style="display:none">‹ wstecz</span></span></h2>
+      <div class="list" id="pubList"></div>
+    </div>
   </div>
   <div class="colResizer" data-c="colTags" title="Przeciągnij, aby zmienić szerokość"></div>
   <div class="col mshow" id="colNotes">
@@ -915,7 +1174,7 @@ html[data-theme="dark"] .ncontent[contenteditable="true"]:focus{box-shadow:0 0 0
     <div class="askBtns"><button class="msgCancel" type="button">Anuluj</button><button class="msgOk" type="button">OK</button></div>
   </div>
 </div>
-<button id="readExit">✎ Pokaż narzędzia</button>
+<button id="readExit"><svg class="ic mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5h3.6L19 8.6a1.9 1.9 0 0 0-2.7-2.7L5.2 17z"/><path d="M14.8 7.4l2.7 2.7"/></svg> Pokaż narzędzia</button>
 
 <div class="overlay" id="modalFs">
   <div class="fsmodal">
@@ -1296,7 +1555,217 @@ async function showStorageInfo(){
   }catch(e){ el.textContent = "Notatek: "+notes.filter(n=>!n.del).length; }
 }
 function noteMatchesTag(n,t){ if(t==="all")return true; if(t==="none")return n.tg.length===0; return n.tg.includes(t); }
-function noteMatchesBook(n,b){ if(b==="all")return true; if(b===0)return !n.b; return n.b===b; }
+/* filtr księgi; dodatkowo obsługuje wybór publikacji: "pub:SYMBOL" */
+function noteMatchesBook(n,b){
+  if(b==="all") return true;
+  if(typeof b==="string" && b.indexOf("pub:")===0){
+    const key=b.slice(4);
+    if(n.b) return false;
+    if(key.indexOf("year:")===0){                       // cały rocznik danej kategorii
+      const p=key.split(":");                           // year:kategoria:rok
+      return pubCatOf(n).id===p[1] && (pubYearOf(n)||"—")===p[2];
+    }
+    return pubKeyOf(n)===key;
+  }
+  if(b===0) return !n.b;
+  return n.b===b;
+}
+/* ===== zestaw ikon kreskowych (sama grafika — bez wpływu na działanie) ===== */
+const svgIc = (d, sw) => `<svg class="ic mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC_GRIP   = svgIc('<circle cx="9" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.1" fill="currentColor" stroke="none"/>');
+const IC_PIN    = svgIc('<path d="M9.5 3h5l-.6 5.4 3.1 3.1H7l3.1-3.1z"/><path d="M12 11.5V21"/>');
+const IC_BOOK   = svgIc('<path d="M4 5.6A2.6 2.6 0 0 1 6.6 3H19.4v14.4H6.6A2.6 2.6 0 0 0 4 20z"/><path d="M4 20a2.6 2.6 0 0 1 2.6-2.6H19.4V21H6.6A2.6 2.6 0 0 1 4 20z"/>');
+const IC_PENCIL = svgIc('<path d="M4.5 19.5h3.6L19 8.6a1.9 1.9 0 0 0-2.7-2.7L5.2 17z"/><path d="M14.8 7.4l2.7 2.7"/>');
+const IC_CLOCK  = svgIc('<circle cx="12" cy="12" r="8.4"/><path d="M12 7.4V12l3 1.8"/>');
+const IC_EXT    = svgIc('<path d="M14 4.5h5.5V10"/><path d="M19.5 4.5L11 13"/><path d="M18 14v4.6a1.4 1.4 0 0 1-1.4 1.4H5.4A1.4 1.4 0 0 1 4 18.6V7.4A1.4 1.4 0 0 1 5.4 6H10"/>');
+const IC_DOTS   = svgIc('<circle cx="5.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18.5" cy="12" r="1.3" fill="currentColor" stroke="none"/>');
+/* klucz publikacji: symbol + numer wydania (żeby roczniki Strażnicy nie zlewały się w jedno) */
+function pubKeyOf(n){ return (n.ks||"—") + (n.itn?("|"+n.itn):""); }
+/* klucz GRUPY publikacji — wszystkie wydania Strażnicy trafiają pod jedną pozycję */
+function pubGroupOf(n){
+  const ks=String(n.ks||"—").toLowerCase();
+  return ks.replace(/[\d]+$/,"") || ks;      // „w22" → „w", „pt14" → „pt"
+}
+function pubGroupLabel(g){
+  if(g==="—") return "Bez oznaczenia";
+  return PUB_NAMES[g] || PUB_NAMES[g.replace(/-.*$/,"")] || g;
+}
+/* ===== PANEL PUBLIKACJI — podział na kategorie jak w JW Library ===== */
+const PUB_CATS = [
+  {id:"w",    name:"Strażnica",            test:ks=>/^wp?\d*$/.test(ks),        byYear:true},
+  {id:"g",    name:"Przebudźcie się!",     test:ks=>/^gp?\d*$/.test(ks),        byYear:true},
+  {id:"mwb",  name:"Życie i służba",       test:ks=>/^mwb/.test(ks),            byYear:true},
+  {id:"km",   name:"Nasza Służba Królestwa",test:ks=>/^km\d*$/.test(ks),        byYear:true},
+  {id:"yb",   name:"Roczniki",             test:ks=>/^(yb|yp)\d*$/.test(ks),    byYear:true},
+  {id:"kong", name:"Wydawnictwa kongresowe",test:ks=>/^(ca|co)[-\d]/.test(ks),  byYear:true},
+  {id:"kursy",name:"Szkolenia i kursy",    test:ks=>/^(pt|be|sg|kc|cf)\d*$/.test(ks)},
+  {id:"ksiazki",name:"Książki",            test:ks=>/^(bt|bh|bhs|lff|jy|cl|lvs|od|it|si|rr|kr|ia|es|sjj|jd|gt|re|dp|ip|w0|bm|pe|hs)\d*$/.test(ks)},
+  {id:"broszury",name:"Broszury",          test:ks=>/^(ll|ld|rj|hf|la|pc|bm|ay|gf|ph|jl|lc|lr|mb|fg|ol|pu|sp|th|wfg|yc)\d*$/.test(ks)},
+  {id:"traktaty",name:"Traktaty i zaproszenia",test:ks=>/^(t-|inv|iv)/.test(ks)},
+  {id:"serie",name:"Serie artykułów",      test:ks=>/^(lmd|ijwbq|jwb|nwtsty-)/.test(ks)},
+  {id:"programy",name:"Programy",          test:ks=>/pgm/.test(ks),             byYear:true},
+  {id:"szkice",name:"Szkice wykładów",     test:ks=>/^s-\d+/.test(ks)},
+  {id:"skorowidze",name:"Skorowidze",      test:ks=>/^(dx|si-)/.test(ks)},
+  {id:"wskazowki",name:"Wskazówki",        test:ks=>/^(S-|sn)\d*/.test(ks)}
+];
+function pubCatOf(n){
+  const ks=String(n.ks||"").toLowerCase();
+  if(!ks) return {id:"inne", name:"Inne", byYear:false};
+  const c=PUB_CATS.find(c=>c.test(ks));
+  return c || {id:"inne", name:"Inne", byYear:false};
+}
+/* rok publikacji: z numeru wydania (RRRRMMDD) albo z końcówki symbolu (w22 → 2022) */
+function pubYearOf(n){
+  const itn=String(n.itn||"");
+  if(itn.length===8 && +itn.slice(0,4)) return itn.slice(0,4);
+  const m=String(n.ks||"").match(/(\d{2})$/);
+  if(m){ const y=+m[1]; return String(y>=60 ? 1900+y : 2000+y); }
+  return "";
+}
+let pubView = {cat:null, year:null};     // gdzie jesteśmy w panelu publikacji
+
+/* ——— WŁASNA KOLEJNOŚĆ POZYCJI W PANELU PUBLIKACJI ———
+   Każdy poziom ma własny zapis kolejności (kategorie / roczniki / wydania).
+   Pozycje przenosi się chwytem ⠿ — działa myszą i palcem na iPadzie. */
+let pubOrder = {};
+function loadPubOrder(){ try{ pubOrder = JSON.parse(localStorage.getItem("pubOrder")||"{}") || {}; }catch(e){ pubOrder = {}; } }
+function savePubOrder(){ try{ localStorage.setItem("pubOrder", JSON.stringify(pubOrder)); }catch(e){} }
+function pubOrderKey(){
+  if(!pubView.cat) return "cats";
+  if(!pubView.year) return "c:"+pubView.cat;
+  return "y:"+pubView.cat+":"+pubView.year;
+}
+/* nakłada zapisaną kolejność; pozycje nowe (jeszcze nieprzestawiane) lądują na końcu, zachowując kolejność domyślną */
+function applyPubOrder(keys){
+  const ord = pubOrder[pubOrderKey()];
+  if(!ord || !ord.length) return keys;
+  const pos = {}; ord.forEach((k,i)=>{ pos[k]=i; });
+  return keys.map((k,i)=>({k, a: (k in pos) ? pos[k] : 1e6, i}))
+             .sort((x,y)=> x.a-y.a || x.i-y.i)
+             .map(x=>x.k);
+}
+function setPubOrder(list){ pubOrder[pubOrderKey()] = list; savePubOrder(); }
+function clearPubOrder(){ delete pubOrder[pubOrderKey()]; savePubOrder(); renderPubPanel(); toast("Przywrócono domyślną kolejność"); }
+/* przeciąganie pozycji chwytem — pointer events (mysz + dotyk + rysik) */
+function initPubDrag(el){
+  el.querySelectorAll(".pubDrag").forEach(h=>{
+    h.addEventListener("pointerdown", ev=>{
+      const row = h.closest(".item"); if(!row) return;
+      ev.preventDefault(); ev.stopPropagation();
+      try{ h.setPointerCapture(ev.pointerId); }catch(e){}
+      row.classList.add("dragging"); el.classList.add("reordering");
+      const move = e=>{
+        const y = e.clientY;
+        const others = [...el.querySelectorAll(".item.pubMove")].filter(x=>x!==row);
+        let after = null;
+        for(const it of others){
+          const r = it.getBoundingClientRect();
+          if(y > r.top + r.height/2) after = it;
+        }
+        if(after){ if(after.nextSibling!==row) after.after(row); }
+        else { const first = el.querySelector(".item.pubMove"); if(first && first!==row) el.insertBefore(row, first); }
+      };
+      const end = ()=>{
+        h.removeEventListener("pointermove", move);
+        h.removeEventListener("pointerup", end);
+        h.removeEventListener("pointercancel", end);
+        row.classList.remove("dragging"); el.classList.remove("reordering");
+        setPubOrder([...el.querySelectorAll(".item.pubMove")].map(x=>x.dataset.ord));
+        const rst=$("pubReset"); if(rst) rst.style.display="";
+      };
+      h.addEventListener("pointermove", move);
+      h.addEventListener("pointerup", end);
+      h.addEventListener("pointercancel", end);
+    });
+  });
+}
+function renderPubPanel(){
+  const el=$("pubList"); if(!el) return;
+  const base = notes.filter(n=>!n.del && !n.b && noteMatchesTag(n,filt.tag) && noteMatchesQuery(n));
+  const back=$("pubBack"), rst=$("pubReset");
+  const grip = '<span class="pubDrag" title="Przeciągnij, aby zmienić kolejność">'+IC_GRIP+'</span>';
+  let html="";
+  if(!pubView.cat){
+    // POZIOM 1: kategorie
+    back.style.display="none";
+    const cats={};
+    base.forEach(n=>{ const c=pubCatOf(n); if(!cats[c.id]) cats[c.id]={name:c.name,byYear:c.byYear,cnt:0}; cats[c.id].cnt++; });
+    const keys=applyPubOrder(Object.keys(cats).sort((a,b)=>cats[b].cnt-cats[a].cnt || cats[a].name.localeCompare(cats[b].name,"pl")));
+    if(!keys.length){ el.innerHTML='<div class="pubEmpty">Brak notatek z publikacji</div>'; if(rst) rst.style.display="none"; return; }
+    keys.forEach(id=>{
+      html+=`<div class="item pubCat pubMove" data-cat="${id}" data-ord="${id}">${grip}<span class="nm">${esc(cats[id].name)}</span><span class="arr">›</span><span class="cnt">${cats[id].cnt}</span></div>`;
+    });
+  } else if(!pubView.year){
+    // POZIOM 2: roczniki albo poszczególne publikacje
+    back.style.display=""; back.textContent="‹ Publikacje";
+    const inCat = base.filter(n=>pubCatOf(n).id===pubView.cat);
+    const cat = PUB_CATS.find(c=>c.id===pubView.cat) || {byYear:false, name:"Inne"};
+    if(cat.byYear){
+      const years={};
+      inCat.forEach(n=>{ const y=pubYearOf(n)||"—"; years[y]=(years[y]||0)+1; });
+      applyPubOrder(Object.keys(years).sort((a,b)=>b.localeCompare(a))).forEach(y=>{
+        html+=`<div class="item pubYear pubMove" data-year="${esc(y)}" data-ord="${esc(y)}">${grip}<span class="nm">${y==="—"?"Bez rocznika":y}</span><span class="cnt">${years[y]}</span></div>`;
+      });
+    } else {
+      const items={};
+      inCat.forEach(n=>{ const k=pubKeyOf(n); items[k]=(items[k]||0)+1; });
+      applyPubOrder(Object.keys(items).sort((a,b)=>items[b]-items[a])).forEach(k=>{
+        const act=String(filt.book)==="pub:"+k;
+        html+=`<div class="item pubPick pubMove${act?" active":""}" data-key="${esc(k)}" data-ord="${esc(k)}">${grip}<span class="nm">${esc(pubKeyLabel(k))}</span><span class="cnt">${items[k]}</span></div>`;
+      });
+    }
+  } else {
+    // POZIOM 3: wydania w wybranym roczniku
+    back.style.display=""; back.textContent="‹ "+(PUB_CATS.find(c=>c.id===pubView.cat)||{name:""}).name;
+    const inYear = base.filter(n=>pubCatOf(n).id===pubView.cat && (pubYearOf(n)||"—")===pubView.year);
+    const items={};
+    inYear.forEach(n=>{ const k=pubKeyOf(n); items[k]=(items[k]||0)+1; });
+    const keys=applyPubOrder(Object.keys(items).sort((a,b)=>{
+      const ia=+(String(a).split("|")[1]||0), ib=+(String(b).split("|")[1]||0);
+      return ia-ib;
+    }));
+    // cały rocznik jednym kliknięciem — zawsze na górze, nie przenosi się
+    const yKey="year:"+pubView.cat+":"+pubView.year;
+    html+=`<div class="item pubPick${String(filt.book)==="pub:"+yKey?" active":""}" data-key="${esc(yKey)}"><span class="nm">Cały rocznik ${esc(pubView.year)}</span><span class="cnt">${inYear.length}</span></div>`;
+    keys.forEach(k=>{
+      const itn=String(k).split("|")[1];
+      const lbl= itn ? issueLabel(itn) : pubKeyLabel(k);
+      const act=String(filt.book)==="pub:"+k;
+      html+=`<div class="item pubPick pubMove${act?" active":""}" data-key="${esc(k)}" data-ord="${esc(k)}">${grip}<span class="nm">${esc(lbl)}</span><span class="cnt">${items[k]}</span></div>`;
+    });
+  }
+  el.innerHTML=html;
+  if(rst) rst.style.display = pubOrder[pubOrderKey()] ? "" : "none";
+  el.querySelectorAll(".pubCat").forEach(it=>{ it.onclick=e=>{ if(e.target.classList.contains("pubDrag")) return; pubView={cat:it.dataset.cat, year:null}; renderPubPanel(); }; });
+  el.querySelectorAll(".pubYear").forEach(it=>{ it.onclick=e=>{ if(e.target.classList.contains("pubDrag")) return; pubView.year=it.dataset.year; renderPubPanel(); }; });
+  el.querySelectorAll(".pubPick").forEach(it=>{
+    it.onclick=e=>{
+      if(e.target.classList.contains("pubDrag")) return;
+      const k="pub:"+it.dataset.key;
+      filt.book = (String(filt.book)===k) ? "all" : k;
+      filt.ch=null; persistFilt(); renderAll();
+      if(innerWidth<=900) mobileShow("colNotes");
+    };
+  });
+  initPubDrag(el);
+}
+/* podpis nagłówka grupy na liście notatek */
+function groupHeaderFor(n){
+  if(sortMode==="bible"){
+    if(!n.b) return "Publikacje i notatki ogólne";
+    return (BOOKS[n.b]||("Księga "+n.b)) + (n.ch?(" "+n.ch):"");
+  }
+  // sortMode === "pub"
+  if(n.b) return "Notatki biblijne";
+  const art = (n.pub||"").trim();
+  const head = pubKeyLabel(pubKeyOf(n));
+  return art ? head+" · "+art : head;
+}
+function pubKeyLabel(key){
+  const [ks,itn]=String(key).split("|");
+  const name = ks==="—" ? "Bez oznaczenia" : pubFullName(ks);
+  return itn ? name+" · "+issueLabel(itn) : name;
+}
 function noteMatchesCh(n){ return filt.ch==null || n.ch===filt.ch; }
 /* Tekst przeszukiwany: tytuł + treść + ODNOŚNIK (nazwa lekcji/publikacji lub werset)
    — dzięki temu „Lekcja 1 (a)" albo „pt14" znajdzie wszystkie notatki z tym odnośnikiem. */
@@ -1465,7 +1934,7 @@ function renderTags(){
       <span class="secArr">${s.open===false?"▸":"▾"}</span>
       <span class="secName">${esc(s.name)}</span>
       <span class="secCnt">${inside.length}${sum?" · "+sum:""}</span>
-      <span class="secMore" title="Opcje sekcji">⋯</span></div>`;
+      <span class="secMore" title="Opcje sekcji">${IC_DOTS}</span></div>`;
     if(s.open!==false){
       if(!inside.length) html += `<div class="secEmpty">Pusta — przenieś tu etykiety przez ⋯ przy etykiecie</div>`;
       else inside.forEach(t=>{ html += tagItem(t.id,t.name,counts[t.id]||0,true,t.color,true); });
@@ -1476,6 +1945,7 @@ function renderTags(){
   html += '<div class="divider">Moje etykiety</div>';
   loose.forEach(t=>{ html += tagItem(t.id,t.name,counts[t.id]||0,true,t.color); });
   el.innerHTML = html;
+  renderPubPanel();
   // obsługa nagłówków sekcji
   el.querySelectorAll(".secHead").forEach(h=>{
     const sid=+h.dataset.sec;
@@ -1652,7 +2122,7 @@ function openColorMenu(e){
   const presets = `<div class="cm-lbl">Gotowe kompozycje pastelowe (cały interfejs)</div><div class="cm-presets">`+
     PASTELS.map(([nm,c])=>`<button class="cm-preset" data-preset="${c}" style="background:${glassGrad(c,.12,-.18,1)};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)">${nm}</button>`).join("")+
     `<button class="cm-preset" data-preset="reset" style="background:var(--sel);color:var(--text)">Domyślny</button></div>`;
-  cm.innerHTML = `<div class="cm-title">🎨 Wygląd aplikacji</div>`+
+  cm.innerHTML = `<div class="cm-title">Wygląd aplikacji</div>`+
     presets+
     `<div class="cm-sec"><div class="cm-lbl">Albo ustaw każdą część osobno:</div></div>`+
     sec("colBooks","Kolumna „Księgi”")+
@@ -1670,7 +2140,7 @@ function tagItem(key,name,cnt,user,color,inSection){
   const dot = color ? `<span class="tgdot" style="background:${color}"></span>`
             : (key==="all" ? `<span class="tgdot all"></span>` : `<span class="tgdot none"></span>`);
   return `<div class="item ${active?"active":""} ${cnt?"":"zero"}${inSection?" inSec":""}" data-k="${key}" ${user?'data-droppable="1"':""}>
-    ${dot}<span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">⋯</span>':""}<span class="cnt">${cnt}</span></div>`;
+    ${dot}<span class="nm">${esc(name)}</span>${user?'<span class="more" title="Opcje etykiety">'+IC_DOTS+'</span>':""}<span class="cnt">${cnt}</span></div>`;
 }
 function cmpTags(a,b){
   const ao=a.ord!==undefined, bo=b.ord!==undefined;
@@ -1761,6 +2231,12 @@ function createTag(name){
   saveTags();
   return t;
 }
+$("pubBack").onclick = ()=>{
+  if(pubView.year) pubView.year=null; else pubView.cat=null;
+  renderPubPanel();
+};
+$("pubReset").onclick = ()=> clearPubOrder();
+loadPubOrder();
 $("btnNewSec").onclick = createSection;
 $("btnNewTag").onclick = async ()=>{
   const name = await askText({title:"Nowa etykieta", placeholder:"Nazwa etykiety", okLabel:"Utwórz"});
@@ -1813,11 +2289,13 @@ function renderBooks(){
   el.innerHTML = html;
   el.querySelectorAll(".item").forEach(it=>{
     it.onclick = ()=>{
-      const k = it.dataset.k==="all" ? "all" : +it.dataset.k;
+      const raw = it.dataset.k;
+      const k = raw==="all" ? "all" : (raw.indexOf("pub:")===0 ? raw : +raw);
       if(typeof k==="number" && k>0){
         expandedBook = (expandedBook===k && filt.book===k) ? null : k;
       } else expandedBook = null;
-      filt.book = k; filt.ch = null;
+      filt.book = (String(filt.book)===String(k) && typeof k==="string" && k.indexOf("pub:")===0) ? "all" : k;  // ponowne kliknięcie publikacji = wyłącz
+      filt.ch = null;
       persistFilt(); renderAll();
       // na telefonie: księga zostaje (żeby wybrać rozdział), reszta przełącza na notatki
       if(innerWidth<=900 && !(typeof k==="number" && k>0)) mobileShow("colNotes");
@@ -1833,10 +2311,10 @@ function renderBooks(){
     };
   });
 }
-function bookItem(key,name,cnt,expandable,expanded){
+function bookItem(key,name,cnt,expandable,expanded,isPub){
   const active = String(filt.book)===String(key) && filt.ch==null;
   const arr = expandable? `<span class="arr">${expanded?"▾":"▸"}</span>` : "";
-  return `<div class="item ${active?"active":""} ${cnt?"":"zero"}" data-k="${key}">${arr}<span class="nm">${esc(name)}</span><span class="cnt">${cnt}</span></div>`;
+  return `<div class="item ${active?"active":""} ${cnt?"":"zero"}${isPub?" pubItem":""}" data-k="${key}" title="${esc(name)}">${arr}<span class="nm">${esc(name)}</span><span class="cnt">${cnt}</span></div>`;
 }
 function bookBlock(i, cnt, base){
   const expanded = expandedBook===i;
@@ -2000,7 +2478,21 @@ function renderNotes(){
   el.innerHTML = "";
   if(arr.length===0){ el.appendChild(emptyStateEl()); fsNavList=[]; return; }
   const frag = document.createDocumentFragment();
-  arr.slice(0,visibleCount).forEach(n=>frag.appendChild(noteCard(n)));
+  // przy sortowaniu wg publikacji lub Biblii dodajemy przyklejone nagłówki grup
+  const grouped = (sortMode==="pub" || sortMode==="bible");
+  let lastGrp = null;
+  arr.slice(0,visibleCount).forEach(n=>{
+    if(grouped){
+      const g = groupHeaderFor(n);
+      if(g !== lastGrp){
+        lastGrp = g;
+        const h=document.createElement("div");
+        h.className="listGroup"; h.textContent=g;
+        frag.appendChild(h);
+      }
+    }
+    frag.appendChild(noteCard(n));
+  });
   el.appendChild(frag);
   fsNavList = arr.map(n=>n.g);
   if(arr.length > visibleCount){
@@ -2151,16 +2643,16 @@ function noteCard(n){
     : "";
   d.innerHTML =
     `<div class="nhead">
-       <span class="drag" draggable="true" title="Przeciągnij na zakładkę">⠿</span>
-       <div class="ntitle">${n.pin?'<span class="pinmark" title="Przypięta">📌</span> ':""}${hilite(esc(n.t||""))}</div>
+       <span class="drag" draggable="true" title="Przeciągnij na zakładkę">${IC_GRIP}</span>
+       <div class="ntitle">${n.pin?'<span class="pinmark" title="Przypięta">'+IC_PIN+'</span> ':""}${hilite(esc(n.t||""))}</div>
      </div>
      <div class="nmeta2">
-       ${link ? `<a class="refbtn" href="${link}" target="_blank" rel="noopener noreferrer" data-act="openref" title="Otwórz w JW Library">📖 ${esc(ref||"Otwórz w JW Library")} ↗</a>` : (ref?`<span class="pill ref">📖 ${esc(ref)}</span>`:`<button class="refbtn assign" data-act="assignref" title="Przypisz werset — utworzy link do JW Library">📌 Przypisz werset</button>`)}
-       ${link ? `<button class="refbtn edref" data-act="assignref" title="Zmień przypisany werset">✎</button>` : ""}
+       ${link ? `<a class="refbtn" href="${link}" target="_blank" rel="noopener noreferrer" data-act="openref" title="Otwórz w JW Library">${IC_BOOK} ${esc(ref||"Otwórz w JW Library")} ${IC_EXT}</a>` : (ref?`<span class="pill ref">${IC_BOOK} ${esc(ref)}</span>`:`<button class="refbtn assign" data-act="assignref" title="Przypisz werset — utworzy link do JW Library">${IC_PIN} Przypisz werset</button>`)}
+       ${link ? `<button class="refbtn edref" data-act="assignref" title="Zmień przypisany werset">${IC_PENCIL}</button>` : ""}
        ${n.ks?`<span class="pill ks" title="${esc(pubFullName(n.ks))}">${esc(n.ks)}</span>`:""}
        ${n.itn?`<span class="pill issue" title="Wydanie">${esc(issueLabel(n.itn))}</span>`:""}
        ${n.par?`<span class="pill par" title="Akapit w publikacji">¶ ${n.par}</span>`:""}
-       <span class="pill date">🕓 ${date}</span>
+       <span class="pill date">${IC_CLOCK} ${date}</span>
      </div>
      <div class="chips">${n.tg.map(tid=>{const t=tags.find(x=>x.id===tid);return t?`<span class="chip"${t.color?` style="background:linear-gradient(180deg,${shade(t.color,.15)},${shade(t.color,-.18)});color:#fff"`:""}>${esc(t.name)}<span class="x" data-untag="${tid}" title="Usuń z zakładki">×</span></span>`:"";}).join("")}</div>
      <div class="ncontent">${contentHtml(n)}</div>
@@ -2791,10 +3283,10 @@ function buildEditbar(n){
     <button data-cmd="insertUnorderedList" data-st="insertUnorderedList" title="Lista punktowana">${ICO.ul}</button>
     <button data-cmd="insertOrderedList" data-st="insertOrderedList" title="Lista numerowana">${ICO.ol}</button>
     <span class="eb-sep"></span>
-    <button class="eb-color" data-pop="color" title="Kolor / podświetlenie">🎨</button>
+    <button class="eb-color" data-pop="color" title="Kolor / podświetlenie">${svgIc('<circle cx="12" cy="12" r="8.6"/><circle cx="9" cy="9.6" r="1" fill="currentColor" stroke="none"/><circle cx="14.6" cy="9.6" r="1" fill="currentColor" stroke="none"/><circle cx="9.6" cy="14.8" r="1" fill="currentColor" stroke="none"/>')}</button>
     <button class="eb-ins" data-pop="ins" title="Wstaw: odnośnik do wersetu, cytat, listę zadań, link, linię">${ICO.plus}</button>
     <label class="eb-img" title="Wstaw zdjęcie / ilustrację">${ICO.image}<input type="file" accept="image/*" style="display:none"></label>
-    <button class="eb-more" data-pop="more" title="Więcej: wcięcia, wyrównanie, indeks, wyczyść">⋯</button>`;
+    <button class="eb-more" data-pop="more" title="Więcej: wcięcia, wyrównanie, indeks, wyczyść">${IC_DOTS}</button>`;
   bar.addEventListener("pointerdown", ev=>{
     if(ev.target.closest("select, label.eb-img")){ edSavedRange = captureRange(); return; }
     const pop = ev.target.closest("[data-pop]");

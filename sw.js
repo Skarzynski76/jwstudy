@@ -1,30 +1,26 @@
-const CACHE = 'jwstudy-v130';
-// Najważniejszy jest index.html — reszta to dodatki. Każdy plik zapisujemy OSOBNO,
-// żeby brak jednego (np. ikony) nie przerwał całego zapisu offline.
+const CACHE = 'jwstudy-v163';
+/* Rdzeń: dokument + wszystkie moduły CSS i JS — bez nich aplikacja nie ruszy offline. */
 const CORE = ['./', './index.html'];
+/* Dodatki: ikony i manifest. Brak któregoś nie może zablokować zapisu offline. */
 const EXTRA = [
   './manifest.webmanifest',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-maskable-512.png',
-  './apple-touch-icon.png',
-  './favicon-32.png'
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png',
+  './apple-touch-icon.png', './favicon-32.png'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) =>
-      // index.html musi się zapisać; dodatki najlepiej jak się da, ale ich brak nie blokuje offline
-      c.addAll(CORE).then(() => Promise.allSettled(EXTRA.map((a) => c.add(a))))
-    ).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => c.addAll(CORE).then(() => Promise.allSettled(EXTRA.map((a) => c.add(a)))))
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
@@ -32,32 +28,41 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
 
-  // HTML / nawigacja: NAJPIERW pamięć podręczna (żeby aplikacja ODPALAŁA SIĘ OFFLINE natychmiast),
-  // a w tle pobieramy świeżą wersję do cache — zmiany pojawią się przy następnym uruchomieniu.
+  /* Obce adresy (biblioteki z CDN, linki do jw.org) zostawiamy przeglądarce.
+     Wcześniej trafiały do naszej pamięci podręcznej jako nieprzejrzyste odpowiedzi —
+     zajmowały miejsce, a i tak nie dało się ich sensownie użyć offline. */
+  if (new URL(req.url).origin !== self.location.origin) return;
+
+  /* Dokument: najpierw pamięć podręczna, żeby aplikacja odpalała się offline natychmiast;
+     świeża wersja dociąga się w tle i pojawi przy następnym uruchomieniu. */
   if (req.mode === 'navigate' || req.destination === 'document') {
     e.respondWith(
       caches.match('./index.html').then((cached) => {
         const fromNet = fetch(req).then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('./index.html', copy)).catch(() => {});
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put('./index.html', copy)).catch(() => {});
+          }
           return res;
         }).catch(() => cached);
-        // offline: natychmiast z cache; pierwszy raz (brak cache): z sieci
         return cached || fromNet;
       })
     );
     return;
   }
 
-  // pozostałe zasoby (ikony, manifest): najpierw cache, potem sieć
+  /* Moduły CSS/JS i ikony: oddajemy wersję z pamięci od razu (zero czekania na sieć),
+     a w tle sprawdzamy, czy na serwerze nie ma nowszej — trafi do pamięci na następny raz. */
   e.respondWith(
     caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+      const fromNet = fetch(req).then((res) => {
+        if (res && res.ok && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+        }
         return res;
-      }).catch(() => caches.match('./index.html'));
+      }).catch(() => cached);
+      return cached || fromNet;
     })
   );
 });

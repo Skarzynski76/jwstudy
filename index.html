@@ -2,6 +2,21 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
+<!-- Polityka bezpieczeństwa treści.
+
+     Nie zastępuje filtrowania treści notatek — jest drugą warstwą na wypadek,
+     gdyby coś się przez filtr przedostało. Najważniejsze skutki:
+       • skrypt z JAKIEGOKOLWIEK obcego serwera poza cdnjs nie zostanie wykonany,
+       • object-src 'none' — brak wtyczek i osadzonych obiektów,
+       • base-uri 'self' — nie da się podmienić adresu bazowego strony,
+       • form-action 'none' — wstrzyknięty formularz nie wyśle nigdzie danych,
+       • frame-src 'none' — brak ramek.
+
+     'unsafe-inline' dla skryptów jest konieczne w wersji jednoplikowej, gdzie
+     cały kod siedzi w znacznikach <script> wewnątrz strony.
+     'wasm-unsafe-eval' jest potrzebne bibliotece sql.js, która czyta bazę
+     SQLite z kopii JW Library. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://cdnjs.cloudflare.com; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -722,10 +737,6 @@ html[data-theme="dark"] #dropdown .bk-box.warn .bk-desc{color:#d8b978}
 #colorMenu .cm-sec:first-of-type{border-top:none;padding-top:8px}
 #colorMenu .cm-lbl{font-size:12px;color:var(--muted);margin-bottom:9px}
 #colorMenu .cm-row{display:flex;flex-wrap:wrap;gap:9px}
-#colorMenu .cm-presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
-#colorMenu .cm-preset{border:1px solid var(--border);border-radius:11px;padding:9px 8px;font-size:12.5px;font-weight:600;cursor:pointer}
-#colorMenu .cm-preset:hover{filter:brightness(1.06)}
-#colorMenu .cm-preset:active{transform:translateY(1px)}
 #colorMenu .cm-sw{width:27px;height:27px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer;position:relative;box-shadow:none;transition:transform .12s ease}
 #colorMenu .cm-sw:hover{transform:scale(1.14)}
 #colorMenu .cm-sw:active{transform:scale(.96)}
@@ -2539,24 +2550,102 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
 .st-ver{ font-size:calc(12.5px * var(--uiw)); color:var(--muted); margin-bottom:8px; }
 .st-opt.st-wide{ width:100%; text-align:center; }
 
+/* ============================================================
+   PEŁNY EKRAN + EDYCJA: PRZYKLEJA SIĘ TYLKO PASEK NARZĘDZI (v1.67)
+
+   Dotąd belka tytułu i pasek narzędzi trzymały się górnej krawędzi jednocześnie.
+   Tytuł był spychany pod pasek i przy przewijaniu obie rzeczy właziły na siebie.
+
+   W trybie edycji tytuł wraca do treści i przewija się razem z nią — nie musi
+   nigdzie zjeżdżać. Do krawędzi przykleja się wyłącznie pasek narzędzi,
+   bo to on jest potrzebny pod ręką przez cały czas pisania.
+   ============================================================ */
+#fsWrap .ncard.editing .nhead{
+  position:static;
+  z-index:auto;
+  /* rezerwa na krzyżyk niepotrzebna — przycisk jest teraz przy krawędzi okna */
+  padding-right:clamp(4px, 2vw, 20px);
+}
+#fsWrap .ncard.editing .editbar{
+  top:0;
+  padding-right:calc(46px + 8px);   /* miejsce na krzyżyk, żeby nie zasłaniał przycisków */
+}
+/* Krzyżyk trzyma się rogu okna, a nie tytułu — inaczej odjechałby razem z nim. */
+#fsWrap .ncard.editing .fsCloseInline{
+  position:fixed;
+  top:calc(clamp(10px, 2.4vw, 18px) + env(safe-area-inset-top, 0px));
+  right:clamp(6px, 2vw, 16px);
+  z-index:20;
+}
+/* Tytuł w trybie edycji: spokojny odstęp od paska, bez skoków przy pisaniu. */
+#fsWrap .ncard.editing .ntitle{
+  padding-top:clamp(10px, 2vw, 18px);
+}
+
+/* ============================================================
+   GOTOWE KOMPOZYCJE W USTAWIENIACH (v1.73)
+   ============================================================ */
+.st-komp{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(calc(96px * var(--uiw)), 1fr));
+  gap:calc(7px * var(--uiw));
+  margin-top:calc(4px * var(--uiw));
+}
+.st-kafel{
+  position:relative;
+  border:0; border-radius:calc(11px * var(--uiw));
+  padding:calc(11px * var(--uiw)) calc(10px * var(--uiw));
+  font-size:calc(12.5px * var(--uiw));
+  font-weight:500; cursor:pointer;
+  text-align:center; line-height:1.2;
+  box-shadow:0 1px 3px rgba(0,0,0,.18);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.st-kafel:hover{ transform:translateY(-1px); box-shadow:0 3px 9px rgba(0,0,0,.22); }
+.st-kafel:active{ transform:scale(.97); }
+.st-kafel.on{ box-shadow:0 0 0 2px var(--panel), 0 0 0 4px currentColor; }
+.st-kafel-domyslny{
+  background:var(--panel)!important; color:var(--text)!important;
+  border:1px solid var(--border);
+}
+.st-ptak{
+  position:absolute; top:calc(4px * var(--uiw)); right:calc(6px * var(--uiw));
+  font-size:calc(11px * var(--uiw)); opacity:.9;
+}
+
+/* ============================================================
+   OGRANICZENIE RUCHU (v1.75)
+   System operacyjny pozwala poprosić o mniej animacji — bywa to
+   ustawienie zdrowotne, nie estetyczne. Szanujemy je bez pytania.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important;
+  }
+  .spinner{ animation:none!important; border-top-color:currentColor!important; }
+}
+
 </style></head>
 <body>
-<div id="loading"><div class="spinner"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
+<div id="loading" role="status" aria-live="polite"><div class="spinner" aria-hidden="true"></div><div id="loadMsg">Wczytywanie notatek…</div></div>
 
 <header>
   <div class="brand">
     <img class="brand-logo" src="icon-192.png" width="36" height="36" alt="">
     <div class="brand-txt">
-      <div class="brand-name">JW Study <span class="ver">v1.64</span></div>
+      <div class="brand-name">JW Study <span class="ver">v1.75</span></div>
       <div class="brand-sub" id="hCount"></div>
     </div>
   </div>
   <div class="searchwrap">
     <svg class="ic search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
     <div id="searchSug"></div>
-    <input id="search" type="search" autocomplete="off" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• bez ogonków też działa: milosc znajdzie miłość&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) — którekolwiek z nich&#10;• tytuł:pokora · etykieta:studium · werset:Jan'>
+    <input id="search" type="search" autocomplete="off" aria-label="Szukaj w notatkach" placeholder='Szukaj w notatkach…' title='Wyszukiwanie rozszerzone:&#10;• bez ogonków też działa: milosc znajdzie miłość&#10;• kilka słów — wszystkie muszą wystąpić&#10;• gwiazdka: miłos* znajdzie miłość, miłosierdzie…&#10;• "w cudzysłowie" — dokładna fraza&#10;• (słowo|inne) — którekolwiek z nich&#10;• tytuł:pokora · etykieta:studium · werset:Jan'>
   </div>
-  <select id="sortSel" title="Kolejność notatek na liście">
+  <select id="sortSel" aria-label="Kolejność notatek na liście" title="Kolejność notatek na liście">
     <optgroup label="Według zmiany">
       <option value="new">Ostatnio zmienione</option>
       <option value="old">Najdawniej zmienione</option>
@@ -2595,7 +2684,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
   <button data-p="colNotes" class="on">Notatki</button>
 </div>
 
-<main>
+<main id="glowna">
   <div class="col" id="colBooks">
     <h2><button class="colToggle" data-c="colBooks" title="Zwiń / rozwiń">⟨⟨</button>Biblia</h2>
     <div class="list" id="bookList"></div>
@@ -2657,9 +2746,9 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
 <div id="imgHandles"><span class="h tl"></span><span class="h tr"></span><span class="h bl"></span><span class="h br"></span></div>
 <div id="dropCaret"></div>
 <div id="toast"></div>
-<div id="dropdown"></div>
-<div id="colorMenu"></div>
-<div id="ebPop"></div>
+<div id="dropdown" role="menu" aria-label="Menu"></div>
+<div id="colorMenu" role="dialog" aria-label="Kolory kolumn i notatek"></div>
+<div id="ebPop" role="menu" aria-label="Narzędzia edytora"></div>
 <div id="readPop"></div>
 <div class="overlay" id="askModal">
   <div class="askbox">
@@ -2697,7 +2786,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
         📂 Wybierz plik…
         <input type="file" id="mfInput" style="display:none">
       </label>
-      <button class="btn" onclick="closeModal('modalFile')">Anuluj</button>
+      <button class="btn" data-zamknij="modalFile">Anuluj</button>
     </div>
   </div>
 </div>
@@ -2740,7 +2829,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
     </div>
 
     <div class="actions">
-      <button class="btn" onclick="closeModal('modalNew')">Anuluj</button>
+      <button class="btn" data-zamknij="modalNew">Anuluj</button>
       <button class="btn primary" id="nnSave"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Utwórz notatkę</button>
     </div>
   </div>
@@ -2751,7 +2840,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
     <h3>Eksport do JW Library</h3>
     <p id="expInfo"></p>
     <div class="actions">
-      <button class="btn" onclick="closeModal('modalExport')">Anuluj</button>
+      <button class="btn" data-zamknij="modalExport">Anuluj</button>
       <button class="btn primary" id="expGo">Utwórz plik .jwlibrary</button>
     </div>
   </div>
@@ -2763,7 +2852,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
     <p class="trashHint">Usunięte notatki są przechowywane <b>30 dni</b>, potem znikają na stałe. Możesz je przywrócić lub usunąć od razu.</p>
     <div id="trashList"></div>
     <div class="actions">
-      <button class="btn" onclick="closeModal('modalTrash')">Zamknij</button>
+      <button class="btn" data-zamknij="modalTrash">Zamknij</button>
       <button class="btn danger" id="trashEmpty">Opróżnij kosz</button>
     </div>
   </div>
@@ -2775,7 +2864,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
     <p>Wszystkie zmiany (edycje, kolory, zakładki, nowe notatki) zapisują się <b>automatycznie w pamięci Twojej przeglądarki</b> (IndexedDB) na tym komputerze — nic nie jest wysyłane do internetu.</p>
     <p>⚠️ To oznacza, że dane są powiązane z <b>tą przeglądarką i tym plikiem</b>. Wyczyszczenie danych przeglądania („ciasteczka i dane witryn”) może je usunąć. Dlatego co jakiś czas zrób kopię: <b>⚙️ Plik → Zapisz kopię danych (JSON)</b> — taki plik możesz potem wczytać z powrotem, także na innym komputerze.</p>
     <p>Trwałym archiwum jest też eksport do formatu <b>.jwlibrary</b>, który można zaimportować w aplikacji JW Library.</p>
-    <div class="actions"><button class="btn primary" onclick="closeModal('modalInfo')">Rozumiem</button></div>
+    <div class="actions"><button class="btn primary" data-zamknij="modalInfo">Rozumiem</button></div>
   </div>
 </div>
 
@@ -2815,7 +2904,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
       <div class="help-row"><span class="help-ic">💾</span><div><b>Kopia zapasowa</b> — rób ją regularnie (przycisk 💾 u góry). Gdy zrobi się bursztynowy, czas na kopię.<br><b>Przenoszenie między urządzeniami:</b> zapisz kopię na jednym, a na drugim <b>⚙️ Plik → Wczytaj kopię</b> i wybierz <b>Dołącz + układ</b> — doda brakujące notatki i przeniesie porządek etykiet (sekcje, kolory), więc wszędzie będzie tak samo. Nic nie kasuje.</div></div>
       <div class="help-row"><span class="help-ic">⌨️</span><div><b>Skróty</b> (komputer): <code>/</code> szukaj · <code>n</code> nowa notatka · <code>Esc</code> zamknij.</div></div>
     </div>
-    <div class="actions"><button class="btn primary" onclick="closeModal('modalHelp')">Zaczynajmy</button></div>
+    <div class="actions"><button class="btn primary" data-zamknij="modalHelp">Zaczynajmy</button></div>
   </div>
 </div>
 
@@ -2825,7 +2914,7 @@ html[data-theme="dark"] #colPubs{ background:var(--bg); }
     <div class="nn-head"><h3>Ustawienia</h3></div>
     <div id="setBody"></div>
     <div class="btnrow" style="justify-content:flex-end;margin-top:18px">
-      <button class="btn primary" onclick="closeModal('modalSettings')">Gotowe</button>
+      <button class="btn primary" data-zamknij="modalSettings">Gotowe</button>
     </div>
   </div>
 </div>
@@ -2959,6 +3048,63 @@ async function idbBulkChunked(store,items){
     await idbBulk(store, items.slice(i,i+400));
   }
 }
+/**
+ * Wymiana CAŁEJ zawartości bazy w jednej transakcji.
+ *
+ * Wcześniej „Zastąp wszystko" robiło to na dwa razy: najpierw czyszczenie
+ * w jednej transakcji, potem zapis w kolejnych. Gdy drugi krok się nie udał
+ * (brak miejsca, zamknięcie karty, błąd bazy), na urządzeniu zostawała
+ * pusta baza — stare notatki skasowane, nowych nie ma.
+ *
+ * Teraz czyszczenie i zapis dzieją się w JEDNEJ transakcji: albo wchodzi
+ * całość, albo baza zostaje dokładnie taka, jaka była.
+ *
+ * @param {Note[]} noweNotes
+ * @param {Tag[]} noweTags
+ * @param {Object[]} noweSekcje
+ * @param {Object[]} noweZakladki
+ * @returns {Promise<boolean>}
+ */
+function idbZastapWszystko(noweNotes, noweTags, noweSekcje, noweZakladki){
+  return new Promise((res, rej)=>{
+    if(!idb) return res(false);
+    let tx;
+    try{ tx = idb.transaction(["notes","tags","meta"], "readwrite"); }
+    catch(e){ return rej(e); }
+    tx.oncomplete = ()=>res(true);
+    tx.onerror    = ()=>rej(tx.error || new Error("zapis się nie powiódł"));
+    tx.onabort    = ()=>rej(tx.error || new Error("zapis przerwany"));
+    try{
+      const sn = tx.objectStore("notes");
+      const st = tx.objectStore("tags");
+      const sm = tx.objectStore("meta");
+      sn.clear(); st.clear();
+      for(const n of noweNotes) sn.put(n);
+      for(const t of noweTags)  st.put(t);
+      sm.put(noweSekcje,   "sections");
+      sm.put(noweZakladki, "pubTabs");
+    }catch(e){
+      try{ tx.abort(); }catch(_){}
+      rej(e);
+    }
+  });
+}
+/**
+ * Odczytuje z bazy to, co miało się zapisać, i porównuje liczby.
+ * Zapis do IndexedDB potrafi „udać się" i nie zostawić danych (np. przy
+ * wyczerpanym miejscu), więc po imporcie sprawdzamy wynik zamiast zakładać.
+ * @returns {Promise<{notatki:number, etykiety:number, zgadza:boolean}|null>}
+ */
+async function sprawdzZapis(ileNotatek, ileEtykiet){
+  if(!idb) return null;
+  try{
+    const [notatki, etykiety] = await Promise.all([idbCount("notes"), idbCount("tags")]);
+    return {notatki, etykiety, zgadza: notatki===ileNotatek && etykiety===ileEtykiet};
+  }catch(e){
+    console.warn("Nie udało się sprawdzić zapisu", e);
+    return null;
+  }
+}
 function idbCount(store){return new Promise((res,rej)=>{const t=idb.transaction(store).objectStore(store).count();t.onsuccess=()=>res(t.result);t.onerror=rej;});}
 /* ===== OCHRONA PRZED BRAKIEM MIEJSCA =====
    Gdy pamięć urządzenia się zapełni, zapis do bazy NIE UDAJE SIĘ.
@@ -3037,7 +3183,41 @@ function saveTags(){ if(idb) idbBulk("tags", tags).catch(e=>reportSaveError(e,"e
    albo pochodzić ze starszej wersji. Zamiast ufać, że wszystko ma właściwy kształt,
    każdą notatkę przepuszczamy przez sito — pola nadające się do naprawy prostujemy,
    rekordy bez identyfikatora odrzucamy, bo bez niego nie da się nimi zarządzać. */
-function sanitizeNote(n){
+/**
+ * Czy zapis koloru jest bezpieczny do wstawienia w atrybut stylu.
+ * Odrzuca cudzysłowy, nawiasy ostre i url(), którymi dałoby się wyjść
+ * z atrybutu i dopisać własny kod.
+ */
+function kolorBezpieczny(v){
+  if(typeof v!=="string") return false;
+  const t=v.trim();
+  if(t.length>32) return false;
+  return /^#[0-9a-f]{3,8}$/i.test(t)
+      || /^rgba?\(\s*[\d.\s,%]+\)$/i.test(t)
+      || /^hsla?\(\s*[\d.\s,%deg]+\)$/i.test(t)
+      || /^[a-z]{3,20}$/i.test(t);
+}
+/**
+ * Sito dla treści notatki wczytanej z CUDZEGO pliku.
+ *
+ * Pole h to gotowy HTML wstawiany przez innerHTML. Własny edytor przepuszcza je
+ * przez sanitize() przy każdym zapisie, ale plik kopii może pochodzić skądkolwiek —
+ * wystarczyło podłożyć <img src=x onerror=…> albo <script>, żeby przy otwarciu
+ * aplikacji wykonał się obcy kod. Dlatego wszystko z zewnątrz przechodzi przez
+ * ten sam filtr co treść pisana ręcznie.
+ */
+function czystyHtmlZObcegoZrodla(html){
+  if(typeof html!=="string" || !html) return "";
+  if(typeof sanitize!=="function") return "";   // bez filtru wolimy stracić formatowanie niż wpuścić kod
+  try{ return sanitize(html); }
+  catch(e){ console.warn("Nie udało się oczyścić treści notatki", e); return ""; }
+}
+
+/**
+ * @param {*} n
+ * @param {boolean} [obce]  dane z cudzego pliku — treść przechodzi przez filtr HTML
+ */
+function sanitizeNote(n, obce){
   if(!n || typeof n!=="object") return null;
   const g = (typeof n.g==="string" && n.g) ? n.g : (n.g!=null ? String(n.g) : "");
   if(!g) return null;                       // notatka bez identyfikatora jest bezużyteczna
@@ -3045,6 +3225,17 @@ function sanitizeNote(n){
   n.t  = typeof n.t==="string" ? n.t : (n.t==null ? "" : String(n.t));
   n.c  = typeof n.c==="string" ? n.c : (n.c==null ? "" : String(n.c));
   n.h  = typeof n.h==="string" ? n.h : "";
+  if(obce && n.h){
+    const czysty = czystyHtmlZObcegoZrodla(n.h);
+    if(czysty !== n.h) console.warn("Oczyszczono treść notatki z wczytanej kopii:", n.g);
+    n.h = czysty;
+  }
+  if(obce){
+    // te pola trafiają do atrybutów i nazw — muszą być zwykłym tekstem
+    if(n.ff!=null && typeof n.ff!=="string") delete n.ff;
+    if(n.lh!=null && !/^[\d.]{1,6}$/.test(String(n.lh))) delete n.lh;
+    if(n.pm!=null && !/^[\d.]{1,6}(em|px|rem)?$/.test(String(n.pm))) delete n.pm;
+  }
   n.tg = Array.isArray(n.tg) ? n.tg.map(Number).filter(x=>isFinite(x)) : [];
   n.b  = liczbaLubZero(n.b);
   n.ch = liczbaLubZero(n.ch);
@@ -3063,10 +3254,10 @@ function sanitizeNote(n){
 function liczbaLubZero(v){ const x=Number(v); return isFinite(x) ? x : 0; }
 /* Odsiewa niepoprawne rekordy i mówi w konsoli, ile ich było — łatwiej zdiagnozować
    uszkodzony plik, niż zastanawiać się, czemu notatek jest mniej. */
-function sanitizeNotes(list, zrodlo){
+function sanitizeNotes(list, zrodlo, obce){
   if(!Array.isArray(list)) { console.warn("Oczekiwano listy notatek, dostałem:", typeof list, "("+(zrodlo||"?")+")"); return []; }
   const out=[]; let odrzucone=0;
-  for(const n of list){ const ok=sanitizeNote(n); if(ok) out.push(ok); else odrzucone++; }
+  for(const n of list){ const ok=sanitizeNote(n, obce); if(ok) out.push(ok); else odrzucone++; }
   if(odrzucone) console.warn("Pominięto "+odrzucone+" uszkodzonych notatek ("+(zrodlo||"?")+")");
   return out;
 }
@@ -3075,7 +3266,7 @@ function sanitizeNotes(list, zrodlo){
  * identyfikatorem (powtórki rozjeżdżają przypisania notatek).
  * @returns {Tag[]}
  */
-function sanitizeTags(list, zrodlo){
+function sanitizeTags(list, zrodlo, obce){
   if(!Array.isArray(list)) return [];
   const out=[]; const uzyte=new Set(); let odrzucone=0;
   for(const t of list){
@@ -3086,7 +3277,9 @@ function sanitizeTags(list, zrodlo){
     if(uzyte.has(id)){ odrzucone++; continue; }     // powtórzone identyfikatory rozjeżdżają przypisania
     uzyte.add(id);
     t.id=id; t.name=name;
-    if(t.color!=null && typeof t.color!=="string") delete t.color;
+    /* Kolor trafia do atrybutu style. Zapis z cudzysłowem pozwoliłby z niego wyjść
+       i dopisać własny atrybut, więc przepuszczamy tylko proste, znane postacie. */
+    if(t.color!=null && !kolorBezpieczny(t.color)) delete t.color;
     if(t.sec!=null && !isFinite(Number(t.sec))) delete t.sec;
     out.push(t);
   }
@@ -3201,7 +3394,20 @@ async function boot(){
   $("loading").style.display = "none";
   updateBackupBadge();
   if(backupStale()) setTimeout(()=>toast("💾 Warto zrobić kopię danych — kliknij 💾 na górze"), 1500);
-  if(!lsGet(KP+"Onboarded", null)){ setTimeout(()=>openModal("modalHelp"),400); lsSet(KP+"Onboarded","1"); }
+  /* Znacznik „widziano" stawiamy dopiero po ZAMKNIĘCIU okna, nie po otwarciu.
+     Gdyby cokolwiek przerwało pierwsze uruchomienie, powitanie pokaże się ponownie
+     zamiast przepaść bez śladu. */
+  if(!lsGet(KP+"Onboarded", null)) setTimeout(()=>{
+    openModal("modalHelp");
+    const okno = $("modalHelp");
+    const obserwuj = new MutationObserver(()=>{
+      if(!okno.classList.contains("show")){
+        lsSet(KP+"Onboarded","1");
+        obserwuj.disconnect();
+      }
+    });
+    obserwuj.observe(okno, {attributes:true, attributeFilter:["class"]});
+  }, 400);
   // tryb offline: zapamiętaj aplikację w pamięci podręcznej urządzenia
   if(location.protocol.indexOf("http")===0 && "serviceWorker" in navigator) zarejestrujSW();
 }
@@ -3234,14 +3440,26 @@ function zarejestrujSW(){
       });
     });
   }).catch(()=>{});
-  /* Gdy nowa wersja przejmuje stronę, przeładowujemy raz — inaczej w bieżącej
-     sesji zostałyby stare pliki CSS i JS wczytane przed podmianą. */
-  let przeladowano = false;
-  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
-    if(przeladowano) return;
-    przeladowano = true;
-    location.reload();
-  });
+  /* Gdy NOWA wersja zastępuje starą, przeładowujemy raz — inaczej w bieżącej
+     sesji zostałyby stare pliki CSS i JS wczytane przed podmianą.
+
+     Uwaga na pierwsze uruchomienie: obsługa offline dopiero wtedy przejmuje stronę,
+     więc to samo zdarzenie pada, choć niczego nie zastępuje. Bez poniższego warunku
+     aplikacja przeładowywała się sekundę po starcie i zdmuchiwała okno powitalne. */
+  const bylaObsluga = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>przejeloObsluge(bylaObsluga));
+}
+/**
+ * Reakcja na przejęcie strony przez obsługę offline.
+ * @param {boolean} bylaObsluga  czy jakaś obsługa działała już przy wczytywaniu strony
+ */
+let _przeladowano = false;
+function przejeloObsluge(bylaObsluga){
+  if(!bylaObsluga) return false;   // pierwsze uruchomienie — nie ma czego odświeżać
+  if(_przeladowano) return false;
+  _przeladowano = true;
+  location.reload();
+  return true;
 }
 /** Pasek z informacją o nowej wersji i przyciskiem odświeżenia. */
 function pokazNowaWersje(nowy){
@@ -3583,7 +3801,7 @@ function noteSearchStamp(n){
  * dopiero, gdy notatka się zmieni — inaczej każdy wciśnięty klawisz przeliczałby
  * wszystkie notatki od zera.
  * @param {Note} n
- * @returns {{stamp:string, plain:string, norm:string, squashed:string}}
+ * @returns {Object} pola: stamp, plain, norm, squashed
  */
 function searchTextOf(n){
   const stamp = noteSearchStamp(n);
@@ -3730,7 +3948,11 @@ function applyNoteView(){
   const el=$("noteList"); if(!el) return;
   el.classList.remove("v-list","v-compact");
   el.classList.add("v-"+noteView);
-  document.querySelectorAll("#viewBar .vb").forEach(b=>b.classList.toggle("on", b.dataset.view===noteView));
+  document.querySelectorAll("#viewBar .vb").forEach(b=>{
+    const wlaczony = b.dataset.view===noteView;
+    b.classList.toggle("on", wlaczony);
+    b.setAttribute("aria-pressed", String(wlaczony));   // czytnik ekranu mówi, który widok jest włączony
+  });
 }
 function setNoteView(v){
   noteView=v;
@@ -3744,6 +3966,10 @@ function initViewBar(){
   };
   document.querySelectorAll("#viewBar .vb").forEach(b=>{
     b.innerHTML = ic[b.dataset.view]||"";
+    /* Ikona sama w sobie nic nie mówi czytnikowi ekranu — nazwę bierzemy z podpowiedzi.
+       aria-pressed pokazuje, który widok jest właśnie włączony. */
+    if(b.title && !b.getAttribute("aria-label")) b.setAttribute("aria-label", b.title);
+    b.setAttribute("aria-pressed", String(b.classList.contains("on")));
     b.onclick = ()=>setNoteView(b.dataset.view);
   });
   applyNoteView();
@@ -3824,9 +4050,10 @@ function renderTags(){
     // kolor napisu dobierany do tła sekcji — inaczej jasny pastel + biel = nic nie widać
     /* Pasek bierze wybrany kolor w całości — z pastelowej palety wygląda spokojnie,
        a kolor napisu liczy czytelnyTekst(), więc pozostaje czytelny przy każdym odcieniu. */
-    const sc = s.color
-      ? ` style="--secBg:${s.color};--secLine:${shade(s.color,-.28)};`+
-        `--secFg:${czytelnyTekst(s.color)};--secFg2:${czytelnyTekstSlaby(s.color)}"`
+    const kol = (typeof kolorBezpieczny==="function" && kolorBezpieczny(s.color)) ? s.color : "";
+    const sc = kol
+      ? ` style="--secBg:${kol};--secLine:${shade(kol,-.28)};`+
+        `--secFg:${czytelnyTekst(kol)};--secFg2:${czytelnyTekstSlaby(kol)}"`
       : "";
     html += `<div class="secHead${s.open===false?" closed":""}" data-sec="${s.id}"${sc}>
       <span class="secArr">${s.open===false?"▸":"▾"}</span>
@@ -3978,12 +4205,29 @@ const SECCOLORS = ["#cfe3d6","#cfdcea","#dcd4ea","#f0dcc6","#eed6dd","#cfe4e2","
 const TAGCOLORS = ["#e8c86a","#dcb08a","#e0a89a","#c9b6d8","#a9c4e4","#9fd0c7","#b6d9a8","#efb7c4","#c2c8d0"];
 /* pastelowe kompozycje: jeden zgrany odcień na całą kompozycję kolumn i belek */
 const PASTELS = [["Lawenda","#b9a9d6"],["Mięta","#9ed3c2"],["Brzoskwinia","#e8b894"],["Błękit","#a6c3e0"],["Róż","#e2adc0"],["Piasek","#dccfae"],["Szałwia","#b7c9a8"],["Grafit","#b9bec6"]];
+/**
+ * Gotowa kompozycja — jeden kolor na CAŁY interfejs.
+ *
+ * Pasek górny był dotąd na stałe butelkowo-zielony, bo brał kolor ze zmiennej
+ * --accent ustawianej w arkuszu stylów. Kompozycja podmienia teraz także ją,
+ * więc pasek, przyciski i podświetlenie wybranej pozycji idą za wybranym kolorem.
+ *
+ * Kolumna Publikacje doszła później niż ta funkcja i nie była kolorowana —
+ * teraz jest.
+ *
+ * @param {string} c  kolor kompozycji albo "reset"
+ */
 function applyPreset(c){
   let cfg;
   if(c==="reset") cfg={};
-  else cfg={colBooks:c, colTags:c, colNotes:c, nhead:c};
+  else cfg={colBooks:c, colTags:c, colPubs:c, colNotes:c, nhead:c, ui:c};
   try{ localStorage.setItem(KP+"Colors", JSON.stringify(cfg)); }catch(e){}
   applyColors();
+}
+/** Kolor bieżącej kompozycji albo pusty napis. */
+function biezacaKompozycja(){
+  try{ return (JSON.parse(localStorage.getItem(KP+"Colors")||"{}").ui) || ""; }
+  catch(e){ return ""; }
 }
 function shade(hex,f){
   const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255;
@@ -4002,7 +4246,6 @@ function shade(hex,f){
 function hexA(hex,al){ const n=parseInt(shade(hex,0).slice(1),16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${al})`; }
 /* wyciszenie koloru — mieszanie w stronę szarości, żeby barwy nie były ostre/jaskrawe */
 function desat(hex, mix){ const n=parseInt(shade(hex,0).slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const a=(r*0.3+g*0.59+b*0.11); r=Math.round(r+(a-r)*mix); g=Math.round(g+(a-g)*mix); b=Math.round(b+(a-b)*mix); return "#"+[r,g,b].map(x=>Math.max(0,Math.min(255,x)).toString(16).padStart(2,"0")).join(""); }
-function glassGrad(c,a,b,al){ return `linear-gradient(180deg,${hexA(shade(c,a),al)} 0%,${hexA(shade(c,b),al*0.92)} 100%)`; }
 function loadColorCfg(){ try{ return JSON.parse(localStorage.getItem(KP+"Colors")||"{}"); }catch(e){ return {}; } }
 /* ——— czytelność na kolorowym tle ———
    Sekcje i belki notatek dostawały biały tekst niezależnie od wybranego koloru.
@@ -4020,10 +4263,31 @@ function czytelnyTekst(hex){ return luminancja(hex) > 0.42 ? "#1c2b24" : "#fffff
 /** Przygaszony wariant tekstu (liczniki, podpisy) — ta sama zasada, mniejszy kontrast. */
 function czytelnyTekstSlaby(hex){ return luminancja(hex) > 0.42 ? "rgba(28,43,36,.62)" : "rgba(255,255,255,.75)"; }
 
+/**
+ * Kolor paska górnego dla kompozycji.
+ *
+ * Stałe przyciemnienie o 42% wystarczało dla większości pastelów, ale przy
+ * jasnych (Piasek) napis wychodził poniżej progu czytelności WCAG 4.5:1.
+ * Zamiast zgadywać jedną wartość, przyciemniamy stopniowo aż do progu.
+ *
+ * @param {string} baza  kolor kompozycji po wyciszeniu
+ * @returns {string} odcień, na którym napis jest na pewno czytelny
+ */
+function akcentCzytelny(baza){
+  let kolor = shade(baza, -.42);
+  for(let i=0; i<12; i++){
+    const t = czytelnyTekst(kolor);
+    const a = luminancja(t), b = luminancja(kolor);
+    const [jasny, ciemny] = a>b ? [a,b] : [b,a];
+    if((jasny+0.05)/(ciemny+0.05) >= 4.5) return kolor;
+    kolor = shade(kolor, -.08);
+  }
+  return kolor;
+}
 function buildColorCSS(){
   const cfg = loadColorCfg(); let css="";
   // spokojne, MATOWE i WYCISZONE tło w wybranym odcieniu (bez ostrych barw; kafelki zostają jasne)
-  ["colBooks","colTags"].forEach(id=>{
+  ["colBooks","colTags","colPubs"].forEach(id=>{
     const raw=cfg[id]; if(!raw) return; const c=desat(raw,.42);
     css+=`#${id}{background:${hexA(shade(c,.6),.45)};border-color:${hexA(shade(c,-.05),.3)}}`;
     css+=`#${id} h2,#${id} .divider,#${id} .cnt{color:${shade(desat(raw,.55),-.28)}!important}`;
@@ -4043,6 +4307,26 @@ function buildColorCSS(){
     css += `.nhead .drag{color:${czytelnyTekstSlaby(tlo)}!important}`;
     css += `.pinmark .mic,.favmark .mic{color:${tekst}!important;opacity:.9}`;
   }
+  /* ——— kompozycja na cały interfejs ———
+     --accent rządzi paskiem górnym, przyciskiem „Nowa notatka" i podświetleniem
+     wybranej pozycji. Bierzemy ciemniejszy odcień tej samej rodziny kolorów:
+     dzięki temu pasek pasuje do kolumn, a biały napis na nim pozostaje czytelny.
+     Kolor napisu i tak liczymy, na wypadek jasnej kompozycji. */
+  if(cfg.ui){
+    const baza    = desat(cfg.ui, .18);
+    const akcent  = akcentCzytelny(baza);
+    const akcent2 = shade(baza, -.22);
+    const tekst   = czytelnyTekst(akcent);
+    const slaby   = czytelnyTekstSlaby(akcent);
+    css += `:root{--accent:${akcent};--accent2:${akcent2}}`;
+    css += `header{background:${akcent}}`;
+    css += `.brand-name{color:${tekst}!important}`;
+    css += `.brand-name .ver,.brand-sub{color:${slaby}!important}`;
+    css += `header .btn{color:${tekst}}`;
+    css += `header .btn.primary{background:${tekst};color:${akcent}}`;
+    css += `header .fontctl button{color:${tekst}}`;
+    css += `#mobileTabs button.on{background:${akcent};border-color:${akcent};color:${tekst}}`;
+  }
   return css;
 }
 function applyColors(){
@@ -4051,11 +4335,10 @@ function applyColors(){
   s.textContent = buildColorCSS();
 }
 /**
- * Menu kolorów. Dwa tryby, bo trafia się do niego z dwóch miejsc:
- *  - "kolumny" (przycisk palety w pasku górnym) — same kolory poszczególnych kolumn,
- *  - "wszystko" (Ustawienia → Wygląd) — dodatkowo gotowe kompozycje na cały interfejs.
- * @param {{target:HTMLElement}} e  element, przy którym ma się pojawić menu
- * @param {"kolumny"|"wszystko"} [tryb="kolumny"]
+ * Menu kolorów spod ikony palety w pasku górnym: kolory poszczególnych kolumn
+ * i belki notatek. Gotowe kompozycje na cały interfejs mieszkają w Ustawieniach,
+ * żeby te same rzeczy nie były w dwóch miejscach.
+ * @param {Object} e  obiekt z polem target — element, przy którym ma się pojawić menu
  */
 function openColorMenu(e, tryb){
   tryb = tryb || "kolumny";
@@ -4066,19 +4349,15 @@ function openColorMenu(e, tryb){
   };
   const sec=(target,label)=>`<div class="cm-sec"><div class="cm-lbl">${label}</div><div class="cm-row" data-target="${target}">`+
     sw(target,null)+TAGCOLORS.map(c=>sw(target,c)).join("")+`</div></div>`;
-  const presets = `<div class="cm-lbl">Gotowe kompozycje pastelowe (cały interfejs)</div><div class="cm-presets">`+
-    PASTELS.map(([nm,c])=>`<button class="cm-preset" data-preset="${c}" style="background:${glassGrad(c,.12,-.18,1)};color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)">${nm}</button>`).join("")+
-    `<button class="cm-preset" data-preset="reset" style="background:var(--sel);color:var(--text)">Domyślny</button></div>`;
   const kolumny = sec("colBooks","Kolumna „Biblia”")+
                   sec("colTags","Kolumna „Etykiety”")+
+                  sec("colPubs","Kolumna „Publikacje”")+
                   sec("colNotes","Tło kolumny „Notatki”")+
                   sec("nhead","Belka każdej notatki");
   cm.dataset.tryb = tryb;
-  cm.innerHTML = tryb==="wszystko"
-    ? `<div class="cm-title">Wygląd aplikacji</div>`+presets+
-      `<div class="cm-sec"><div class="cm-lbl">Albo ustaw każdą część osobno:</div></div>`+kolumny
-    : `<div class="cm-title">Kolory kolumn</div>`+kolumny+
-      `<div class="cm-note">Gotowe kompozycje na cały interfejs są w Ustawieniach → Wygląd.</div>`;
+  cm.innerHTML = `<div class="cm-title">Kolory kolumn i notatek</div>`+kolumny+
+    `<div class="cm-note">Gotowe kompozycje na cały interfejs — łącznie z paskiem górnym — `+
+    `są w Ustawieniach (koło zębate).</div>`;
   cm.style.display="block";
   const r=e.target.getBoundingClientRect();
   const w=cm.offsetWidth||300, h=cm.offsetHeight||380;
@@ -4087,7 +4366,10 @@ function openColorMenu(e, tryb){
 }
 function tagItem(key,name,cnt,user,color,inSection,secId){
   const active = String(filt.tag)===String(key);
-  const dot = color ? `<span class="tgdot" style="background:${color}"></span>`
+  /* Druga linia obrony: kolor sprawdzamy także przy rysowaniu, bo w bazie mogą
+     leżeć dane zapisane przez starszą wersję, sprzed kontroli przy wczytywaniu. */
+  const bezpieczny = (typeof kolorBezpieczny==="function" && kolorBezpieczny(color)) ? color : "";
+  const dot = bezpieczny ? `<span class="tgdot" style="background:${bezpieczny}"></span>`
             : (key==="all" ? `<span class="tgdot all"></span>` : `<span class="tgdot none"></span>`);
   /* Uchwyt tylko przy etykietach użytkownika — „Wszystkie" i „Bez etykiety" stoją
      na stałych miejscach. data-grupa pilnuje, żeby etykieta nie wyskoczyła z sekcji. */
@@ -4667,7 +4949,8 @@ function noteCardChips(n){
   const chip = tid => {
     const t = tags.find(x=>x.id===tid);
     if(!t) return "";
-    const style = t.color ? ` style="background:linear-gradient(180deg,${shade(t.color,.15)},${shade(t.color,-.18)});color:#fff"` : "";
+    const kol = (typeof kolorBezpieczny==="function" && kolorBezpieczny(t.color)) ? t.color : "";
+    const style = kol ? ` style="background:linear-gradient(180deg,${shade(kol,.15)},${shade(kol,-.18)});color:#fff"` : "";
     return `<span class="chip"${style}>${esc(t.name)}<span class="x" data-untag="${tid}" title="Usuń z zakładki">×</span></span>`;
   };
   return `<div class="chips">${n.tg.map(chip).join("")}</div>`;
@@ -4907,8 +5190,24 @@ function renderFs(){
  */
 function zmierzNhead(){
   const belka = document.querySelector("#fsWrap .nhead");
-  const wys = belka ? Math.round(belka.getBoundingClientRect().height) : 0;
+  /* W trybie edycji belka nie jest już przyklejona — pasek narzędzi trzyma się
+     samej krawędzi, więc żadnej rezerwy nie potrzebuje. */
+  const wEdycji = !!document.querySelector("#fsWrap .ncard.editing");
+  const wys = (belka && !wEdycji) ? Math.round(belka.getBoundingClientRect().height) : 0;
   document.documentElement.style.setProperty("--nheadH", wys + "px");
+  pilnujNhead(belka);
+}
+/* Wysokość belki zmienia się sama: przy łamaniu tytułu, zmianie wielkości pisma
+   albo szerokości okna. ResizeObserver łapie każdy taki przypadek — samo
+   nasłuchiwanie na zmianę rozmiaru okna to za mało. */
+let _obsNhead = null, _pilnowana = null;
+function pilnujNhead(belka){
+  if(!belka || belka === _pilnowana) return;
+  if(typeof ResizeObserver === "undefined") return;
+  if(!_obsNhead) _obsNhead = new ResizeObserver(()=>{ if(fsGuid) zmierzNhead(); });
+  if(_pilnowana) _obsNhead.unobserve(_pilnowana);
+  _obsNhead.observe(belka);
+  _pilnowana = belka;
 }
 addEventListener("resize", ()=>{ if(fsGuid) zmierzNhead(); });
 
@@ -5147,13 +5446,10 @@ let fsNoteFs = 0; // 0 = domyślny (jak w kolumnie); >0 = własny rozmiar czytan
 try{ const v=+(localStorage.getItem(KP+"FsFont")); if(v>=12 && v<=34) fsNoteFs=v; }catch(e){}
 function applyFsFont(){ const r=document.documentElement.style; if(fsNoteFs) r.setProperty("--fsNoteFs", fsNoteFs+"px"); else r.removeProperty("--fsNoteFs"); }
 applyFsFont();
-/* Paleta w pasku górnym otwiera same kolory kolumn. Gotowe kompozycje na cały
-   interfejs zostają w Ustawieniach — tam wchodzi się rzadziej i świadomie. */
-function colorMenuAnchor(){ return $("btnColors") || $("btnSettings") || $("btnMenu") || document.body; }
-$("btnColors").onclick = e => openColorMenu({target:$("btnColors")}, "kolumny");
+/* Paleta w pasku górnym otwiera same kolory kolumn i belek notatek.
+   Gotowe kompozycje na cały interfejs mieszkają w Ustawieniach. */
+$("btnColors").onclick = e => openColorMenu({target:$("btnColors")});
 $("colorMenu").addEventListener("click", e=>{
-  const preset=e.target.closest(".cm-preset");
-  if(preset){ applyPreset(preset.dataset.preset); openColorMenu({target:colorMenuAnchor()}, "wszystko"); return; }
   const swEl=e.target.closest(".cm-sw"); const row=e.target.closest("[data-target]");
   if(!swEl||!row) return;
   const cfg=loadColorCfg();
@@ -5200,7 +5496,7 @@ function applyFsWidth(){ document.documentElement.style.setProperty("--fsMax", F
 applyFsWidth();
 $("fMinus").onclick = ()=>{ noteFs = Math.max(FS_MIN, noteFs-1); lsSetSoon(KP+"Font", noteFs); applyFs(); toast("Wielkość: "+noteFs+" px"); };
 $("fPlus").onclick = ()=>{ noteFs = Math.min(FS_MAX, noteFs+1); lsSetSoon(KP+"Font", noteFs); applyFs(); toast("Wielkość: "+noteFs+" px"); };
-$("btnBackup").onclick = ()=>{ exportJson(); };
+$("btnBackup").onclick = ()=>{ exportJson(); };   // sama zdecyduje: nadpisać wskazany plik czy pobrać nowy
 /* filtry zmieniają się przy każdym kliknięciu kolumny — zapis sklejamy w jeden */
 function persistFilt(){ lsSetSoon(KP+"Filt", JSON.stringify(filt), 300); }
 
@@ -5279,7 +5575,7 @@ function cloneNote(n){ return deepCopy(n); }
 function cloneTags(){ return deepCopy(tags); }
 /**
  * Odkłada operację na stos cofania (maksymalnie 30 pozycji).
- * @param {{type:string,label:string,before:*}} u
+ * @param {Object} u  pola: type, label, before
  */
 function pushUndo(u){ undoStack.push(u); if(undoStack.length>30) undoStack.shift(); updateUndoBtn(); }
 function updateUndoBtn(){ const b=$("btnUndo"); b.disabled=!undoStack.length; b.style.opacity=undoStack.length?"1":".45"; }
@@ -5874,6 +6170,7 @@ function openEbPop(kind, btn, bar){
        <div data-clear="1">${IE_MIOTLA}Wyczyść formatowanie</div>`;
   }
   pop.dataset.ce = ""; pop._ce = ce;
+  if(typeof oznaczPozycjeMenu==="function") oznaczPozycjeMenu(pop);
   pop.style.display="block";
   /* Menu bywa długie (np. „Więcej"), a na iPadzie w podzielonym oknie brakuje miejsca.
      placeDropdown dobiera stronę, przycina wysokość i włącza przewijanie. */
@@ -6619,10 +6916,13 @@ function toggleEdit(card,n){
     contEl.style.display="block";
     contEl.focus();
     if(typeof histStart==="function") histStart(contEl);   // własna historia cofania
+    // w pełnym ekranie belka tytułu przestaje być przyklejona — trzeba przeliczyć rezerwę
+    if(typeof zmierzNhead==="function") zmierzNhead();
   } else {
     card.classList.remove("editing");
     hideImgBar();
     card.querySelector(".editbar")?.remove();
+    if(typeof zmierzNhead==="function") zmierzNhead();   // belka wraca na swoje miejsce
     titleEl.contentEditable="false"; contEl.contentEditable="false";
     btn.innerHTML=ICO.edit; btn.title="Edytuj notatkę";
     saveVersion(n);   // zapisz poprzednią treść do historii wersji
@@ -6642,6 +6942,8 @@ function toggleEdit(card,n){
  * @param {string} html
  * @returns {string}
  */
+/** Znaczniki usuwane wraz z zawartością — ich treść nie jest tekstem notatki. */
+const WYTNIJ_Z_ZAWARTOSCIA = ["SCRIPT","STYLE","NOSCRIPT","TEMPLATE","IFRAME","OBJECT","EMBED","APPLET","META","LINK","BASE","FORM"];
 /** Przepuszczamy tylko proste zapisy koloru, bez url() i wyrażeń. */
 function bezpiecznyKolor(v){
   return /^#[0-9a-f]{3,8}$/i.test(v) || /^rgba?\([\d\s.,%]+\)$/i.test(v) || /^[a-z]{3,20}$/i.test(v);
@@ -6717,6 +7019,10 @@ function sanitize(html){
             sp.style.color=kol; walk(node,sp); dst.appendChild(sp);
           } else walk(node,dst);
         }
+        /* Znaczniki, których zawartość ma zniknąć RAZEM z nimi. Dla nieznanych
+           znaczników przepisujemy dzieci (żeby nie gubić tekstu), ale treść skryptu,
+           arkusza stylów czy ramki nie jest tekstem notatki i nie ma czego ratować. */
+        else if(WYTNIJ_Z_ZAWARTOSCIA.indexOf(tag)>=0){ /* nic — całość odpada */ }
         else walk(node,dst);
       }
     });
@@ -6891,7 +7197,8 @@ function renderNnTags(keepChecked){
   const checked = keepChecked || [...$("nnTags").querySelectorAll("input:checked")].map(i=>+i.value);
   $("nnTags").innerHTML = tags.map(t=>{
     const chk = checked.includes(t.id) ? "checked" : "";
-    const dot = t.color ? `<span class="nnDot" style="background:${t.color}"></span>` : "";
+    const kol = (typeof kolorBezpieczny==="function" && kolorBezpieczny(t.color)) ? t.color : "";
+    const dot = kol ? `<span class="nnDot" style="background:${kol}"></span>` : "";
     return `<label><input type="checkbox" value="${t.id}" ${chk}> ${dot}${esc(t.name)}</label>`;
   }).join("");
 }
@@ -6992,18 +7299,86 @@ document.addEventListener("click", e=>{
   if(!e.target.closest("#dropdown") && e.target.id!=="btnMenu") $("dropdown").style.display="none";
 }, true);
 
-/* ================= BIBLIOTEKI CDN ================= */
-function loadScript(src){return new Promise((res,rej)=>{
-  if(document.querySelector(`script[src="${src}"]`)) return res();
-  const s=document.createElement("script"); s.src=src;
-  s.onload=res; s.onerror=()=>rej(new Error("Nie można załadować: "+src+" (wymagany internet)"));
-  document.head.appendChild(s);
-});}
+/* =====================================================================
+   BIBLIOTEKI DO IMPORTU Z JW LIBRARY
+
+   Plik .jwlibrary to archiwum ZIP z bazą SQLite w środku. Do jego otwarcia
+   potrzebne są dwie biblioteki: JSZip i sql.js.
+
+   Domyślnie szukamy ich OBOK aplikacji, w katalogu lib/. Jeśli ich tam nie ma,
+   sięgamy do cdnjs — ale wtedy z sumą kontrolną (SRI), więc przeglądarka
+   wykona plik tylko wtedy, gdy zgadza się co do bajta. Podmieniony plik
+   na serwerze pośredniczącym po prostu się nie uruchomi.
+
+   Katalog lib/ ma pierwszeństwo, bo pozwala pozbyć się zależności od obcego
+   serwera: import działa wtedy bez internetu i bez zaufania komukolwiek.
+   Jak go wypełnić — patrz lib/README.md.
+   ===================================================================== */
+const BIBLIOTEKI = {
+  jszip: {
+    lokalnie: "./lib/jszip.min.js",
+    zdalnie:  "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
+    /* Sumę kontrolną wpisz z lib/README.md — bez niej plik z sieci nie zostanie
+       użyty wcale, zamiast zostać użyty bez sprawdzenia. */
+    suma: ""
+  },
+  sqljs: {
+    lokalnie: "./lib/sql-wasm.js",
+    zdalnie:  "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js",
+    suma: ""
+  }
+};
+const KAT_SQL_ZDALNY = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/";
+let sqlZLokalnego = false;
+
+/**
+ * Wczytuje skrypt. Gdy podano sumę kontrolną, przeglądarka sprawdza plik
+ * przed wykonaniem; niezgodność = plik nie zostanie uruchomiony.
+ */
+function loadScript(src, suma){
+  return new Promise((res,rej)=>{
+    if(document.querySelector(`script[src="${src}"]`)) return res();
+    const s=document.createElement("script");
+    s.src=src;
+    if(suma){ s.integrity=suma; s.crossOrigin="anonymous"; }
+    s.onload=res;
+    s.onerror=()=>rej(new Error("Nie można wczytać: "+src));
+    document.head.appendChild(s);
+  });
+}
+/** Czy plik leży obok aplikacji. Sprawdzamy przed próbą wykonania. */
+async function plikObok(url){
+  try{
+    const r = await fetch(url, {method:"HEAD", cache:"no-store"});
+    return r.ok;
+  }catch(e){ return false; }
+}
+/**
+ * Wczytuje bibliotekę: najpierw z katalogu lib/, w razie braku z cdnjs z SRI.
+ * @returns {Promise<boolean>} czy udało się z pliku lokalnego
+ */
+async function wczytajBiblioteke(opis, nazwa){
+  if(await plikObok(opis.lokalnie)){
+    await loadScript(opis.lokalnie);
+    return true;
+  }
+  if(!opis.suma){
+    /* Bez sumy kontrolnej nie wykonujemy obcego kodu po cichu — mówimy wprost,
+       czego brakuje. Wpisanie sumy albo wgranie pliku do lib/ załatwia sprawę. */
+    throw new Error("Brak biblioteki "+nazwa+". Wgraj plik do katalogu lib/ obok aplikacji "+
+                    "(instrukcja w lib/README.md) albo uzupełnij sumę kontrolną w kodzie.");
+  }
+  await loadScript(opis.zdalnie, opis.suma);
+  return false;
+}
 let SQL=null;
 async function getLibs(){
-  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
-  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js");
-  if(!SQL) SQL=await initSqlJs({locateFile:f=>"https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/"+f});
+  await wczytajBiblioteke(BIBLIOTEKI.jszip, "JSZip");
+  sqlZLokalnego = await wczytajBiblioteke(BIBLIOTEKI.sqljs, "sql.js");
+  if(!SQL){
+    const katalog = sqlZLokalnego ? "./lib/" : KAT_SQL_ZDALNY;
+    SQL = await initSqlJs({locateFile: f => katalog + f});
+  }
 }
 
 /* ================= WYBÓR PLIKU (import / kopia JSON) ================= */
@@ -7026,27 +7401,88 @@ $("mfInput").addEventListener("change", e=>{
 });
 
 /* ================= IMPORT BACKUPU ================= */
+/* ===== LIMITY WCZYTYWANYCH PLIKÓW =====
+   Archiwum ZIP potrafi rozpakować się do rozmiaru tysiące razy większego niż sam
+   plik („bomba zip"). Baza SQLite wczytywana jest w całości do pamięci, więc
+   dla przeglądarki na telefonie kończyłoby się to zawieszeniem karty.
+   Dlatego sprawdzamy rozmiar PRZED rozpakowaniem i po nim. */
+const MAX_ARCHIWUM   = 300 * 1024 * 1024;   // sam plik .jwlibrary
+const MAX_BAZA       = 400 * 1024 * 1024;   // userData.db po rozpakowaniu
+const MAX_WPISOW_ZIP = 5000;                // rozsądna kopia ma ich kilkanaście
+
+/** Czytelny rozmiar do komunikatów. */
+function ludzkiRozmiar(b){
+  return b >= 1048576 ? (b/1048576).toFixed(1)+" MB" : Math.round(b/1024)+" KB";
+}
+
 async function handleImportFile(e){
   const file=e.target.files[0]; e.target.value="";
   if(!file) return;
+  try{
+    if(file.size > MAX_ARCHIWUM)
+      throw new Error("Plik ma "+ludzkiRozmiar(file.size)+", a dopuszczalne jest do "+
+                      ludzkiRozmiar(MAX_ARCHIWUM)+". To nie wygląda na kopię z JW Library.");
+    if(file.size === 0) throw new Error("Plik jest pusty.");
+  }catch(err){ showInfo("Nie wczytano kopii", esc(err.message)); return; }
+
   toast("Wczytywanie backupu…");
+  let db = null;
   try{
     await getLibs();
     const buf=await file.arrayBuffer();
-    const zip=await JSZip.loadAsync(buf);
+
+    let zip;
+    try{ zip = await JSZip.loadAsync(buf); }
+    catch(err){ throw new Error("Pliku nie da się otworzyć jako archiwum — jest uszkodzony albo to nie jest kopia z JW Library."); }
+
+    const wpisy = Object.keys(zip.files);
+    if(wpisy.length > MAX_WPISOW_ZIP)
+      throw new Error("Archiwum zawiera "+wpisy.length+" plików. Kopia z JW Library ma ich kilkanaście — to nie jest ten rodzaj pliku.");
+
     const dbFile=zip.file("userData.db");
-    if(!dbFile) throw new Error("Brak userData.db — to nie jest backup JW Library");
-    const dbBytes=await dbFile.async("uint8array");
-    const db=new SQL.Database(dbBytes);
-    const res=importFromDb(db);
-    db.close();
+    if(!dbFile) throw new Error("W archiwum nie ma pliku userData.db — to nie jest kopia z JW Library.");
+
+    /* Rozmiar po rozpakowaniu znamy z nagłówka archiwum — sprawdzamy go, ZANIM
+       zaczniemy rozpakowywać, więc bomba zip nie zdąży zająć pamięci. */
+    const zapowiadany = dbFile._data && dbFile._data.uncompressedSize;
+    if(zapowiadany && zapowiadany > MAX_BAZA)
+      throw new Error("Baza w archiwum ma "+ludzkiRozmiar(zapowiadany)+" po rozpakowaniu, "+
+                      "a dopuszczalne jest do "+ludzkiRozmiar(MAX_BAZA)+".");
+
+    let dbBytes;
+    try{ dbBytes = await dbFile.async("uint8array"); }
+    catch(err){ throw new Error("Nie udało się rozpakować bazy z archiwum — plik jest uszkodzony."); }
+
+    if(dbBytes.length > MAX_BAZA)
+      throw new Error("Rozpakowana baza ma "+ludzkiRozmiar(dbBytes.length)+", a dopuszczalne jest do "+ludzkiRozmiar(MAX_BAZA)+".");
+    if(dbBytes.length < 100) throw new Error("Baza w archiwum jest pusta lub uszkodzona.");
+    /* Każdy plik SQLite zaczyna się od tego napisu. Sprawdzenie kosztuje nic,
+       a oszczędza wywrotki wewnątrz sql.js na przypadkowym pliku. */
+    const naglowek = String.fromCharCode.apply(null, dbBytes.subarray(0,15));
+    if(naglowek !== "SQLite format 3")
+      throw new Error("Plik userData.db nie jest bazą SQLite — archiwum jest uszkodzone.");
+
+    try{ db = new SQL.Database(dbBytes); }
+    catch(err){ throw new Error("Bazy z archiwum nie da się otworzyć — jest uszkodzona."); }
+
+    let res;
+    try{ res = importFromDb(db); }
+    catch(err){ throw new Error("Baza otworzyła się, ale nie ma w niej spodziewanych tabel notatek. "+
+                                "To może być kopia z innej wersji JW Library."); }
     if(idb){ await idbPut("files",buf,"lastBackup"); await idbPut("meta",file.name,"lastBackupName"); await idbPut("meta",new Date().toISOString(),"lastBackupDate"); }
     renderAll();
     showInfo("Import zakończony", `Kopia z JW Library została <b>dołączona</b> (bez kasowania Twoich danych).<br><br>`+
       `• Nowych notatek: <b>${res.added}</b><br>`+
       `• Zaktualizowanych: <b>${res.updated}</b><br>`+
       `• Pominięto (bez zmian lub Twoje edycje): ${res.skipped}`);
-  }catch(err){ console.error(err); toast("Błąd importu: "+err.message); }
+  }catch(err){
+    console.warn("Import z JW Library nie powiódł się", err);
+    showInfo("Nie wczytano kopii",
+      esc(err && err.message ? err.message : String(err))+
+      "<br><br><b>Twoje notatki pozostały nietknięte</b> — import dokłada dane dopiero po pomyślnym odczytaniu całego archiwum.");
+  }finally{
+    if(db){ try{ db.close(); }catch(e){} }   // pamięć bazy zwalniamy także po błędzie
+  }
 }
 function importFromDb(db){
   const tagRows=db.exec("SELECT TagId, Name FROM Tag WHERE Type=1");
@@ -7196,7 +7632,7 @@ $("expGo").onclick = async ()=>{
  * Notatki nieznane bazie są wstawiane, istniejące aktualizowane, usunięte kasowane.
  * Daty przechodzą przez jwlDate — JW Library wymaga formatu RRRR-MM-DDTGG:MM:SS+00:00.
  * @param {*} db  baza otwarta przez sql.js
- * @returns {{inserted:number,updated:number,deleted:number}}
+ * @returns {Object} pola: inserted, updated, deleted
  */
 function applyChangesToDb(db){
   const one=sql=>{const r=db.exec(sql);return r.length?r[0].values[0][0]:null;};
@@ -7599,13 +8035,116 @@ async function shareBackup(){
 }
 
 /* ================= KOPIA JSON ================= */
-function exportJson(){
-  const name="moje-notatki-kopia-"+new Date().toISOString().substring(0,10)+".json";
+/* =====================================================================
+   KOPIA ZAPASOWA DO JEDNEGO, STALE NADPISYWANEGO PLIKU
+
+   Codzienne kopie zostawiały na dysku stos plików „…kopia-2026-08-06.json",
+   „…(1).json" i tak dalej. Przeglądarka z zasady nie może nadpisać pobranego
+   pliku — może jednak dostać od użytkownika wskazanie KONKRETNEGO pliku
+   i pisać do niego dalej. Służy do tego showSaveFilePicker.
+
+   Wskazanie zapamiętujemy w bazie na urządzeniu, więc pytanie pada raz.
+   Przy każdej kolejnej kopii plik jest po prostu nadpisywany — bez okien,
+   bez nowych plików na dysku.
+
+   Działa w przeglądarkach opartych na Chromium (Chrome, Edge, Brave, Arc)
+   na komputerze. Safari i przeglądarki mobilne tego nie udostępniają —
+   tam zostaje dotychczasowe pobieranie i to jest w porządku.
+   ===================================================================== */
+const KLUCZ_UCHWYT_KOPII = "kopiaPlik";
+
+/* ===== LIMITY WCZYTYWANEJ KOPII =====
+   Zapory przed plikiem, który nie jest kopią notatek, i przed spreparowanym
+   plikiem, który miałby zapchać pamięć urządzenia. */
+const MAX_KOPIA_JSON = 200 * 1024 * 1024;
+const MAX_NOTATEK    = 200000;
+const MAX_ETYKIET    = 5000;
+
+/** Czy ta przeglądarka pozwala pisać do wskazanego pliku. */
+function stalyPlikDostepny(){
+  return typeof window !== "undefined" && typeof window.showSaveFilePicker === "function";
+}
+/** Zapamiętane wskazanie pliku albo null. */
+async function uchwytKopii(){
+  try{ return (await idbGet("meta", KLUCZ_UCHWYT_KOPII)) || null; }
+  catch(e){ return null; }
+}
+/**
+ * Sprawdza (a w razie potrzeby prosi o) prawo do zapisu we wskazanym pliku.
+ * Po ponownym uruchomieniu przeglądarki prawo trzeba potwierdzić jednym kliknięciem.
+ */
+async function prawoDoPliku(uchwyt, pytaj){
+  if(!uchwyt || !uchwyt.queryPermission) return false;
+  const opis = {mode:"readwrite"};
+  if((await uchwyt.queryPermission(opis)) === "granted") return true;
+  if(!pytaj) return false;
+  return (await uchwyt.requestPermission(opis)) === "granted";
+}
+/** Pyta o plik i zapamiętuje wskazanie. */
+async function wskazPlikKopii(){
+  if(!stalyPlikDostepny()){
+    toast("Ta przeglądarka nie pozwala pisać do wskazanego pliku");
+    return false;
+  }
+  try{
+    const uchwyt = await window.showSaveFilePicker({
+      suggestedName: "moje-notatki-kopia.json",
+      types: [{ description: "Kopia notatek JW Study", accept: {"application/json": [".json"]} }]
+    });
+    await idbPut("meta", uchwyt, KLUCZ_UCHWYT_KOPII);
+    toastOk("Kopie będą zapisywane do pliku: " + (uchwyt.name || "wybranego"));
+    return true;
+  }catch(e){
+    if(e && e.name === "AbortError") return false;      // użytkownik zrezygnował
+    console.warn("Nie udało się wskazać pliku kopii", e);
+    toastErr("Nie udało się wskazać pliku");
+    return false;
+  }
+}
+/** Przestaje używać wskazanego pliku — wracamy do zwykłego pobierania. */
+async function zapomnijPlikKopii(){
+  try{ await idbDelKey("meta", KLUCZ_UCHWYT_KOPII); }catch(e){}
+  toast("Kopie znów będą pobierane jako nowe pliki");
+}
+/** Nazwa zapamiętanego pliku albo pusty napis. */
+async function nazwaPlikuKopii(){
+  const u = await uchwytKopii();
+  return u && u.name ? u.name : "";
+}
+
+/** Dane do kopii — jedno miejsce, żeby zapis do pliku i pobranie były identyczne. */
+function daneKopii(){
   /* Zakładki publikacji też muszą trafić do kopii — bez nich podział na lekcje
      i rozdziały nie odtworzy się na drugim urządzeniu, mimo że same notatki tam dojdą. */
-  const paczka = {tags, notes, sections, pubTabs: (typeof pubTabs!=="undefined" ? pubTabs : [])};
-  const blob=new Blob([JSON.stringify(paczka)],{type:"application/json"});
-  saveFile(blob, name, "Kopia notatek (JSON)");
+  return {tags, notes, sections, pubTabs: (typeof pubTabs!=="undefined" ? pubTabs : [])};
+}
+
+/**
+ * Zapisuje kopię danych.
+ * Gdy wskazano stały plik i jest do niego prawo — nadpisuje go po cichu.
+ * W przeciwnym razie pobiera nowy plik z datą w nazwie, jak dotąd.
+ */
+async function exportJson(){
+  const tekst = JSON.stringify(daneKopii());
+  const uchwyt = await uchwytKopii();
+  if(uchwyt){
+    try{
+      if(await prawoDoPliku(uchwyt, true)){
+        const zapis = await uchwyt.createWritable();
+        await zapis.write(tekst);
+        await zapis.close();
+        clearDirty();
+        toastOk("Nadpisano kopię: " + (uchwyt.name || "plik"));
+        return;
+      }
+      toast("Brak prawa do zapisu w tym pliku — pobieram nowy");
+    }catch(e){
+      console.warn("Nie udało się nadpisać pliku kopii", e);
+      toast("Nie udało się nadpisać pliku — pobieram nowy");
+    }
+  }
+  const name = "moje-notatki-kopia-" + new Date().toISOString().substring(0,10) + ".json";
+  saveFile(new Blob([tekst], {type:"application/json"}), name, "Kopia notatek (JSON)");
   clearDirty();
   toast("Zapisano kopię danych");
 }
@@ -7689,6 +8228,13 @@ async function handleJsonFile(e){
   if(!f) return;
   let data;
   try{
+    /* Kopia JSON jest wczytywana w całości do pamięci i przetwarzana jako tekst.
+       Przy 16 000 notatek plik ma kilkanaście MB, więc 200 MB to zapas z nawiązką,
+       a jednocześnie zapora przed przypadkowym wskazaniem filmu albo obrazu dysku. */
+    if(f.size > MAX_KOPIA_JSON)
+      throw new Error("Plik ma "+ludzkiRozmiar(f.size)+", a dopuszczalne jest do "+
+                      ludzkiRozmiar(MAX_KOPIA_JSON)+" — to nie wygląda na kopię notatek");
+    if(f.size === 0) throw new Error("Plik jest pusty");
     const tekst = await f.text();
     if(!tekst || !tekst.trim()) throw new Error("Plik jest pusty");
     try{ data = JSON.parse(tekst); }
@@ -7697,8 +8243,22 @@ async function handleJsonFile(e){
     if(!Array.isArray(data.notes) || !Array.isArray(data.tags))
       throw new Error("W pliku brakuje listy notatek albo etykiet — to może być kopia z innego programu");
     // sito na wejściu: uszkodzone rekordy odpadają, zanim trafią do aplikacji
-    data.notes = sanitizeNotes(data.notes, "wczytana kopia");
-    data.tags  = sanitizeTags(data.tags, "wczytana kopia");
+    /* Trzeci argument: dane pochodzą z CUDZEGO pliku. Treść notatek przechodzi
+       wtedy przez filtr HTML, a kolory przez sprawdzenie zapisu. */
+    data.notes = sanitizeNotes(data.notes, "wczytana kopia", true);
+    data.tags  = sanitizeTags(data.tags, "wczytana kopia", true);
+    if(Array.isArray(data.sections)) data.sections = data.sections.filter(sek=>{
+      if(!sek || typeof sek!=="object") return false;
+      if(typeof sek.name!=="string" || !sek.name.trim()) return false;
+      if(sek.color!=null && !kolorBezpieczny(sek.color)) delete sek.color;
+      return true;
+    });
+    if(Array.isArray(data.pubTabs)) data.pubTabs = data.pubTabs.filter(z=>
+      z && typeof z==="object" && typeof z.name==="string" && z.name.trim());
+    if(data.notes.length > MAX_NOTATEK)
+      throw new Error("Plik zawiera "+data.notes.length+" notatek, a dopuszczalne jest do "+MAX_NOTATEK);
+    if(data.tags.length > MAX_ETYKIET)
+      throw new Error("Plik zawiera "+data.tags.length+" etykiet, a dopuszczalne jest do "+MAX_ETYKIET);
     if(!data.notes.length && !data.tags.length) throw new Error("Plik nie zawiera ani jednej czytelnej notatki lub etykiety");
   }catch(err){ toastErr("Nie wczytano kopii: "+err.message); return; }
 
@@ -7730,8 +8290,14 @@ async function handleJsonFile(e){
         saveSections();
         if(typeof savePubTabs==="function") savePubTabs();   // zakładki publikacji z kopii
       }
+      const kontrolaM = idb ? await sprawdzZapis(notes.length, tags.length) : null;
       renderAll();
       showInfo("Kopia dołączona",
+        (kontrolaM
+          ? (kontrolaM.zgadza
+              ? `<p class="ch-lead">Zapisano i sprawdzono: <b>${kontrolaM.notatki}</b> notatek · <b>${kontrolaM.etykiety}</b> etykiet</p>`
+              : `<p class="ch-lead" style="color:#c0392b">Uwaga: w bazie jest <b>${kontrolaM.notatki}</b> notatek zamiast <b>${notes.length}</b>. Sprawdź miejsce na urządzeniu.</p>`)
+          : "")+
         `• Nowych notatek: <b>${st.notesAdded}</b><br>`+
         `• Zaktualizowanych (nowsza wersja z pliku): <b>${st.notesUpdated}</b><br>`+
         `• Zachowanych bez zmian (Twoja wersja nowsza lub taka sama): <b>${st.notesKept}</b><br>`+
@@ -7740,21 +8306,52 @@ async function handleJsonFile(e){
         (choice==="mergeLayout" ? `<br>• Etykiet uporządkowanych wg układu z pliku: <b>${st.organized}</b>` : ""));
       return;
     }
-    // ZASTĄP WSZYSTKO
-    notes=data.notes; tags=data.tags;
-    sections=(Array.isArray(data.sections)?data.sections:[]).filter(x=>x&&typeof x==="object"&&isFinite(Number(x.id))&&typeof x.name==="string");
-    if(typeof pubTabs!=="undefined"){
-      pubTabs = (Array.isArray(data.pubTabs)?data.pubTabs:[])
-        .filter(x=>x&&typeof x==="object"&&x.ks&&typeof x.name==="string"&&x.name.trim());
-      if(typeof savePubTabs==="function") savePubTabs();
-    }
+    /* ===== ZASTĄP WSZYSTKO =====
+       Kolejność jest tu istotna. Najpierw przygotowujemy komplet nowych danych,
+       potem zapisujemy je do bazy JEDNĄ transakcją, a dopiero po jej udanym
+       zakończeniu podmieniamy to, co widać na ekranie.
+
+       Wcześniej było odwrotnie: pamięć podmieniana od razu, baza czyszczona
+       osobno, zapis osobno. Gdy zapis padł, na urządzeniu zostawała pusta baza,
+       a na ekranie dane, które po odświeżeniu znikały. Teraz nieudany zapis
+       nie rusza ani bazy, ani ekranu. */
+    const noweNotes = data.notes;
+    const noweTags  = data.tags;
+    const noweSekcje = (Array.isArray(data.sections)?data.sections:[])
+      .filter(x=>x&&typeof x==="object"&&isFinite(Number(x.id))&&typeof x.name==="string");
+    const noweZakladki = (Array.isArray(data.pubTabs)?data.pubTabs:[])
+      .filter(x=>x&&typeof x==="object"&&x.ks&&typeof x.name==="string"&&x.name.trim());
+
+    let kontrola = null;
     if(idb){
-      await new Promise((res,rej)=>{const t=idb.transaction(["notes","tags"],"readwrite");t.objectStore("notes").clear();t.objectStore("tags").clear();t.oncomplete=res;t.onerror=rej;});
-      await idbBulk("tags",tags); await idbBulk("notes",notes);
-      saveSections();
+      await idbZastapWszystko(noweNotes, noweTags, noweSekcje, noweZakladki);
+      kontrola = await sprawdzZapis(noweNotes.length, noweTags.length);
+      if(kontrola && !kontrola.zgadza){
+        showInfo("Zapis niepełny",
+          `Do bazy trafiło <b>${kontrola.notatki}</b> notatek i <b>${kontrola.etykiety}</b> etykiet, `+
+          `a plik zawierał <b>${noweNotes.length}</b> i <b>${noweTags.length}</b>.<br><br>`+
+          `Dane na ekranie <b>nie zostały podmienione</b>. Najczęstsza przyczyna to brak miejsca `+
+          `na urządzeniu — zwolnij je i spróbuj ponownie.`);
+        return;
+      }
     }
-    renderAll(); toast("Wczytano kopię danych (zastąpiono)");
-  }catch(err){ toast("Błąd: "+err.message); }
+    // dopiero teraz, po potwierdzonym zapisie, podmieniamy to, co widać
+    notes = noweNotes; tags = noweTags; sections = noweSekcje;
+    if(typeof pubTabs!=="undefined") pubTabs = noweZakladki;
+    renderAll();
+    showInfo("Zastąpiono dane",
+      `Zapisano i sprawdzono w bazie urządzenia:<br>`+
+      `• Notatek: <b>${kontrola ? kontrola.notatki : noweNotes.length}</b><br>`+
+      `• Etykiet: <b>${kontrola ? kontrola.etykiety : noweTags.length}</b>`+
+      (noweSekcje.length ? `<br>• Sekcji: <b>${noweSekcje.length}</b>` : "")+
+      (noweZakladki.length ? `<br>• Zakładek w publikacjach: <b>${noweZakladki.length}</b>` : "")+
+      (kontrola ? "" : "<br><br><i>Baza urządzenia niedostępna — dane działają do zamknięcia karty.</i>"));
+  }catch(err){
+    console.warn("Wczytywanie kopii nie powiodło się", err);
+    showInfo("Nie udało się wczytać kopii",
+      `${esc(err && err.message ? err.message : String(err))}<br><br>`+
+      `<b>Dotychczasowe dane pozostały nietknięte</b> — zapis odbywa się w całości albo wcale.`);
+  }
 }
 
 </script>
@@ -7787,8 +8384,120 @@ function flashOk(el){
   el.classList.add("flash-ok");
   setTimeout(()=>el.classList.remove("flash-ok"), 700);
 }
-function openModal(id){$(id).classList.add("show");}
-function closeModal(id){$(id).classList.remove("show");}
+/* =====================================================================
+   OKNA DIALOGOWE A DOSTĘPNOŚĆ
+
+   Okno bez roli „dialog" jest dla czytnika ekranu zwykłym kawałkiem strony:
+   nie zapowiada się, nie odcina tła, a kursor czytnika wędruje po treści,
+   która jest właśnie zasłonięta. Klawiszem Tab dawało się wyjść poza okno
+   i klikać w niewidoczne przyciski pod spodem.
+
+   Poniższe funkcje nadają rolę, przenoszą ognisko do okna, zatrzymują
+   klawisz Tab w jego obrębie i oddają ognisko tam, skąd okno otwarto.
+   ===================================================================== */
+let _skadOkno = null;
+
+function openModal(id){
+  const okno = $(id); if(!okno) return;
+  przygotujOknoDlaCzytnika(okno);
+  _skadOkno = document.activeElement;
+  okno.classList.add("show");
+  okno.setAttribute("aria-hidden","false");
+  const cel = okno.querySelector("input:not([type=hidden]), textarea, select, button, [tabindex]");
+  if(cel){ try{ cel.focus(); }catch(e){} }
+}
+function closeModal(id){
+  const okno = $(id); if(!okno) return;
+  okno.classList.remove("show");
+  okno.setAttribute("aria-hidden","true");
+  // ognisko wraca tam, skąd okno otwarto — inaczej ląduje na początku strony
+  if(_skadOkno && document.contains(_skadOkno)){ try{ _skadOkno.focus(); }catch(e){} }
+  _skadOkno = null;
+}
+/** Rola, powiązanie z nagłówkiem i odcięcie tła — nadawane raz, przy pierwszym otwarciu. */
+function przygotujOknoDlaCzytnika(okno){
+  const pudlo = okno.querySelector(".modal") || okno;
+  if(pudlo.getAttribute("role")==="dialog") return;
+  pudlo.setAttribute("role","dialog");
+  pudlo.setAttribute("aria-modal","true");
+  const naglowek = pudlo.querySelector("h2, h3");
+  if(naglowek){
+    if(!naglowek.id) naglowek.id = okno.id + "-tytul";
+    pudlo.setAttribute("aria-labelledby", naglowek.id);
+  }
+}
+/* Tab nie może wyprowadzić poza otwarte okno. */
+document.addEventListener("keydown", e=>{
+  if(e.key!=="Tab") return;
+  const okno = document.querySelector(".overlay.show");
+  if(!okno) return;
+  const pudlo = okno.querySelector(".modal") || okno;
+  const doOgniska = [...pudlo.querySelectorAll('a[href], button:not([disabled]), input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    .filter(el=>el.offsetParent!==null || el.getClientRects().length || true);
+  if(!doOgniska.length) return;
+  const pierwszy = doOgniska[0], ostatni = doOgniska[doOgniska.length-1];
+  if(e.shiftKey && document.activeElement===pierwszy){ e.preventDefault(); ostatni.focus(); }
+  else if(!e.shiftKey && document.activeElement===ostatni){ e.preventDefault(); pierwszy.focus(); }
+});
+/**
+ * Przyciski z samą ikoną mają podpowiedź w atrybucie title, ale czytniki ekranu
+ * traktują ją niepewnie — część pomija ją zupełnie. Kopiujemy ją do aria-label,
+ * które jest do tego przeznaczone. Robimy to dla przycisków istniejących
+ * i dla dokładanych później (menu, paski narzędzi, karty notatek).
+ */
+function nazwijPrzyciskiIkonowe(korzen){
+  (korzen||document).querySelectorAll("button[title], label[title], [role=button][title]").forEach(b=>{
+    if(b.getAttribute("aria-label")) return;
+    if(b.textContent.trim()) return;              // ma widoczny napis — wystarczy
+    b.setAttribute("aria-label", b.getAttribute("title"));
+  });
+}
+if(typeof MutationObserver!=="undefined"){
+  new MutationObserver(zmiany=>{
+    zmiany.forEach(z=>z.addedNodes.forEach(n=>{ if(n.nodeType===1) nazwijPrzyciskiIkonowe(n); }));
+  }).observe(document.documentElement, {childList:true, subtree:true});
+}
+nazwijPrzyciskiIkonowe();
+/**
+ * Rozwijane menu buduje kilka miejsc w kodzie i każde robi to własnym HTML-em.
+ * Zamiast dopisywać role w każdym z nich, nadajemy je tutaj — po każdej zmianie
+ * zawartości. Rola „menu" bez pozycji „menuitem" jest dla czytnika ekranu gorsza
+ * niż jej brak: zapowiada listę, po której nie da się przejść.
+ */
+function oznaczPozycjeMenu(menu){
+  if(!menu) return;
+  [...menu.children].forEach(el=>{
+    if(el.classList.contains("dd-sep")){ el.setAttribute("role","separator"); return; }
+    if(el.classList.contains("dd-lbl") || el.classList.contains("cm-title")){
+      el.setAttribute("role","presentation"); return;
+    }
+    if(el.tagName==="DIV" || el.tagName==="BUTTON"){
+      if(!el.getAttribute("role")) el.setAttribute("role","menuitem");
+      if(!el.hasAttribute("tabindex")) el.setAttribute("tabindex","-1");
+    }
+  });
+}
+if(typeof MutationObserver!=="undefined"){
+  ["dropdown","ebPop"].forEach(id=>{
+    const m=document.getElementById(id);
+    if(!m) return;
+    new MutationObserver(()=>oznaczPozycjeMenu(m)).observe(m, {childList:true});
+  });
+}
+
+/* Role okien nadajemy od razu, nie dopiero przy pierwszym otwarciu — czytnik ekranu
+   ma wtedy poprawny obraz strony niezależnie od tego, czego użytkownik dotknął. */
+document.querySelectorAll(".overlay").forEach(o=>{
+  przygotujOknoDlaCzytnika(o);
+  if(!o.classList.contains("show")) o.setAttribute("aria-hidden","true");
+});
+/* Przyciski zamykające okna działają przez wspólny nasłuch, a nie przez atrybut
+   onclick w kodzie strony. Atrybuty z kodem są pierwszym, co blokuje polityka
+   bezpieczeństwa treści (CSP) — bez nich da się ją zacieśnić. */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-zamknij]");
+  if(b) closeModal(b.dataset.zamknij);
+});
 function download(blob,name){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob); a.download=name;
@@ -7844,6 +8553,7 @@ function otworzMenuKolumn(anchor){
     }).join("") +
     `<div class="dd-sep"></div><div data-kol-all="1">Pokaż wszystkie</div>`;
   dd.style.display = "block";
+  oznaczPozycjeMenu(dd);          // role nadajemy od razu, nie dopiero po przerysowaniu
   placeDropdown(dd, anchor);
   dd.onclick = e=>{
     if(e.target.closest("[data-kol-all]")){
@@ -8296,6 +9006,24 @@ function optionGroup(group, options, current){
  * Buduje i otwiera okno ustawień. Każda zmiana zapisuje się od razu — nie ma
  * przycisku „Zastosuj", bo efekt widać natychmiast.
  */
+/**
+ * Kafelki gotowych kompozycji. Bieżąca jest odhaczona, więc widać, co jest włączone.
+ * Kolory poszczególnych kolumn celowo NIE są tutaj — mieszkają pod ikoną palety
+ * i nie powinny być w dwóch miejscach naraz.
+ */
+function kompozycjeHtml(){
+  const teraz = typeof biezacaKompozycja==="function" ? biezacaKompozycja() : "";
+  return PASTELS.map(([nm,c])=>{
+    const wybrana = teraz===c;
+    const tlo = shade(desat(c,.18), -.42);
+    return `<button class="st-kafel${wybrana?" on":""}" data-komp="${c}" `+
+           `style="background:${tlo};color:${czytelnyTekst(tlo)}">${esc(nm)}`+
+           (wybrana?'<span class="st-ptak">✓</span>':"")+`</button>`;
+  }).join("") +
+  `<button class="st-kafel st-kafel-domyslny${teraz?"":" on"}" data-komp="reset">Domyślna`+
+  (teraz?"":'<span class="st-ptak">✓</span>')+`</button>`;
+}
+
 function openSettings(){
   const box = $("setBody");
   box.innerHTML =
@@ -8321,9 +9049,12 @@ function openSettings(){
      <div class="st-sec">
        <div class="st-lbl">Wygląd</div>
        ${optionGroup("theme", [["light","Dzień"],["sepia","Sepia"],["dark","Noc"],["auto","Jak w systemie"]], themeMode)}
-       <div class="st-row">
-         <button class="st-opt wide" data-act="colors">Kolory i kompozycje…</button>
-       </div>
+       <div class="st-hint">Dzień, sepia i noc zmieniają jasność. Kompozycja poniżej zmienia kolor — obie rzeczy działają razem.</div>
+     </div>
+     <div class="st-sec">
+       <div class="st-lbl">Gotowa kompozycja</div>
+       <div class="st-komp">${kompozycjeHtml()}</div>
+       <div class="st-hint">Jeden kolor na <b>cały interfejs</b>: pasek górny, kolumny, belki notatek i podświetlenia. Kolory poszczególnych kolumn osobno ustawisz pod ikoną palety w pasku górnym.</div>
      </div>
      <div class="st-sec">
        <div class="st-lbl">Układ listy notatek</div>
@@ -8346,11 +9077,19 @@ function openSettings(){
        <div class="st-hint">Skróty działają, gdy nie piszesz w polu tekstowym. Prawy przycisk myszy (albo przytrzymanie palcem) otwiera szybkie akcje.</div>
      </div>
      <div class="st-sec">
+       <div class="st-lbl">Kopia zapasowa</div>
+       <div class="st-ver" id="stPlikKopii"></div>
+       <button class="st-opt st-wide" data-act="plikKopii">Wskaż stały plik kopii</button>
+       <button class="st-opt st-wide" id="stPlikKopiiOff" data-act="plikKopiiOff" style="display:none">Przestań używać tego pliku</button>
+       <div class="st-hint">Zamiast pobierać co dzień nowy plik, aplikacja może <b>nadpisywać jeden wskazany</b> — na dysku nie przybywa kopii. Wskazujesz go raz. Wymaga przeglądarki Chrome, Edge, Brave lub Arc na komputerze; w Safari pozostaje zwykłe pobieranie.</div>
+     </div>
+     <div class="st-sec">
        <div class="st-lbl">Wersja aplikacji</div>
        <div class="st-ver" id="stWersja"></div>
        <button class="st-opt st-wide" data-act="odswiez">Pobierz najnowszą wersję</button>
        <div class="st-hint">Kasuje zapisaną kopię plików aplikacji i wczytuje ją od nowa z serwera. Przydatne, gdy po wgraniu nowej wersji na GitHub wciąż widzisz starą. <b>Notatki zostają nietknięte</b> — są w osobnej bazie na urządzeniu.</div>
      </div>`;
+  pokazPlikKopii();
   const pole = $("stWersja");
   if(pole){
     const znak = document.querySelector(".brand-name .ver");
@@ -8366,14 +9105,28 @@ function openSettings(){
       $("stFsVal").textContent = noteFs + " px";
       return;
     }
+    const komp = e.target.closest("[data-komp]");
+    if(komp){
+      applyPreset(komp.dataset.komp);
+      const siatka = box.querySelector(".st-komp");
+      if(siatka) siatka.innerHTML = kompozycjeHtml();   // odhacz nowo wybraną
+      return;
+    }
     const act = e.target.closest("[data-act]");
+    if(act && act.dataset.act==="plikKopii"){
+      wskazPlikKopii().then(ok=>{ if(ok) pokazPlikKopii(); });
+      return;
+    }
+    if(act && act.dataset.act==="plikKopiiOff"){
+      zapomnijPlikKopii().then(pokazPlikKopii);
+      return;
+    }
     if(act && act.dataset.act==="odswiez"){
       askConfirm("Pobrać najnowszą wersję?",
         "Zapisana kopia plików aplikacji zostanie skasowana i pobrana od nowa z serwera.<br><br>Notatki, etykiety i zakładki <b>zostają nietknięte</b>.",
         {okLabel:"Pobierz i odśwież"}).then(ok=>{ if(ok) wymusAktualizacje(); });
       return;
     }
-    if(act && act.dataset.act==="colors"){ closeModal("modalSettings"); setTimeout(()=>openColorMenu({target:colorMenuAnchor()}, "wszystko"), 60); return; }
     const opt = e.target.closest(".st-opt[data-v]");
     if(!opt) return;
     const grp = opt.closest("[data-grp]").dataset.grp, v = opt.dataset.v;
@@ -8384,6 +9137,22 @@ function openSettings(){
     opt.parentElement.querySelectorAll(".st-opt").forEach(b=>b.classList.toggle("on", b===opt));
     toastOk("Zapisano ustawienie");
   };
+}
+/** Pokazuje w ustawieniach, do jakiego pliku trafiają kopie. */
+async function pokazPlikKopii(){
+  const opis = document.getElementById("stPlikKopii");
+  const wyl = document.getElementById("stPlikKopiiOff");
+  if(!opis) return;
+  if(!stalyPlikDostepny()){
+    opis.textContent = "Ta przeglądarka pozwala tylko pobierać nowe pliki.";
+    const btn = document.querySelector('#setBody [data-act="plikKopii"]');
+    if(btn) btn.style.display = "none";
+    if(wyl) wyl.style.display = "none";
+    return;
+  }
+  const nazwa = await nazwaPlikuKopii();
+  opis.textContent = nazwa ? "Nadpisywany plik: " + nazwa : "Każda kopia to nowy plik z datą w nazwie.";
+  if(wyl) wyl.style.display = nazwa ? "" : "none";
 }
 $("btnSettings").onclick = openSettings;
 

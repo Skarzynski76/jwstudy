@@ -1,10 +1,12 @@
-const CACHE = 'jwstudy-v164s';
+const CACHE = 'jwstudy-v175s';
 /* Rdzeń: dokument + wszystkie moduły CSS i JS — bez nich aplikacja nie ruszy offline. */
 const CORE = [
   './', './index.html'
 ];
-/* Dodatki: ikony i manifest. Brak któregoś nie może zablokować zapisu offline. */
+/* Dodatki: ikony, manifest i biblioteki importu (jeśli wgrane do lib/).
+   Brak któregokolwiek nie może zablokować zapisu offline — stąd osobna lista. */
 const EXTRA = [
+  './lib/jszip.min.js', './lib/sql-wasm.js', './lib/sql-wasm.wasm',
   './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png',
   './apple-touch-icon.png', './favicon-32.png'
